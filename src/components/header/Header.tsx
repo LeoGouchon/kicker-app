@@ -1,23 +1,16 @@
 import {StyledHeader} from "./Header.style.tsx";
-import {Avatar, Segmented} from "antd";
-import {faMoon, faSun} from "@fortawesome/free-regular-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Avatar, Flex, Tag} from "antd";
+import {isDev} from "../../utils/envChoice.ts";
+import {ThemeSwitcher} from "./components/themeSwitcher/ThemeSwitcher.tsx";
 
 export const Header = () => {
-    const themeChoiceOptions = [
-        {
-            value: 'light',
-            icon: <FontAwesomeIcon icon={faSun}/>,
-        },
-        {
-            icon: <FontAwesomeIcon icon={faMoon}/>,
-            value: 'dark',
-        }
-    ]
     return (
         <StyledHeader>
-            <Segmented options={themeChoiceOptions} shape="round"/>
-            <Avatar>A</Avatar>
+            {isDev ? <Tag color={'error'}>Dev mode</Tag> : <Tag color={'success'}>Current live!</Tag>}
+            <Flex gap={'middle'}>
+                <ThemeSwitcher/>
+                <Avatar>A</Avatar>
+            </Flex>
         </StyledHeader>
     )
 }
