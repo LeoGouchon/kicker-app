@@ -1,9 +1,11 @@
 import './App.css'
+import {BrowserRouter} from "react-router-dom";
+import {AppContent} from "./AppContent.tsx";
 
 export const App = () => {
-  return (
-    <>
-     Wesh wesh
-    </>
-  )
+    return (
+        <BrowserRouter>
+           <AppContent />
+        </BrowserRouter>
+    )
 }
