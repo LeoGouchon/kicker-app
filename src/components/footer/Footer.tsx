@@ -2,13 +2,14 @@ import {Flex, Layout, Space, Typography} from "antd";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGithub, faLinkedin} from "@fortawesome/free-brands-svg-icons";
 import {faFolderClosed} from "@fortawesome/free-regular-svg-icons";
+import {FlexFullWidth} from "../../App.style.tsx";
 
 const {Text} = Typography;
 
 export const Footer = () => {
     return (
-        <Layout.Footer>
-            <Flex justify={'space-between'} align={'center'}>
+        <Layout.Footer style={{width: '100%'}}>
+            <FlexFullWidth justify={'space-between'} align={'center'}>
                 <Space size={2}>
                     <Text>Supported by HubScore ©2025</Text> <Text type="secondary">(c'est faux, c'était pour faire
                     stylé)</Text>
@@ -18,7 +19,7 @@ export const Footer = () => {
                     <a href={'https://www.linkedin.com/in/leogouchon/'} target={'_blank'}><FontAwesomeIcon icon={faLinkedin}/></a>
                     <a href={'https://leogouchon.com'} target={'_blank'}><FontAwesomeIcon icon={faFolderClosed}/></a>
                 </Flex>
-            </Flex>
+            </FlexFullWidth>
         </Layout.Footer>
     )
 }

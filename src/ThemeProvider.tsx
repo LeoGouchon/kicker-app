@@ -1,4 +1,3 @@
-// ThemeProvider.tsx
 import { ConfigProvider, theme as antdTheme } from 'antd';
 import React, { useState, createContext, useContext } from 'react';
 
@@ -34,6 +33,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
             <ConfigProvider
                 theme={{
                     algorithm: themeState === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+                    cssVar: true
                 }}
             >
                 {children}

@@ -31,6 +31,7 @@ export const Sider = () => {
         <StyledSider
             collapsible
             defaultCollapsed
+            collapsedWidth={60}
         >
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
         </StyledSider>

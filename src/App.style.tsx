@@ -1,5 +1,4 @@
-
-import {Layout} from "antd";
+import {Flex, Layout} from "antd";
 import styled from "@emotion/styled";
 
 export const StyledLayout = styled(Layout)`
@@ -15,4 +14,8 @@ export const StyledMainContent = styled.div`
     min-height: 360px;
     background-color: var(--ant-color-bg-container);
     border-radius: var(--ant-border-radius-lg);
+`;
+
+export const FlexFullWidth = styled(Flex)`
+    width: 100%;
 `;
