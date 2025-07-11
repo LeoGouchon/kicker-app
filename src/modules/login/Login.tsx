@@ -37,7 +37,8 @@ export const Login = () => {
                 onSuccess: () => {
                     navigate(ROUTES.HOME);
                 },
-                onError: () => {
+                onError: (err) => {
+                    console.error(err);
                     form.setFields([
                         {name: 'password', value: ''},
                     ]);
@@ -80,6 +81,7 @@ export const Login = () => {
                             rules={[
                                 {required: true, type: 'email', message: 'Veuillez saisir votre email'},
                             ]}
+                            validateTrigger={'onBlur'}
                         >
                             <Input/>
                         </Form.Item>

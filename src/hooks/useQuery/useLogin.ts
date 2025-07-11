@@ -1,13 +1,29 @@
 import {useMutation} from "@tanstack/react-query";
 import {api} from "../../utils/api.ts";
+import {UserContext} from "../../context/UserContext.tsx";
+import {useContext} from "react";
 
 export const useLogin = () => {
+    const {setUser} = useContext(UserContext);
+
     return useMutation({
-        mutationFn: ({email, password}: { email: string, password: string }) => {
-            return api.post('/authenticate/login', {email, password});
+        mutationFn: async ({email, password}: { email: string, password: string }) => {
+            const response = await api.post('/authenticate/login', {email, password});
+            return response.data.token;
         },
-        onSuccess: (response) => {
-            localStorage.setItem('token', response.data.token)
+        onSuccess: async (token: string) => {
+            localStorage.setItem('token', token);
+
+            try {
+                const responseUser = await api.get('/me');
+                console.log(responseUser.data);
+                setUser(responseUser.data);
+                localStorage.setItem('user', JSON.stringify(responseUser.data));
+            } catch (err) {
+                console.error("Erreur lors de la récupération de l'utilisateur :", err);
+                localStorage.removeItem('token');
+                setUser(null);
+            }
         },
         onError: () => {
             localStorage.removeItem('token')

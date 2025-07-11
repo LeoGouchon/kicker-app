@@ -7,7 +7,8 @@ export const useLogout = () => {
             return api.post('/authenticate/logout')
         },
         onSuccess: () => {
-            localStorage.removeItem('token')
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
         }
     })
 }

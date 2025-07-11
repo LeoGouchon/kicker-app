@@ -19,12 +19,13 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+        const token = localStorage.getItem('token');
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 401 && !originalRequest._retry && token) {
             originalRequest._retry = true;
 
             try {
-                const refreshResponse = await api.post('/auth/refresh');
+                const refreshResponse = await api.post('/authenticate/refresh-token');
                 const newAccessToken: string = refreshResponse.data.token;
 
                 localStorage.setItem('token', newAccessToken);

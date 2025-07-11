@@ -1,7 +1,7 @@
 import {Segmented} from "antd";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faMoon, faSun} from "@fortawesome/free-regular-svg-icons";
-import {useAntdTheme} from "../../../../ThemeProvider.tsx";
+import {useAntdTheme} from "../../../../context/ThemeProvider.tsx";
 
 export const ThemeSwitcher = () => {
     const { isDarkTheme,toggleTheme } = useAntdTheme();

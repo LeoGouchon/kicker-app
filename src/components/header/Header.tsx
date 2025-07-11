@@ -1,9 +1,10 @@
 import {StyledHeader} from "./Header.style.tsx";
-import {Avatar, Button, Flex, Tag} from "antd";
+import {Button, Flex, Tag} from "antd";
 import {isDev} from "../../utils/envChoice.ts";
 import {ThemeSwitcher} from "./components/themeSwitcher/ThemeSwitcher.tsx";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../routes/constant.ts";
+import {Logged} from "./components/logged/Logged.tsx";
 
 export const Header = () => {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ export const Header = () => {
                 <ThemeSwitcher/>
                 {
                     isUserLoggedIn
-                        ? <Avatar>U</Avatar>
+                        ? <Logged/>
                         : <Button type="primary" onClick={() => navigate(ROUTES.LOGIN)}>Se connecter</Button>
                 }
             </Flex>
