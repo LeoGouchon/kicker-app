@@ -1,4 +1,5 @@
 import axios from "axios";
+import {ROUTES} from "../routes/constant.ts";
 
 export const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -21,7 +22,9 @@ api.interceptors.response.use(
         const originalRequest = error.config;
         const token = localStorage.getItem('token');
 
-        if (error.response?.status === 401 && !originalRequest._retry && token) {
+        const isRefreshingToken = originalRequest.url?.includes('/authenticate/refresh-token');
+
+        if (error.response?.status === 401 && token && !originalRequest._retry && !isRefreshingToken) {
             originalRequest._retry = true;
 
             try {
@@ -36,6 +39,9 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch (refreshError) {
                 console.error('Échec du refresh token:', refreshError);
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.replace(ROUTES.HOME);
             }
         }
 

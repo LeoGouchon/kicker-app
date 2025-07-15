@@ -11,6 +11,8 @@ export const useRefreshToken = () => {
         },
         onError: () => {
             localStorage.removeItem('token')
-        }
+        },
+        retryDelay: 1000,
+        retry: 5
     })
 }
