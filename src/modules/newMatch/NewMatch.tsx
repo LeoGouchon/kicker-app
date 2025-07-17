@@ -1,8 +1,9 @@
-import {Col, Form, InputNumber, Row, Select} from "antd";
+import {Button, Col, Form, InputNumber, Row, Select} from "antd";
 import {FlexFullWidth} from "../../App.style.tsx";
 import {useForm, useWatch} from "antd/es/form/Form";
 import {KickerBackground} from "./NewMatch.style.tsx";
 import {useGetPlayers} from "../../hooks/useQuery/usePlayer.ts";
+import {CreatePlayer} from "./components/createPlayer/CreatePlayer.tsx";
 
 export const NewMatch = () => {
     const [form] = useForm();
@@ -29,7 +30,7 @@ export const NewMatch = () => {
     console.log(getAvailablePlayerList('joueurA1'))
 
     return (
-        <FlexFullWidth vertical>
+        <FlexFullWidth vertical gap={'large'}>
             <KickerBackground>
 
             </KickerBackground>
@@ -37,7 +38,7 @@ export const NewMatch = () => {
                 form={form}
                 layout="vertical"
             >
-                <Row>
+                <Row gutter={8}>
                     <Col span={12}>
                         <Form.Item name="joueurA1" label="Joueur 01 - Equipe 1" required>
                             <Select
@@ -57,7 +58,7 @@ export const NewMatch = () => {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row>
+                <Row gutter={8}>
                     <Col span={12}>
                         <Form.Item name="joueurA2" label="Joueur 02 - Equipe 1">
                             <Select
@@ -77,19 +78,23 @@ export const NewMatch = () => {
                         </Form.Item>
                     </Col>
                 </Row>
-                <Row>
+                <Row gutter={8}>
                     <Col span={12}>
-                        <Form.Item name="scoreA" label="Score - Equipe 1">
+                        <Form.Item name="scoreA" label="Score - Equipe 1" required>
                             <InputNumber min={-10} max={10} step={1} placeholder={"0"}/>
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item name="scoreB" label="Score - Equipe 2">
+                        <Form.Item name="scoreB" label="Score - Equipe 2" required>
                             <InputNumber min={-10} max={10} step={1} placeholder={"0"}/>
                         </Form.Item>
                     </Col>
                 </Row>
+                <Button type="primary" htmlType="submit">
+                    Enregistrer
+                </Button>
             </Form>
+            <CreatePlayer/>
         </FlexFullWidth>
     )
 }
