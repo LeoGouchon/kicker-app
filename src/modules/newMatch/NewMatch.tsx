@@ -5,9 +5,12 @@ import {KickerBackground} from "./NewMatch.style.tsx";
 import {useGetPlayers} from "../../hooks/useApiEndPoint/usePlayer.ts";
 import {CreatePlayer} from "./components/createPlayer/CreatePlayer.tsx";
 import {useCreateMatch} from "../../hooks/useApiEndPoint/useMatch.ts";
+import {useNavigate} from "react-router-dom";
+import {ROUTES} from "../../routes/constant.ts";
 
 export const NewMatch = () => {
     const [form] = useForm();
+    const navigate = useNavigate();
 
     const {isLoading, data: playersResponse} = useGetPlayers({page: 0, size: 100});
 
@@ -39,7 +42,13 @@ export const NewMatch = () => {
                 player2AId: formValues.joueurA2,
                 player1BId: formValues.joueurB1,
                 player2BId: formValues.joueurB2
-            });
+            },
+                {
+                    onSuccess: () => {
+                        form.resetFields();
+                        navigate(ROUTES.DASHBOARD);
+                    }
+                });
         });
     }
 
