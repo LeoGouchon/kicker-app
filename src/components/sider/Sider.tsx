@@ -28,8 +28,8 @@ export const Sider = () => {
     }
 
     const items: MenuItem[] = [
-        getItem('Nouveau match', 'newMatch', <FontAwesomeIcon icon={faSquarePlus} />, () => navigate(ROUTES.NEW_MATCH)),
-        getItem('Statistiques', 'stats', <FontAwesomeIcon icon={faChartBar} />, () => navigate(ROUTES.DASHBOARD)),
+        getItem('Nouveau match', ROUTES.NEW_MATCH, <FontAwesomeIcon icon={faSquarePlus} />, () => navigate(ROUTES.NEW_MATCH)),
+        getItem('Statistiques', ROUTES.DASHBOARD, <FontAwesomeIcon icon={faChartBar} />, () => navigate(ROUTES.DASHBOARD)),
     ];
 
     return (
@@ -38,7 +38,7 @@ export const Sider = () => {
             defaultCollapsed
             collapsedWidth={60}
         >
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+            <Menu selectedKeys={[location.pathname]} theme="dark" mode="inline" items={items} />
         </StyledSider>
     )
 }
