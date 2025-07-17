@@ -1,6 +1,6 @@
 import {useForm} from "antd/es/form/Form";
-import {Button, Form, Input, message} from "antd";
-import {useCreatePlayer} from "../../../../hooks/useQuery/usePlayer.ts";
+import {Button, Form, Input, message, Typography} from "antd";
+import {useCreatePlayer} from "../../../../hooks/useApiEndPoint/usePlayer.ts";
 
 export const CreatePlayer = () => {
     const [form] = useForm();
@@ -31,6 +31,7 @@ export const CreatePlayer = () => {
 
     return (
         <Form form={form} layout="vertical" name="createPlayer" style={{width: '100%'}} onFinish={handleFinish}>
+            <Typography.Title level={3}>Créer un joueur</Typography.Title>
             <Form.Item name="firstname" label="Prénom" rules={[{required: true, message: 'Veuillez entrer un prénom'}]}>
                 <Input />
             </Form.Item>

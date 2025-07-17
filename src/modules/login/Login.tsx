@@ -13,7 +13,7 @@ import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../routes/constant.ts";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useLogin} from "../../hooks/useQuery/useLogin.ts";
+import {useLogin} from "../../hooks/useApiEndPoint/useLogin.ts";
 import {ThemeSwitcher} from "../../components/header/components/themeSwitcher/ThemeSwitcher.tsx";
 
 export const Login = () => {

@@ -3,7 +3,7 @@ import {UserContext} from "../../../../context/UserContext.tsx";
 import {type ReactElement, useContext} from "react";
 import type {UserType} from "../../../../types/User.type.ts";
 import {ClickyAvatar} from "./Logged.style.tsx";
-import {useLogout} from "../../../../hooks/useQuery/useLogout.ts";
+import {useLogout} from "../../../../hooks/useApiEndPoint/useLogout.ts";
 
 export const Logged = () => {
     const {user}: { user?: UserType } = useContext(UserContext);
