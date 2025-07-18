@@ -1,8 +1,10 @@
-import {Flex, Layout} from "antd";
+import {Flex, Layout, type LayoutProps} from "antd";
 import styled from "@emotion/styled";
 
-export const StyledLayout = styled(Layout)`
+export const StyledLayout = styled(Layout)<LayoutProps>`
     min-height: 100vh;
+    max-width: 100vw;
+    position: relative;
 `;
 
 export const StyledContent = styled(Layout.Content)`
