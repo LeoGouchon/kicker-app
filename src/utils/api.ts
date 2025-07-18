@@ -1,12 +1,13 @@
 import axios from "axios";
 import {ROUTES} from "../routes/constant.ts";
+import {mockApi} from "./mockApi.ts";
 
-export const api = axios.create({
+const realApi = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
 })
 
-api.interceptors.request.use((config) => {
+realApi.interceptors.request.use((config) => {
         const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
@@ -16,7 +17,7 @@ api.interceptors.request.use((config) => {
     (error) => Promise.reject(error instanceof Error ? error : new Error(String(error)))
 );
 
-api.interceptors.response.use(
+realApi.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
@@ -28,15 +29,15 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                const refreshResponse = await api.post('/authenticate/refresh-token');
+                const refreshResponse = await realApi.post('/authenticate/refresh-token');
                 const newAccessToken: string = refreshResponse.data.token;
 
                 localStorage.setItem('token', newAccessToken);
 
-                api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+                realApi.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
                 originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
 
-                return api(originalRequest);
+                return realApi(originalRequest);
             } catch (refreshError) {
                 console.error('Échec du refresh token:', refreshError);
                 localStorage.removeItem('token');
@@ -50,3 +51,5 @@ api.interceptors.response.use(
         );
     }
 );
+
+export const api = import.meta.env.VITE_MOCK_API === 'true' ? mockApi : realApi;
