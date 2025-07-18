@@ -33,7 +33,13 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
             <ConfigProvider
                 theme={{
                     algorithm: themeState === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                    cssVar: true
+                    cssVar: true,
+                    components: {
+                        Layout: {
+                            lightTriggerBg: 'transparent',
+                            triggerBg: 'transparent',
+                        }
+                    }
                 }}
             >
                 {children}
