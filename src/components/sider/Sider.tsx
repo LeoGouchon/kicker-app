@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {StyledSider} from "./Sider.style.tsx";
 import {Button, Menu, type MenuProps} from "antd";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChartBar, faSquarePlus} from "@fortawesome/free-regular-svg-icons";
+import {faChartBar, faSquarePlus, faUser} from "@fortawesome/free-regular-svg-icons";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../routes/constant.ts";
 import {faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
@@ -34,6 +34,8 @@ export const Sider = () => {
             icon={faSquarePlus}/>, () => navigate(ROUTES.NEW_MATCH)),
         getItem('Statistiques', ROUTES.DASHBOARD, <FontAwesomeIcon
             icon={faChartBar}/>, () => navigate(ROUTES.DASHBOARD)),
+        getItem('Joueurs', ROUTES.PLAYER, <FontAwesomeIcon
+            icon={faUser}/>, () => navigate(ROUTES.PLAYER))
     ];
 
     return (
