@@ -3,7 +3,7 @@ import type {UserType} from "../types/User.type.ts";
 
 interface UserContextType {
     user?: UserType;
-    setUser: (newUser: UserType) => void;
+    setUser: (newUser?: UserType) => void;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

@@ -16,13 +16,12 @@ export const useLogin = () => {
 
             try {
                 const responseUser = await api.get('/me');
-                console.log(responseUser.data);
                 setUser(responseUser.data);
                 localStorage.setItem('user', JSON.stringify(responseUser.data));
             } catch (err) {
                 console.error("Erreur lors de la récupération de l'utilisateur :", err);
                 localStorage.removeItem('token');
-                setUser(null);
+                setUser(undefined);
             }
         },
         onError: () => {
