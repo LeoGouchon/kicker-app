@@ -7,17 +7,39 @@ export const mockApi = {
     get: async (url: string) => {
         await new Promise(resolve => setTimeout(resolve, 200));
 
-        if (url.startsWith('/kicker/matches')) return mockMatchGetResponse;
-        if (url.startsWith('/players')) return mockPlayerGetResponse;
-        if (url === '/me') return mockMeResponse;
+        let data;
+        if (url.startsWith('/kicker/matches')) data = mockMatchGetResponse;
+        else if (url.startsWith('/players')) data = mockPlayerGetResponse;
+        else if (url === '/me') data = mockMeResponse;
+        else throw new Error('Mock not implemented for url: ' + url);
 
-        throw new Error('Mock not implemented for url: ' + url);
+        return {
+            data,
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: { url }
+        };
     },
-    post: async (url: string, data?: any) => {
-        if (url === '/authenticate/login') return mockLoginResponse;
-        if (url === '/authenticate/logout') return {data: {}};
-        if (url.startsWith('/kicker/matches')) return mockMatchPostResponse(data);
+    post: async (url: string, data?: unknown) => {
+        let responseData;
+        if (url === '/authenticate/login') responseData = mockLoginResponse;
+        else if (url === '/authenticate/refresh-token') responseData = { token: 'mock-refresh-token' };
+        else if (url === '/authenticate/logout') responseData = {};
+        else if (url.startsWith('/kicker/matches')) responseData = mockMatchPostResponse(data as Parameters<typeof mockMatchPostResponse>[0]);
+        else throw new Error('Mock not implemented for url: ' + url);
 
-        throw new Error('Mock not implemented for url: ' + url);
+        return {
+            data: responseData,
+            status: 200,
+            statusText: 'OK',
+            headers: {},
+            config: { url, data }
+        };
+    },
+    delete: async (url: string) => {
+        console.log('delete', url);
+        await new Promise(resolve => setTimeout(resolve, 200));
+        return { status: 200, statusText: 'OK' };
     }
 }
