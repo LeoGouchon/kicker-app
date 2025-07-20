@@ -1,4 +1,4 @@
-import {Flex, Layout, type LayoutProps} from "antd";
+import {Flex, type FlexProps, Layout, type LayoutProps} from "antd";
 import styled from "@emotion/styled";
 
 export const StyledLayout = styled(Layout)<LayoutProps>`
@@ -18,6 +18,6 @@ export const StyledMainContent = styled.div`
     border-radius: var(--ant-border-radius-lg);
 `;
 
-export const FlexFullWidth = styled(Flex)`
+export const FlexFullWidth = styled(Flex)<FlexProps>`
     width: 100%;
 `;

@@ -9,6 +9,8 @@ export const Logged = () => {
     const {user}: { user?: UserType } = useContext(UserContext);
     const logoutMutation = useLogout();
 
+    console.log(user);
+
     const handleLogout = () => {
         logoutMutation.mutate(undefined, {
             onSuccess: () => {
