@@ -66,7 +66,7 @@ export const useDeletePlayer = () => {
     return useMutation({
         mutationFn: async (id: string): Promise<void> => {
             try {
-                return await api.delete(`/players/${id}`).then(res => res.data);
+                await api.delete(`/players/${id}`);
             } catch (error) {
                 console.error("Erreur lors de la suppression du joueur", error);
                 throw error;

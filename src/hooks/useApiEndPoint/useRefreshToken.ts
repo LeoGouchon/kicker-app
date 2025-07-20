@@ -3,11 +3,11 @@ import {useMutation} from "@tanstack/react-query";
 
 export const useRefreshToken = () => {
     return useMutation({
-        mutationFn: () => {
-            return api.post('/authenticate/refresh-token')
+        mutationFn: async () => {
+            return api.post('/authenticate/refresh-token').then(res => res.data);
         },
         onSuccess: (response) => {
-            localStorage.setItem('token', response.data.token)
+            localStorage.setItem('token', response.token)
         },
         onError: () => {
             localStorage.removeItem('token')
