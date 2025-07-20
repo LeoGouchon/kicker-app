@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import {StyledSider} from "./Sider.style.tsx";
 import {Button, Menu, type MenuProps} from "antd";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChartBar, faSquarePlus, faUser} from "@fortawesome/free-regular-svg-icons";
+import {faSquarePlus} from "@fortawesome/free-regular-svg-icons";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../routes/constant.ts";
-import {faArrowLeft, faArrowRight} from "@fortawesome/free-solid-svg-icons";
+import {faArrowLeft, faArrowRight, faMedal, faTableList} from "@fortawesome/free-solid-svg-icons";
 
 export const Sider = () => {
 
@@ -32,10 +32,10 @@ export const Sider = () => {
     const items: MenuItem[] = [
         getItem('Nouveau match', ROUTES.NEW_MATCH, <FontAwesomeIcon
             icon={faSquarePlus}/>, () => navigate(ROUTES.NEW_MATCH)),
-        getItem('Statistiques', ROUTES.DASHBOARD, <FontAwesomeIcon
-            icon={faChartBar}/>, () => navigate(ROUTES.DASHBOARD)),
-        getItem('Joueurs', ROUTES.PLAYER, <FontAwesomeIcon
-            icon={faUser}/>, () => navigate(ROUTES.PLAYER))
+        getItem('Historique', ROUTES.HISTORY, <FontAwesomeIcon
+            icon={faTableList}/>, () => navigate(ROUTES.HISTORY)),
+        getItem('Joueurs', ROUTES.RANKING, <FontAwesomeIcon
+            icon={faMedal}/>, () => navigate(ROUTES.RANKING))
     ];
 
     return (

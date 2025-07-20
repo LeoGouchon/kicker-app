@@ -10,8 +10,8 @@ import {Players} from "../modules/players/Players.tsx";
 export const routes: RouteObject[] = [
     {path: ROUTES.HOME, element: <div>Home</div>},
     {path: ROUTES.LOGIN, element: <Login/>},
-    {path: ROUTES.DASHBOARD, element: <Stats/>},
-    {path: ROUTES.PLAYER, element: <Players/>},
+    {path: ROUTES.HISTORY, element: <Stats/>},
+    {path: ROUTES.RANKING, element: <Players/>},
     {path: ROUTES.NEW_MATCH, element: <WithProtectionRoute><NewMatch/></WithProtectionRoute>},
     {path: ROUTES.NOT_FOUND, element: <NotFound/>}
 ]

@@ -46,7 +46,7 @@ export const NewMatch = () => {
                 {
                     onSuccess: () => {
                         form.resetFields();
-                        navigate(ROUTES.DASHBOARD);
+                        navigate(ROUTES.HISTORY);
                     }
                 });
         });

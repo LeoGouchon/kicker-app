@@ -1,8 +1,8 @@
 export const ROUTES = {
     LOGIN: '/login',
-    DASHBOARD: '/dashboard',
+    HISTORY: '/history',
     NEW_MATCH: '/new-match',
-    PLAYER: '/player',
+    RANKING: '/ranking',
     HOME: '/',
     NOT_FOUND: '*'
 }
