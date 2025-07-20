@@ -1,12 +1,11 @@
-import {type JSX, useContext} from "react";
+import {type JSX} from "react";
 import {Button, Result} from "antd";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../routes/constant.ts";
-import {UserContext} from "../../context/UserContext.tsx";
 
 export const WithProtectionRoute = ({children}: { children: JSX.Element }) => {
     const token = localStorage.getItem("token");
-    const user = useContext(UserContext).user;
+    const user = localStorage.getItem("user");
 
     const navigate = useNavigate();
 

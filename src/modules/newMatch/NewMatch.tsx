@@ -7,13 +7,10 @@ import {CreatePlayer} from "./components/createPlayer/CreatePlayer.tsx";
 import {useCreateMatch} from "../../hooks/useApiEndPoint/useMatch.ts";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../routes/constant.ts";
-import {UserContext} from "../../context/UserContext.tsx";
-import {useContext} from "react";
 
 export const NewMatch = () => {
     const [form] = useForm();
     const navigate = useNavigate();
-    const {user} = useContext(UserContext);
 
     const {isLoading, data: playersResponse} = useGetPlayers({page: 0, size: 100});
 
@@ -170,7 +167,7 @@ export const NewMatch = () => {
                 </Button>
             </Form>
             <Divider/>
-            {user?.admin && <CreatePlayer/>}
+            <CreatePlayer/>
         </FlexFullWidth>
     )
 }

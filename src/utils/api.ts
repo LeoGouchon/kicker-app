@@ -41,6 +41,7 @@ realApi.interceptors.response.use(
             } catch (refreshError) {
                 console.error('Échec du refresh token:', refreshError);
                 localStorage.removeItem('token');
+                localStorage.removeItem('user');
                 window.location.replace(ROUTES.HOME);
             }
         }

@@ -1,4 +1,4 @@
-import {createContext, type ReactNode, useState, useMemo} from "react";
+import {createContext, type ReactNode, useEffect, useState, useMemo} from "react";
 import type {UserType} from "../types/User.type.ts";
 
 interface UserContextType {
@@ -14,6 +14,21 @@ export const UserContext = createContext<UserContextType>({
 
 export const UserProvider = ({children}: { children: ReactNode }) => {
     const [user, setUser] = useState<UserType>();
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem('user', JSON.stringify(user));
+        } else {
+            localStorage.removeItem('user');
+        }
+    }, [user]);
 
     const value: UserContextType = useMemo(() => ({
         user,
