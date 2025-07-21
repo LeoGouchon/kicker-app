@@ -35,7 +35,7 @@ export const Sider = () => {
 
     const items: MenuItem[] = [
         getItem('Nouveau match', ROUTES.NEW_MATCH, <FontAwesomeIcon
-            icon={faSquarePlus}/>, () => navigate(ROUTES.NEW_MATCH), false),
+            icon={faSquarePlus}/>, () => navigate(ROUTES.NEW_MATCH), !user),
         getItem('Historique', ROUTES.HISTORY, <FontAwesomeIcon
             icon={faTableList}/>, () => navigate(ROUTES.HISTORY), false),
         getItem('Classement', ROUTES.RANKING, <FontAwesomeIcon
