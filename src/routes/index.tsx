@@ -11,7 +11,7 @@ export const routes: RouteObject[] = [
     {path: ROUTES.HOME, element: <div>Home</div>},
     {path: ROUTES.LOGIN, element: <Login/>},
     {path: ROUTES.HISTORY, element: <Stats/>},
-    {path: ROUTES.RANKING, element: <Players/>},
+    {path: ROUTES.RANKING, element: <WithProtectionRoute isAdminRestricted><Players/></WithProtectionRoute>},
     {path: ROUTES.NEW_MATCH, element: <WithProtectionRoute><NewMatch/></WithProtectionRoute>},
     {path: ROUTES.NOT_FOUND, element: <NotFound/>}
 ]
