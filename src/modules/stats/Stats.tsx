@@ -102,8 +102,7 @@ export const Stats = () => {
                                 dataIndex: 'player1B',
                                 align: 'center',
                                 render: (player) => {
-                                    console.log(player)
-                                        return `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`
+                                    return `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`
                                 }
                             },
                             {
