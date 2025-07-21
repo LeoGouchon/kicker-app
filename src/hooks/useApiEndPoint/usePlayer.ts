@@ -3,7 +3,7 @@ import {api} from "../../utils/api.ts";
 import type {Pagination} from "../../types/Pagination.type.ts";
 import type {Player} from "../../types/Player.type.ts";
 
-export const useGetPlayers = ({ page, size }:{ page: number, size: number }) => {
+export const useGetPlayers = ({page, size}: { page: number, size: number }) => {
     return useQuery({
         queryKey: ['players', page, size],
         queryFn: async (): Promise<Pagination<Player>> => {
@@ -16,6 +16,16 @@ export const useGetPlayers = ({ page, size }:{ page: number, size: number }) => 
         },
     });
 }
+
+export const useGetUnlinkedPlayers = () => {
+    return useQuery({
+        queryKey: ['unlinked-players'],
+        queryFn: async (): Promise<Player[]> => {
+            const res = await api.get('/players/unlinked');
+            return res.data;
+        }
+    })
+};
 
 export const useCreatePlayer = () => {
     const queryClient = useQueryClient();
@@ -32,7 +42,7 @@ export const useCreatePlayer = () => {
         onSuccess: (newPlayer: Player) => {
             const queries = queryClient
                 .getQueryCache()
-                .findAll({ queryKey: ['players'] })
+                .findAll({queryKey: ['players']})
                 .filter(q => {
                     const key = q.queryKey;
                     return Array.isArray(key) && key[1] === 0; // page === 0
@@ -65,17 +75,12 @@ export const useDeletePlayer = () => {
 
     return useMutation({
         mutationFn: async (id: string): Promise<void> => {
-            try {
-                return await api.delete(`/players/${id}`).then(res => res.data);
-            } catch (error) {
-                console.error("Erreur lors de la suppression du joueur", error);
-                throw error;
-            }
+            await api.delete(`/players/${id}`);
         },
         onSuccess: (_, id) => {
             const queries = queryClient
                 .getQueryCache()
-                .findAll({ queryKey: ['players'], exact: false });
+                .findAll({queryKey: ['players'], exact: false});
 
             for (const query of queries) {
                 const [, page, size] = query.queryKey;

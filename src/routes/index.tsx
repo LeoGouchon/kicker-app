@@ -6,12 +6,16 @@ import {NotFound} from "../modules/notFound/NotFound.tsx";
 import {NewMatch} from "../modules/newMatch/NewMatch.tsx";
 import {Stats} from "../modules/stats/Stats.tsx";
 import {Players} from "../modules/players/Players.tsx";
+import {Invite} from "../modules/invite/Invite.tsx";
+import {Register} from "../modules/register/Register.tsx";
 
 export const routes: RouteObject[] = [
-    {path: ROUTES.HOME, element: <div>Home</div>},
+    {path: ROUTES.HOME, element: <Stats/>},
     {path: ROUTES.LOGIN, element: <Login/>},
     {path: ROUTES.HISTORY, element: <Stats/>},
     {path: ROUTES.RANKING, element: <WithProtectionRoute isAdminRestricted><Players/></WithProtectionRoute>},
     {path: ROUTES.NEW_MATCH, element: <WithProtectionRoute><NewMatch/></WithProtectionRoute>},
+    {path: ROUTES.INVITE, element: <WithProtectionRoute isAdminRestricted><Invite/></WithProtectionRoute>},
+    {path: ROUTES.REGISTER, element: <Register/>},
     {path: ROUTES.NOT_FOUND, element: <NotFound/>}
 ]

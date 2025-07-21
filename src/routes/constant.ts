@@ -4,5 +4,7 @@ export const ROUTES = {
     NEW_MATCH: '/new-match',
     RANKING: '/ranking',
     HOME: '/',
-    NOT_FOUND: '*'
+    NOT_FOUND: '*',
+    INVITE: '/invite',
+    REGISTER: '/register'
 }

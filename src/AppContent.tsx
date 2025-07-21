@@ -12,8 +12,10 @@ export const AppContent = () => {
     const {pathname} = useLocation();
 
     const isLoginPage = pathname === ROUTES.LOGIN;
+    const isInvitePage = pathname === ROUTES.INVITE;
+    const isRegisterPage = pathname === ROUTES.REGISTER;
 
-    if (isLoginPage) {
+    if (isLoginPage || isInvitePage || isRegisterPage) {
         return (
             <StyledLayout>
                 {routing}
