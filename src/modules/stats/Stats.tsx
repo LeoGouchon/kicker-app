@@ -5,7 +5,7 @@ import {useState} from "react";
 import type {SortOrder} from "antd/es/table/interface";
 
 export const Stats = () => {
-    const [dateOrder, setDateOrder] = useState<SortOrder | undefined>("ascend");
+    const [dateOrder, setDateOrder] = useState<SortOrder | undefined>("descend");
 
     const {
         data,
