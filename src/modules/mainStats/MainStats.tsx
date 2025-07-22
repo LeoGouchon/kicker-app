@@ -57,13 +57,16 @@ export const MainStats = () => {
                         title: 'Dernier matches',
                         render: (variable) => (
                             <Space size={'small'}>
-                                {variable?.map((result: boolean, index: number) => (
-                                    <Badge
-                                        key={index + result.toString()}
-                                        color={result ? 'green' : 'red'}
-                                        style={{ opacity: (index + 1) / 5 }}
-                                    />
-                                ))}
+                                {variable
+                                    ?.slice()
+                                    ?.reverse()
+                                    ?.map((result: boolean, index: number) => (
+                                        <Badge
+                                            key={index + result.toString()}
+                                            color={result ? 'green' : 'red'}
+                                            style={{ opacity: (index + 1) / 5 }}
+                                        />
+                                    ))}
                             </Space>
                         ),
                     },
