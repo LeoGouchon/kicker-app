@@ -1,4 +1,4 @@
-import type {Player} from "./Player.type.ts";
+import type {Player} from './Player.type.ts';
 
 export type Match = {
     id: string,

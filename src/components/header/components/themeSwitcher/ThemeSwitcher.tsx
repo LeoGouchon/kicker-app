@@ -1,7 +1,8 @@
-import {Segmented} from "antd";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faMoon, faSun} from "@fortawesome/free-regular-svg-icons";
-import {useAntdTheme} from "../../../../context/ThemeProvider.tsx";
+import {faMoon, faSun} from '@fortawesome/free-regular-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Segmented} from 'antd';
+
+import {useAntdTheme} from '../../../../context/ThemeProvider.tsx';
 
 export const ThemeSwitcher = () => {
     const { isDarkTheme,toggleTheme } = useAntdTheme();
@@ -14,7 +15,7 @@ export const ThemeSwitcher = () => {
             icon: <FontAwesomeIcon icon={faMoon}/>,
             value: 'dark',
         }
-    ]
+    ];
 
     const handleThemeChange = (value: string) => {
         if (value === 'light') {
@@ -23,9 +24,9 @@ export const ThemeSwitcher = () => {
         else if (value === 'dark') {
             toggleTheme('dark');
         }
-    }
+    };
 
     return (
         <Segmented options={themeChoiceOptions} shape="round" onChange={handleThemeChange} defaultValue={isDarkTheme ? 'dark' : 'light'}/>
-    )
-}
+    );
+};

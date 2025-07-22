@@ -1,7 +1,7 @@
-import {mockLoginResponse} from "./mockApiResponse/mockedLogin.ts";
-import {mockMeResponse} from "./mockApiResponse/mockedMe.ts";
-import {mockMatchGetResponse, mockMatchPostResponse} from "./mockApiResponse/mockedMatch.ts";
-import {mockPlayerGetResponse} from "./mockApiResponse/mockedPlayer.ts";
+import {mockLoginResponse} from './mockApiResponse/mockedLogin.ts';
+import {mockMatchGetResponse, mockMatchPostResponse} from './mockApiResponse/mockedMatch.ts';
+import {mockMeResponse} from './mockApiResponse/mockedMe.ts';
+import {mockPlayerGetResponse} from './mockApiResponse/mockedPlayer.ts';
 
 export const mockApi = {
     get: async (url: string) => {
@@ -42,4 +42,4 @@ export const mockApi = {
         await new Promise(resolve => setTimeout(resolve, 200));
         return { status: 200, statusText: 'OK' };
     }
-}
+};

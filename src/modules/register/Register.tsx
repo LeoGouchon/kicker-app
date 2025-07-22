@@ -1,9 +1,10 @@
-import {FullscreenPage} from "../../components/fullscreenPage/FullscreenPage.tsx";
-import {Button, Form, Input, message, Typography} from "antd";
-import {FlexFullWidth} from "../../App.style.tsx";
-import {useRegister} from "../../hooks/useApiEndPoint/useRegister.ts";
-import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../routes/constant.ts";
+import {Button, Form, Input, message, Typography} from 'antd';
+import {useNavigate} from 'react-router-dom';
+
+import {FlexFullWidth} from '../../App.style.tsx';
+import {FullscreenPage} from '../../components/fullscreenPage/FullscreenPage.tsx';
+import {useRegister} from '../../hooks/useApiEndPoint/useRegister.ts';
+import {ROUTES} from '../../routes/constant.ts';
 
 export const Register = () => {
     const [form] = Form.useForm();
@@ -30,7 +31,7 @@ export const Register = () => {
         }).catch((error) => {
             console.error(error);
         });
-    }
+    };
 
     return (
         <>
@@ -43,7 +44,7 @@ export const Register = () => {
                             <Input/>
                         </Form.Item>
                         <Form.Item name="password" label="Mot de passe" rules={[{required: true}, {
-                            pattern: new RegExp("^(?=.*[0-9]).{8,}$"),
+                            pattern: new RegExp('^(?=.*[0-9]).{8,}$'),
                             message: 'Le mot de passe doit contenir au moins 8 caractères et au moins un chiffre'
                         }]}>
                             <Input.Password/>
@@ -68,5 +69,5 @@ export const Register = () => {
                 </FlexFullWidth>
             </FullscreenPage>
         </>
-    )
-}
+    );
+};

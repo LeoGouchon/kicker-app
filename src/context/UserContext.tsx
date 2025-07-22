@@ -1,5 +1,6 @@
-import {createContext, type ReactNode, useState, useMemo, useEffect} from "react";
-import type {UserType} from "../types/User.type.ts";
+import { createContext, type ReactNode, useEffect, useMemo, useState } from 'react';
+
+import type { UserType } from '../types/User.type.ts';
 
 interface UserContextType {
     user?: UserType;
@@ -9,10 +10,10 @@ interface UserContextType {
 // eslint-disable-next-line react-refresh/only-export-components
 export const UserContext = createContext<UserContextType>({
     user: undefined,
-    setUser: () => {}
+    setUser: () => {},
 });
 
-export const UserProvider = ({children}: { children: ReactNode }) => {
+export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<UserType>();
 
     useEffect(() => {
@@ -30,14 +31,13 @@ export const UserProvider = ({children}: { children: ReactNode }) => {
         }
     }, [user]);
 
-    const value: UserContextType = useMemo(() => ({
-        user,
-        setUser,
-    }), [user]);
-
-    return (
-        <UserContext.Provider value={value}>
-            {children}
-        </UserContext.Provider>
+    const value: UserContextType = useMemo(
+        () => ({
+            user,
+            setUser,
+        }),
+        [user]
     );
-}
+
+    return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};

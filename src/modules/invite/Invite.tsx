@@ -1,12 +1,13 @@
-import {FullscreenPage} from "../../components/fullscreenPage/FullscreenPage.tsx";
-import {useGetUnlinkedPlayers} from "../../hooks/useApiEndPoint/usePlayer.ts";
-import {Button, Flex, Form, message, Select} from "antd";
-import {useForm} from "antd/es/form/Form";
-import {useInvite} from "../../hooks/useApiEndPoint/useInvite.ts";
-import {useState} from "react";
-import {ROUTES} from "../../routes/constant.ts";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClipboard} from "@fortawesome/free-regular-svg-icons";
+import {faClipboard} from '@fortawesome/free-regular-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Button, Flex, Form, message, Select} from 'antd';
+import {useForm} from 'antd/es/form/Form';
+import {useState} from 'react';
+
+import {FullscreenPage} from '../../components/fullscreenPage/FullscreenPage.tsx';
+import {useInvite} from '../../hooks/useApiEndPoint/useInvite.ts';
+import {useGetUnlinkedPlayers} from '../../hooks/useApiEndPoint/usePlayer.ts';
+import {ROUTES} from '../../routes/constant.ts';
 
 export const Invite = () => {
     const [form] = useForm();
@@ -27,11 +28,11 @@ export const Invite = () => {
                         messageApi.open({
                             type: 'error',
                             content: 'Oops, erreur lors de l\'invitation du joueur...',
-                        })
+                        });
                     }
                 });
         }).catch(err => console.error(err));
-    }
+    };
 
     return (
         <>
@@ -51,12 +52,12 @@ export const Invite = () => {
                                 <Select
                                     loading={isPlayersLoading}
                                     options={playersResponse?.map(player => ({
-                                        label: player.firstname + " " + (player.lastname?.slice(0, 1) ?? ""),
+                                        label: player.firstname + ' ' + (player.lastname?.slice(0, 1) ?? ''),
                                         value: player.id
                                     }))}
                                     showSearch
                                     onChange={(value) => {
-                                        console.log(value)
+                                        console.log(value);
                                     }}
                                 />
                             </Form.Item>
@@ -73,7 +74,7 @@ export const Invite = () => {
                                 messageApi.open({
                                     type: 'success',
                                     content: 'Lien copié dans le presse-papiers',
-                                })
+                                });
                             }}
                         >
                             Copier le lien dans le presse-papiers
@@ -81,5 +82,5 @@ export const Invite = () => {
                 </Flex>
             </FullscreenPage>
         </>
-    )
-}
+    );
+};

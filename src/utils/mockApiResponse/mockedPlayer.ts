@@ -1,5 +1,5 @@
-import type {Pagination} from "../../types/Pagination.type";
-import type {Player} from "../../types/Player.type.ts";
+import type {Pagination} from '../../types/Pagination.type';
+import type {Player} from '../../types/Player.type.ts';
 
 export const mockPlayerGetResponse: { data: Pagination<Player> } = {
     data: {
@@ -25,4 +25,4 @@ export const mockPlayerGetResponse: { data: Pagination<Player> } = {
         totalElements: 4,
         pageSize: 100
     }
-}
+};

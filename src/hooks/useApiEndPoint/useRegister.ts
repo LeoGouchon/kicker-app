@@ -1,5 +1,6 @@
-import {useMutation} from "@tanstack/react-query";
-import {api} from "../../utils/api.ts";
+import {useMutation} from '@tanstack/react-query';
+
+import {api} from '../../utils/api.ts';
 
 export const useRegister = () => {
     return useMutation({
@@ -8,4 +9,4 @@ export const useRegister = () => {
             return response.data.token;
         },
     });
-}
+};

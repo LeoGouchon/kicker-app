@@ -1,11 +1,12 @@
-import axios from "axios";
-import {ROUTES} from "../routes/constant.ts";
-import {mockApi} from "./mockApi.ts";
+import axios from 'axios';
+
+import {ROUTES} from '../routes/constant.ts';
+import {mockApi} from './mockApi.ts';
 
 const realApi = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
-})
+});
 
 realApi.interceptors.request.use((config) => {
         const token = localStorage.getItem('token');

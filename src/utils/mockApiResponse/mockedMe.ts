@@ -3,4 +3,4 @@ export const mockMeResponse = {
         id: '1',
         email: 'mock@mock.com',
     }
-}
+};

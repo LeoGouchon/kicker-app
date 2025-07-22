@@ -1,5 +1,5 @@
-import {Layout} from "antd";
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
+import {Layout} from 'antd';
 
 export const StyledHeader = styled(Layout.Header)`
     background-color: var(--ant-color-bg-container);      

@@ -1,7 +1,8 @@
-import {FlexFullWidth} from "../../App.style.tsx";
-import {Badge, Space, Table} from "antd";
-import {useGetPlayers} from "../../hooks/useApiEndPoint/usePlayer.ts";
-import type {Player} from "../../types/Player.type.ts";
+import {Badge, Space, Table} from 'antd';
+
+import {FlexFullWidth} from '../../App.style.tsx';
+import {useGetPlayers} from '../../hooks/useApiEndPoint/usePlayer.ts';
+import type {Player} from '../../types/Player.type.ts';
 
 export const Players = () => {
     const {isLoading, data} = useGetPlayers({page: 0, size: 100});
@@ -16,8 +17,8 @@ export const Players = () => {
             lose: Math.floor(matchCount * (1 - ratioWin)),
             eloScore: 1500 + (ratioWin > 0.5 ? -1 : 1) * 2 * (matchCount * ratioWin),
             previousMatches: [Math.random() > ratioWin, Math.random() > ratioWin, Math.random() > ratioWin, Math.random() > ratioWin, Math.random() > ratioWin]
-        }
-    })
+        };
+    });
 
     return (
         <FlexFullWidth>
@@ -79,5 +80,5 @@ export const Players = () => {
                 ]}
             />
         </FlexFullWidth>
-    )
-}
+    );
+};

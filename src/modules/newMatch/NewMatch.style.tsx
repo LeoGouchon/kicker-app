@@ -1,5 +1,6 @@
-import styled from "@emotion/styled";
-import {FlexFullWidth} from "../../App.style.tsx";
+import styled from '@emotion/styled';
+
+import {FlexFullWidth} from '../../App.style.tsx';
 
 export const KickerBackground = styled.div`
     background-color: red;

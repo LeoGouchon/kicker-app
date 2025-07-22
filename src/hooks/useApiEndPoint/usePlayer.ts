@@ -1,7 +1,8 @@
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {api} from "../../utils/api.ts";
-import type {Pagination} from "../../types/Pagination.type.ts";
-import type {Player} from "../../types/Player.type.ts";
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+
+import type {Pagination} from '../../types/Pagination.type.ts';
+import type {Player} from '../../types/Player.type.ts';
+import {api} from '../../utils/api.ts';
 
 export const useGetPlayers = ({page, size}: { page: number, size: number }) => {
     return useQuery({
@@ -10,12 +11,12 @@ export const useGetPlayers = ({page, size}: { page: number, size: number }) => {
             try {
                 return await api.get(`/players?page=${page}&size=${size}`).then(res => res.data);
             } catch (error) {
-                console.error("Erreur lors de la récupération des joueurs", error);
+                console.error('Erreur lors de la récupération des joueurs', error);
                 throw error;
             }
         },
     });
-}
+};
 
 export const useGetUnlinkedPlayers = () => {
     return useQuery({
@@ -24,7 +25,7 @@ export const useGetUnlinkedPlayers = () => {
             const res = await api.get('/players/unlinked');
             return res.data;
         }
-    })
+    });
 };
 
 export const useCreatePlayer = () => {
@@ -35,7 +36,7 @@ export const useCreatePlayer = () => {
             try {
                 return await api.post('/players', player).then(res => res.data);
             } catch (error) {
-                console.error("Erreur lors de la création du joueur", error);
+                console.error('Erreur lors de la création du joueur', error);
                 throw error;
             }
         },
@@ -67,8 +68,8 @@ export const useCreatePlayer = () => {
                 });
             }
         }
-    })
-}
+    });
+};
 
 export const useDeletePlayer = () => {
     const queryClient = useQueryClient();
@@ -97,5 +98,5 @@ export const useDeletePlayer = () => {
                 });
             }
         }
-    })
-}
+    });
+};

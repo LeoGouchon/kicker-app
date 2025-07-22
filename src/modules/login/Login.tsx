@@ -1,9 +1,10 @@
-import {Button, Form, Input, message} from "antd";
-import {useForm} from "antd/es/form/Form";
-import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../routes/constant.ts";
-import {useLogin} from "../../hooks/useApiEndPoint/useLogin.ts";
-import {FullscreenPage} from "../../components/fullscreenPage/FullscreenPage.tsx";
+import {Button, Form, Input, message} from 'antd';
+import {useForm} from 'antd/es/form/Form';
+import {useNavigate} from 'react-router-dom';
+
+import {FullscreenPage} from '../../components/fullscreenPage/FullscreenPage.tsx';
+import {useLogin} from '../../hooks/useApiEndPoint/useLogin.ts';
+import {ROUTES} from '../../routes/constant.ts';
 
 export const Login = () => {
     const [form] = useForm();
@@ -36,9 +37,9 @@ export const Login = () => {
                             {name: 'password', errors: ['Email ou mot de passe incorrect']},
                         ]);
                     }
-                })
-        })
-    }
+                });
+        });
+    };
 
     return (
         <>
@@ -47,8 +48,8 @@ export const Login = () => {
                 <Form
                     form={form}
                     layout={'vertical'}
-                    variant={"filled"}
-                    size={"large"}
+                    variant={'filled'}
+                    size={'large'}
                     onFinish={handleLogin}
                 >
                     <Form.Item
@@ -72,5 +73,5 @@ export const Login = () => {
                 </Form>
             </FullscreenPage>
         </>
-    )
+    );
 };

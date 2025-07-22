@@ -1,5 +1,5 @@
-import {Layout, type SiderProps} from "antd";
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
+import {Layout, type SiderProps} from 'antd';
 
 export const StyledSider = styled(Layout.Sider)<SiderProps>`
     margin: 8px;
