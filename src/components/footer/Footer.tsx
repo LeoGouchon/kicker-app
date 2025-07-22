@@ -1,8 +1,9 @@
-import {Flex, Layout, Space, Typography} from "antd";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faGithub, faLinkedin} from "@fortawesome/free-brands-svg-icons";
-import {faFolderClosed} from "@fortawesome/free-regular-svg-icons";
-import {FlexFullWidth} from "../../App.style.tsx";
+import {faGithub, faLinkedin} from '@fortawesome/free-brands-svg-icons';
+import {faFolderClosed} from '@fortawesome/free-regular-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Flex, Layout, Space, Typography} from 'antd';
+
+import {FlexFullWidth} from '../../App.style.tsx';
 
 const {Text} = Typography;
 
@@ -21,5 +22,5 @@ export const Footer = () => {
                 </Flex>
             </FlexFullWidth>
         </Layout.Footer>
-    )
-}
+    );
+};

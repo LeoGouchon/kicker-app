@@ -1,1 +1,1 @@
-export const isDev: boolean = import.meta.env.VITE_MODE === 'dev'
+export const isDev: boolean = import.meta.env.VITE_MODE === 'dev';

@@ -1,11 +1,12 @@
-import {useLocation, useRoutes} from "react-router-dom";
-import {routes} from "./routes";
-import {Layout} from "antd";
-import {Header} from "./components/header/Header";
-import {Sider} from "./components/sider/Sider";
-import {StyledContent, StyledLayout, StyledMainContent} from "./App.style";
-import {Footer} from "./components/footer/Footer.tsx";
-import {ROUTES} from "./routes/constant.ts";
+import {Layout} from 'antd';
+import {useLocation, useRoutes} from 'react-router-dom';
+
+import {StyledContent, StyledLayout, StyledMainContent} from './App.style';
+import {Footer} from './components/footer/Footer.tsx';
+import {Header} from './components/header/Header';
+import {Sider} from './components/sider/Sider';
+import {routes} from './routes';
+import {ROUTES} from './routes/constant.ts';
 
 export const AppContent = () => {
     const routing = useRoutes(routes);
@@ -20,7 +21,7 @@ export const AppContent = () => {
             <StyledLayout>
                 {routing}
             </StyledLayout>
-        )
+        );
     }
 
     return (

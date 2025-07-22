@@ -1,14 +1,15 @@
-import {Button, Col, Divider, Form, InputNumber, Row, Select, Typography} from "antd";
-import {FlexFullWidth} from "../../App.style.tsx";
-import {useForm, useWatch} from "antd/es/form/Form";
-import {KickerBackground, WrapperTeamSelection} from "./NewMatch.style.tsx";
-import {useGetPlayers} from "../../hooks/useApiEndPoint/usePlayer.ts";
-import {CreatePlayer} from "./components/createPlayer/CreatePlayer.tsx";
-import {useCreateMatch} from "../../hooks/useApiEndPoint/useMatch.ts";
-import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../routes/constant.ts";
-import {UserContext} from "../../context/UserContext.tsx";
-import {useContext} from "react";
+import {Button, Col, Divider, Form, InputNumber, Row, Select, Typography} from 'antd';
+import {useForm, useWatch} from 'antd/es/form/Form';
+import {useContext} from 'react';
+import {useNavigate} from 'react-router-dom';
+
+import {FlexFullWidth} from '../../App.style.tsx';
+import {UserContext} from '../../context/UserContext.tsx';
+import {useCreateMatch} from '../../hooks/useApiEndPoint/useMatch.ts';
+import {useGetPlayers} from '../../hooks/useApiEndPoint/usePlayer.ts';
+import {ROUTES} from '../../routes/constant.ts';
+import {CreatePlayer} from './components/createPlayer/CreatePlayer.tsx';
+import {KickerBackground, WrapperTeamSelection} from './NewMatch.style.tsx';
 
 export const NewMatch = () => {
     const [form] = useForm();
@@ -20,7 +21,7 @@ export const NewMatch = () => {
     const createMatchMutate = useCreateMatch();
 
     const playersList = playersResponse?.content?.map(player => ({
-        label: player.firstname + " " + (player.lastname?.slice(0, 1) ?? ""),
+        label: player.firstname + ' ' + (player.lastname?.slice(0, 1) ?? ''),
         value: player.id
     }));
 
@@ -29,12 +30,12 @@ export const NewMatch = () => {
     const joueurA2 = useWatch<string>('joueurA2', form);
     const joueurB2 = useWatch<string>('joueurB2', form);
 
-    const getAvailablePlayerList = (selectName: "joueurA1" | "joueurB1" | "joueurA2" | "joueurB2") => {
+    const getAvailablePlayerList = (selectName: 'joueurA1' | 'joueurB1' | 'joueurA2' | 'joueurB2') => {
         const selectValuesToExclude = Object.keys({joueurA1, joueurB1, joueurA2, joueurB2})
             .filter(key => key !== selectName)
             .map(key => ({joueurA1, joueurB1, joueurA2, joueurB2}[key] ?? []));
         return playersList?.filter(player => !selectValuesToExclude.includes(player.value)).sort((a, b) => a.label.localeCompare(b.label));
-    }
+    };
 
     const handleFinish = async (formValues: {
         joueurA1: string,
@@ -60,7 +61,7 @@ export const NewMatch = () => {
                     }
                 });
         });
-    }
+    };
 
     return (
         <FlexFullWidth vertical gap={'large'}>
@@ -122,7 +123,7 @@ export const NewMatch = () => {
                                            }
                                        ]}
                             >
-                                <InputNumber min={-10} max={10} step={1} placeholder={"0"}/>
+                                <InputNumber min={-10} max={10} step={1} placeholder={'0'}/>
                             </Form.Item>
                         </WrapperTeamSelection>
                     </Col>
@@ -171,7 +172,7 @@ export const NewMatch = () => {
                                                message: 'Un des deux scores doit être égal à 10'
                                            }
                                        ]}>
-                                <InputNumber min={-10} max={10} step={1} placeholder={"0"}/>
+                                <InputNumber min={-10} max={10} step={1} placeholder={'0'}/>
                             </Form.Item>
                         </WrapperTeamSelection>
                     </Col>
@@ -185,5 +186,5 @@ export const NewMatch = () => {
             <Divider/>
             {user?.admin && <CreatePlayer/>}
         </FlexFullWidth>
-    )
-}
+    );
+};

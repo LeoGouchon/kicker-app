@@ -1,6 +1,7 @@
-import styled from "@emotion/styled";
-import {Flex, Layout} from "antd";
-import {FlexFullWidth} from "../../App.style.tsx";
+import styled from '@emotion/styled';
+import {Flex, Layout} from 'antd';
+
+import {FlexFullWidth} from '../../App.style.tsx';
 
 export const GlobalWrapper = styled(Layout.Content)`
     width: 100%;

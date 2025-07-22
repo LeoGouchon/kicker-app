@@ -1,7 +1,8 @@
-import {useMutation} from "@tanstack/react-query";
-import {api} from "../../utils/api.ts";
-import {UserContext} from "../../context/UserContext.tsx";
-import {useContext} from "react";
+import {useMutation} from '@tanstack/react-query';
+import {useContext} from 'react';
+
+import {UserContext} from '../../context/UserContext.tsx';
+import {api} from '../../utils/api.ts';
 
 export const useLogin = () => {
     const {setUser} = useContext(UserContext);
@@ -19,13 +20,13 @@ export const useLogin = () => {
                 setUser(responseUser.data);
                 localStorage.setItem('user', JSON.stringify(responseUser.data));
             } catch (err) {
-                console.error("Erreur lors de la récupération de l'utilisateur :", err);
+                console.error('Erreur lors de la récupération de l\'utilisateur :', err);
                 localStorage.removeItem('token');
                 setUser(undefined);
             }
         },
         onError: () => {
-            localStorage.removeItem('token')
+            localStorage.removeItem('token');
         }
-    })
-}
+    });
+};

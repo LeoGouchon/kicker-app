@@ -1,5 +1,5 @@
-import {Flex, type FlexProps, Layout, type LayoutProps} from "antd";
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
+import {Flex, type FlexProps, Layout, type LayoutProps} from 'antd';
 
 export const StyledLayout = styled(Layout)<LayoutProps>`
     min-height: 100vh;

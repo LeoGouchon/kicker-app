@@ -1,21 +1,16 @@
-import { Table, Tag, Space, Button } from 'antd';
-import type {Match} from "../../types/Match.type.ts";
-import {useGetInfiniteMatches} from "../../hooks/useApiEndPoint/useMatch.ts";
-import {useState} from "react";
-import type {SortOrder} from "antd/es/table/interface";
+import { Button,Space, Table, Tag } from 'antd';
+import type { SortOrder } from 'antd/es/table/interface';
+import { useState } from 'react';
+
+import { useGetInfiniteMatches } from '../../hooks/useApiEndPoint/useMatch.ts';
+import type { Match } from '../../types/Match.type.ts';
 
 export const Stats = () => {
-    const [dateOrder, setDateOrder] = useState<SortOrder | undefined>("descend");
+    const [dateOrder, setDateOrder] = useState<SortOrder | undefined>('descend');
 
-    const {
-        data,
-        isLoading,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
-    } = useGetInfiniteMatches(50, dateOrder);
+    const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches(50, dateOrder);
 
-    const matches: Match[] = data?.pages.flatMap(page => page.content) ?? [];
+    const matches: Match[] = data?.pages.flatMap((page) => page.content) ?? [];
 
     return (
         <>
@@ -26,10 +21,8 @@ export const Stats = () => {
                 size={'small'}
                 rowKey={(record) => record.id}
                 virtual
-                onChange={(
-                    _, __, sorter
-                ) => {
-                    if (!Array.isArray(sorter) && sorter?.field === "createdAt") {
+                onChange={(_, __, sorter) => {
+                    if (!Array.isArray(sorter) && sorter?.field === 'createdAt') {
                         setDateOrder(sorter.order);
                     } else {
                         setDateOrder(null);
@@ -50,10 +43,8 @@ export const Stats = () => {
                                 },
                                 sortOrder: dateOrder,
                                 render: (date: string | null) =>
-                                    date === null
-                                        ? '(date inconnue)'
-                                        : new Date(date).toLocaleDateString('fr-FR'),
-                            }
+                                    date === null ? '(date inconnue)' : new Date(date).toLocaleDateString('fr-FR'),
+                            },
                         ],
                     },
                     {
@@ -64,17 +55,14 @@ export const Stats = () => {
                                 title: 'Joueur 1',
                                 dataIndex: 'player1A',
                                 align: 'center',
-                                render: (player) =>
-                                    `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`,
+                                render: (player) => `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`,
                             },
                             {
                                 title: 'Joueur 2',
                                 dataIndex: 'player2A',
                                 align: 'center',
                                 render: (player) =>
-                                    player
-                                        ? `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`
-                                        : '',
+                                    player ? `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}` : '',
                             },
                         ],
                     },
@@ -102,17 +90,15 @@ export const Stats = () => {
                                 dataIndex: 'player1B',
                                 align: 'center',
                                 render: (player) => {
-                                    return `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`
-                                }
+                                    return `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`;
+                                },
                             },
                             {
                                 title: 'Joueur 2',
                                 dataIndex: 'player2B',
                                 align: 'center',
                                 render: (player) =>
-                                    player
-                                        ? `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`
-                                        : '',
+                                    player ? `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}` : '',
                             },
                         ],
                     },
@@ -121,10 +107,7 @@ export const Stats = () => {
 
             {hasNextPage && (
                 <div style={{ textAlign: 'center', marginTop: 16 }}>
-                    <Button
-                        onClick={() => fetchNextPage()}
-                        loading={isFetchingNextPage}
-                    >
+                    <Button onClick={() => fetchNextPage()} loading={isFetchingNextPage}>
                         Charger plus
                     </Button>
                 </div>

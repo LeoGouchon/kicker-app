@@ -1,5 +1,5 @@
-import type {Pagination} from "../../types/Pagination.type.ts";
-import type {Match} from "../../types/Match.type.ts";
+import type {Match} from '../../types/Match.type.ts';
+import type {Pagination} from '../../types/Pagination.type.ts';
 
 export const mockMatchGetResponse: { data: Pagination<Match> } = {
     data: {
@@ -75,7 +75,7 @@ export const mockMatchGetResponse: { data: Pagination<Match> } = {
         totalElements: 3,
         pageSize: 100
     }
-}
+};
 
 export const mockMatchPostResponse = (data: Partial<Match>): { data: Match } => {
     const match: Match = {
@@ -90,4 +90,4 @@ export const mockMatchPostResponse = (data: Partial<Match>): { data: Match } => 
     };
 
     return {data: match};
-}
+};

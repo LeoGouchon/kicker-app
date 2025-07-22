@@ -1,6 +1,7 @@
-import {useForm} from "antd/es/form/Form";
-import {Button, Form, Input, message, Typography} from "antd";
-import {useCreatePlayer} from "../../../../hooks/useApiEndPoint/usePlayer.ts";
+import {Button, Form, Input, message, Typography} from 'antd';
+import {useForm} from 'antd/es/form/Form';
+
+import {useCreatePlayer} from '../../../../hooks/useApiEndPoint/usePlayer.ts';
 
 export const CreatePlayer = () => {
     const [form] = useForm();
@@ -27,7 +28,7 @@ export const CreatePlayer = () => {
                 }
             });
         });
-    }
+    };
 
     return (
         <Form form={form} layout="vertical" name="createPlayer" style={{width: '100%'}} onFinish={handleFinish}>
@@ -41,5 +42,5 @@ export const CreatePlayer = () => {
             <Button type="primary" htmlType="submit" loading={createPlayerMutate.isPending}>Créer le joueur</Button>
             {contextHolder}
         </Form>
-    )
-}
+    );
+};

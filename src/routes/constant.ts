@@ -7,4 +7,4 @@ export const ROUTES = {
     NOT_FOUND: '*',
     INVITE: '/invite',
     REGISTER: '/register'
-}
+};

@@ -1,8 +1,9 @@
-import {useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import type {Pagination} from "../../types/Pagination.type.ts";
-import type {Match} from "../../types/Match.type.ts";
-import {api} from "../../utils/api.ts";
-import type {SortOrder} from "antd/es/table/interface";
+import {useInfiniteQuery, useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import type {SortOrder} from 'antd/es/table/interface';
+
+import type {Match} from '../../types/Match.type.ts';
+import type {Pagination} from '../../types/Pagination.type.ts';
+import {api} from '../../utils/api.ts';
 
 type UseGetMatchesParams = {
     page: number;
@@ -20,7 +21,7 @@ export const useGetMatches = ({ page, size }: UseGetMatchesParams) => {
     });
 };
 
-export const useGetInfiniteMatches = (size: number = 10, dateOrder: SortOrder = "ascend") => {
+export const useGetInfiniteMatches = (size: number = 10, dateOrder: SortOrder = 'ascend') => {
     return useInfiniteQuery({
         queryKey: ['matches', size, dateOrder],
         queryFn: async ({ pageParam = 0 }: { pageParam: number }): Promise<Pagination<Match>> => {
@@ -51,12 +52,12 @@ export const useCreateMatch = () => {
             try {
                 return await api.post('/kicker/matches', match).then(res => res.data);
             } catch (error) {
-                console.error("Erreur lors de la création du match", error);
+                console.error('Erreur lors de la création du match', error);
                 throw error;
             }
         },
         onSuccess: () => {
             return queryClient.invalidateQueries({queryKey: ['matches'], exact: false});
         }
-    })
-}
+    });
+};

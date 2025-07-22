@@ -1,12 +1,13 @@
-import React, {useContext, useState} from "react";
-import {StyledSider} from "./Sider.style.tsx";
-import {Button, Menu, type MenuProps} from "antd";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSquarePlus} from "@fortawesome/free-regular-svg-icons";
-import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../routes/constant.ts";
-import {faArrowLeft, faArrowRight, faMedal, faTableList} from "@fortawesome/free-solid-svg-icons";
-import {UserContext} from "../../context/UserContext.tsx";
+import {faSquarePlus} from '@fortawesome/free-regular-svg-icons';
+import {faArrowLeft, faArrowRight, faMedal, faTableList} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {Button, Menu, type MenuProps} from 'antd';
+import React, {useContext, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+
+import {UserContext} from '../../context/UserContext.tsx';
+import {ROUTES} from '../../routes/constant.ts';
+import {StyledSider} from './Sider.style.tsx';
 
 export const Sider = () => {
 
@@ -54,7 +55,7 @@ export const Sider = () => {
                 <div style={{height: '100%'}}>
                     <Menu selectedKeys={[location.pathname]} theme="dark" mode="inline" items={items}/>
                 </div>
-                <div style={{height: "fit-content"}}>
+                <div style={{height: 'fit-content'}}>
                     <Button
                         block
                         type="primary"
@@ -66,5 +67,5 @@ export const Sider = () => {
                 </div>
             </div>
         </StyledSider>
-    )
-}
+    );
+};
