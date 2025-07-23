@@ -1,4 +1,4 @@
-import type { RouteObject } from 'react-router-dom';
+ import type { RouteObject } from 'react-router-dom';
 
 import { WithProtectionRoute } from '../components/withProtectionRoute/WithProtectionRoute.tsx';
 import { Invite } from '../modules/invite/Invite.tsx';
@@ -17,9 +17,7 @@ export const routes: RouteObject[] = [
     {
         path: ROUTES.RANKING,
         element: (
-            <WithProtectionRoute isAdminRestricted>
-                <MainStats />
-            </WithProtectionRoute>
+            <MainStats />
         ),
     },
     {
