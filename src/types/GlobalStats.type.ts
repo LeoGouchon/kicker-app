@@ -7,4 +7,5 @@ export type GlobalStats = {
     winRate: number;
     totalMatches: number;
     lastMatches: boolean[];
+    currentElo: number;
 };
