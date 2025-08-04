@@ -35,6 +35,8 @@ export const MainStats = () => {
                     {
                         key: 'elo',
                         title: 'Elo',
+                        width: 50,
+                        align: 'center',
                         defaultSortOrder: 'descend',
                         sorter: (a, b) => a.currentElo - b.currentElo,
                         dataIndex: 'currentElo',
