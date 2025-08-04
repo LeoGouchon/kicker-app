@@ -1,7 +1,11 @@
+import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Badge, Space, Table, Tag, Typography } from 'antd';
 
 import { FlexFullWidth } from '../../App.style.tsx';
 import { useGetGlobalStats } from '../../hooks/useApiEndPoint/useStats.ts';
+
+const { Text } = Typography;
 
 export const MainStats = () => {
     const { isLoading, data: playerData } = useGetGlobalStats();
@@ -31,10 +35,30 @@ export const MainStats = () => {
                     {
                         key: 'elo',
                         title: 'Elo',
+                        width: 50,
+                        align: 'center',
                         defaultSortOrder: 'descend',
                         sorter: (a, b) => a.currentElo - b.currentElo,
                         dataIndex: 'currentElo',
                         render: (variable) => <Tag>{variable}</Tag>,
+                    },
+                    {
+                        title: 'Diff 7j',
+                        sorter: (a, b) => a.currentElo - a.eloLastWeek - (b.currentElo - b.eloLastWeek),
+                        render: (record) => {
+                            const delta = record.currentElo - record.eloLastWeek;
+                            return delta === 0 ? (
+                                <Text type="secondary">= 0</Text>
+                            ) : delta > 0 ? (
+                                <Text style={{ color: 'green' }}>
+                                    <FontAwesomeIcon icon={faCaretUp} /> {delta}
+                                </Text>
+                            ) : (
+                                <Text style={{ color: 'red' }}>
+                                    <FontAwesomeIcon icon={faCaretDown} /> {delta * -1}
+                                </Text>
+                            );
+                        },
                     },
                     {
                         key: 'count',
