@@ -1,4 +1,5 @@
-import { Button, Col, Divider, Form, InputNumber, Row, Select, Typography } from 'antd';
+import { useTheme } from '@emotion/react';
+import { Button, Divider, Form, InputNumber, Select, Typography } from 'antd';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +16,7 @@ export const NewMatch = () => {
     const [form] = useForm();
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
+    const { screenSize } = useTheme();
 
     const { isLoading, data: playersResponse } = useGetPlayers({ page: 0, size: 100 });
 
@@ -73,8 +75,8 @@ export const NewMatch = () => {
             <Form form={form} size="large" layout="vertical" onFinish={handleFinish}>
                 <FlexFullWidth vertical gap={'middle'}>
                     <Typography.Title level={3}>Créer un match</Typography.Title>
-                    <Row gutter={16}>
-                        <Col span={12}>
+                    <FlexFullWidth gap={'small'} vertical={screenSize === 0}>
+                        <FlexFullWidth vertical>
                             <WrapperTeamSelection vertical team="1">
                                 <Typography.Title level={4}>Equipe 1</Typography.Title>
                                 <Form.Item
@@ -138,8 +140,8 @@ export const NewMatch = () => {
                                     <InputNumber min={-10} max={10} step={1} placeholder={'0'} />
                                 </Form.Item>
                             </WrapperTeamSelection>
-                        </Col>
-                        <Col span={12}>
+                        </FlexFullWidth>
+                        <FlexFullWidth vertical>
                             <WrapperTeamSelection vertical team="2">
                                 <Typography.Title level={4}>Equipe 2</Typography.Title>
                                 <Form.Item
@@ -203,8 +205,8 @@ export const NewMatch = () => {
                                     <InputNumber min={-10} max={10} step={1} placeholder={'0'} />
                                 </Form.Item>
                             </WrapperTeamSelection>
-                        </Col>
-                    </Row>
+                        </FlexFullWidth>
+                    </FlexFullWidth>
                     <Button
                         type="primary"
                         danger={createMatchMutate.isError}
