@@ -18,14 +18,32 @@ export const MainStats = () => {
                 loading={isLoading}
                 style={{ width: '100%' }}
                 size={'small'}
-                dataSource={playerData?.filter((player) => player.totalMatches > 10)}
+                dataSource={playerData?.filter((player) => player.rank > 0)}
                 pagination={false}
                 columns={[
                     {
-                        key: 'id',
-                        dataIndex: 'id',
+                        key: 'rank',
+                        dataIndex: 'rank',
+                        width: 30,
+                    },
+                    {
+                        key: 'rankLastWeek',
+                        dataIndex: 'rankLastWeek',
                         width: 50,
-                        render: (_, __, index) => index + 1,
+                        render: (_, record) => {
+                            const delta = record.rankLastWeek - record.rank;
+                            return delta === 0 ? (
+                                <Text type="secondary">= 0</Text>
+                            ) : delta > 0 ? (
+                                <Text style={{ color: 'green' }}>
+                                    <FontAwesomeIcon icon={faCaretUp} /> {delta}
+                                </Text>
+                            ) : (
+                                <Text style={{ color: 'red' }}>
+                                    <FontAwesomeIcon icon={faCaretDown} /> {delta * -1}
+                                </Text>
+                            );
+                        },
                     },
                     {
                         key: 'name',
@@ -45,7 +63,7 @@ export const MainStats = () => {
                     {
                         title: 'Diff 7j',
                         sorter: (a, b) => a.currentElo - a.eloLastWeek - (b.currentElo - b.eloLastWeek),
-                        render: (record) => {
+                        render: (_, record) => {
                             const delta = record.currentElo - record.eloLastWeek;
                             return delta === 0 ? (
                                 <Text type="secondary">= 0</Text>
@@ -113,7 +131,7 @@ export const MainStats = () => {
                 loading={isLoading}
                 style={{ width: '100%' }}
                 size={'small'}
-                dataSource={playerData?.filter((player) => player.totalMatches <= 10)}
+                dataSource={playerData?.filter((player) => player.rank === 0)}
                 pagination={false}
                 columns={[
                     {
