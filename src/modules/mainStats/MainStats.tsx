@@ -16,8 +16,8 @@ export const MainStats = () => {
             <Typography.Title level={4}>Joueurs classés (min. 10 matchs)</Typography.Title>
             <Table
                 loading={isLoading}
-                style={{ width: '100%' }}
                 size={'small'}
+                virtual
                 dataSource={playerData?.filter((player) => player.rank > 0)}
                 pagination={false}
                 columns={[
@@ -29,7 +29,7 @@ export const MainStats = () => {
                     {
                         key: 'rankLastWeek',
                         dataIndex: 'rankLastWeek',
-                        width: 50,
+                        width: 60,
                         render: (_, record) => {
                             const delta = record.rankLastWeek - record.rank;
                             return delta === 0 ? (

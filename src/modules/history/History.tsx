@@ -1,11 +1,11 @@
-import { Button,Space, Table, Tag } from 'antd';
+import { Button, Space, Table, Tag } from 'antd';
 import type { SortOrder } from 'antd/es/table/interface';
 import { useState } from 'react';
 
 import { useGetInfiniteMatches } from '../../hooks/useApiEndPoint/useMatch.ts';
 import type { Match } from '../../types/Match.type.ts';
 
-export const Stats = () => {
+export const History = () => {
     const [dateOrder, setDateOrder] = useState<SortOrder | undefined>('descend');
 
     const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches(50, dateOrder);
