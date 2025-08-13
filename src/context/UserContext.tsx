@@ -28,17 +28,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         didRunRef.current = true;
 
         const storedUser = localStorage.getItem('user');
-        console.log('storedUser', storedUser);
         if (storedUser) {
-            console.log('ligne 26');
             refreshToken.mutate(undefined, {
                 onSuccess: (response) => {
-                    console.log('refresh token success');
                     localStorage.setItem('token', response.data.token);
                     setUser(JSON.parse(storedUser));
                 },
                 onError: () => {
-                    console.log('refresh token error');
                     localStorage.removeItem('token');
                     localStorage.removeItem('user');
                     setUser(undefined);
