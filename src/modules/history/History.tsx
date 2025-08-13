@@ -1,16 +1,37 @@
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Space, Table, Tag } from 'antd';
 import type { SortOrder } from 'antd/es/table/interface';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { useGetInfiniteMatches } from '../../hooks/useApiEndPoint/useMatch.ts';
+import { ROUTES } from '../../routes/constant.ts';
 import type { Match } from '../../types/Match.type.ts';
 
 export const History = () => {
+    const navigate = useNavigate();
     const [dateOrder, setDateOrder] = useState<SortOrder | undefined>('descend');
 
     const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches(50, dateOrder);
 
     const matches: Match[] = data?.pages.flatMap((page) => page.content) ?? [];
+
+    const getSeasonTag = (date: string) => {
+        const dateObject = new Date(date);
+        const year = dateObject.getFullYear();
+        const quarter = Math.ceil((dateObject.getMonth() + 1) / 3);
+
+        return (
+            <Tag
+                style={{ cursor: 'pointer', marginRight: 0 }}
+                key={`${year}-${quarter}`}
+                onClick={() => navigate(ROUTES.RANKING + `/${year}/${quarter}`)}
+                color={quarter === 1 ? 'blue' : quarter === 2 ? 'geekblue' : quarter === 3 ? 'purple' : 'magenta'}
+                icon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
+            >{` ${year}-${quarter}`}</Tag>
+        );
+    };
 
     return (
         <>
@@ -35,15 +56,15 @@ export const History = () => {
                             {
                                 title: 'Date',
                                 dataIndex: 'createdAt',
-                                defaultSortOrder: 'descend',
-                                sorter: (a, b) => {
-                                    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0; // null = très vieux
-                                    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-                                    return dateA - dateB;
-                                },
-                                sortOrder: dateOrder,
                                 render: (date: string | null) =>
                                     date === null ? '(date inconnue)' : new Date(date).toLocaleDateString('fr-FR'),
+                            },
+                            {
+                                title: 'Saison',
+                                dataIndex: 'createdAt',
+                                align: 'center',
+                                width: 50,
+                                render: (date: string | null) => (date === null ? '' : getSeasonTag(date)),
                             },
                         ],
                     },
