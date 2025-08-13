@@ -28,7 +28,9 @@ export const SeasonStats = React.memo(
             }
         return (
             <FlexFullWidth vertical>
-                <Typography.Title level={2}>Statistiques globales</Typography.Title>
+                <Typography.Title level={2}>
+                    {year === 0 ? 'Toutes les saisons cumulées' : `Année ${year} - Trimestre ${quarter}`}
+                </Typography.Title>
                 <Typography.Title level={4}>Joueurs classés (min. 10 matchs)</Typography.Title>
                 <Table
                     loading={isLoading}
@@ -164,7 +166,6 @@ export const SeasonStats = React.memo(
                         {
                             key: 'elo',
                             title: 'Elo',
-                            sorter: (a, b) => a.currentElo - b.currentElo,
                             render: () => (
                                 <Tag>
                                     <Typography.Text
