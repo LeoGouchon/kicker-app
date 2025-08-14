@@ -1,5 +1,6 @@
-import { createContext, type ReactNode, useEffect, useMemo, useState } from 'react';
+import { createContext, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
+import { useRefreshToken } from '../hooks/useApiEndPoint/useRefreshToken.ts';
 import type { UserType } from '../types/User.type.ts';
 
 interface UserContextType {
@@ -14,20 +15,41 @@ export const UserContext = createContext<UserContextType>({
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<UserType>();
+    const [user, setUser] = useState<UserType | undefined>(() => {
+        const stored = localStorage.getItem('user');
+        return stored ? JSON.parse(stored) : undefined;
+    });
+    const didRunRef = useRef(false);
+
+    const refreshToken = useRefreshToken();
 
     useEffect(() => {
+        if (didRunRef.current) return;
+        didRunRef.current = true;
+
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            refreshToken.mutate(undefined, {
+                onSuccess: (response) => {
+                    localStorage.setItem('token', response.data.token);
+                    setUser(JSON.parse(storedUser));
+                },
+                onError: () => {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    setUser(undefined);
+                },
+            });
         }
     }, []);
 
     useEffect(() => {
-        if (user) {
-            localStorage.setItem('user', JSON.stringify(user));
-        } else {
-            localStorage.removeItem('user');
+        if (user !== undefined) {
+            if (user) {
+                localStorage.setItem('user', JSON.stringify(user));
+            } else {
+                localStorage.removeItem('user');
+            }
         }
     }, [user]);
 

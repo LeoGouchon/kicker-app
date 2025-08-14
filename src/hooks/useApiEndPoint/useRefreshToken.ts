@@ -1,6 +1,6 @@
-import {useMutation} from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
-import {api} from '../../utils/api.ts';
+import { api } from '../../utils/api.ts';
 
 export const useRefreshToken = () => {
     return useMutation({
@@ -8,13 +8,7 @@ export const useRefreshToken = () => {
             const response = await api.post('/authenticate/refresh-token');
             return response.data;
         },
-        onSuccess: (response) => {
-            localStorage.setItem('token', response.data.token);
-        },
-        onError: () => {
-            localStorage.removeItem('token');
-        },
         retryDelay: 1000,
-        retry: 5
+        retry: 5,
     });
 };
