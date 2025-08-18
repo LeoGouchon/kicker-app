@@ -15,7 +15,7 @@ export const routes: RouteObject[] = [
     { path: ROUTES.LOGIN, element: <Login /> },
     { path: ROUTES.HISTORY, element: <History /> },
     {
-        path: ROUTES.RANKING,
+        path: `${ROUTES.RANKING}/*`,
         element: <MainStats />,
     },
     {
