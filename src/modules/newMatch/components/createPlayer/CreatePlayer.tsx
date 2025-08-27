@@ -1,7 +1,8 @@
-import {Button, Form, Input, message, Typography} from 'antd';
-import {useForm} from 'antd/es/form/Form';
+import { Button, Form, Input, message, Select, Typography } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 
-import {useCreatePlayer} from '../../../../hooks/useApiEndPoint/usePlayer.ts';
+import { useCreatePlayer } from '../../../../hooks/useApiEndPoint/usePlayer.ts';
+import { useGetTeams } from '../../../../hooks/useApiEndPoint/useTeam.ts';
 
 export const CreatePlayer = () => {
     const [form] = useForm();
@@ -10,7 +11,9 @@ export const CreatePlayer = () => {
 
     const createPlayerMutate = useCreatePlayer();
 
-    const handleFinish = (formValues: {firstname: string, lastname: string}) => {
+    const { isLoading: isTeamsLoading, data: teamsResponse } = useGetTeams();
+
+    const handleFinish = (formValues: { firstname: string; lastname: string }) => {
         form.validateFields().then(() => {
             createPlayerMutate.mutate(formValues, {
                 onSuccess: () => {
@@ -25,21 +28,34 @@ export const CreatePlayer = () => {
                         type: 'error',
                         content: 'Oops, erreur lors de la création du joueur...',
                     });
-                }
+                },
             });
         });
     };
 
     return (
-        <Form form={form} layout="vertical" name="createPlayer" style={{width: '100%'}} onFinish={handleFinish}>
+        <Form form={form} layout="vertical" name="createPlayer" style={{ width: '100%' }} onFinish={handleFinish}>
             <Typography.Title level={3}>Créer un joueur</Typography.Title>
-            <Form.Item name="firstname" label="Prénom" rules={[{required: true, message: 'Veuillez entrer un prénom'}]}>
+            <Form.Item
+                name="firstname"
+                label="Prénom"
+                rules={[{ required: true, message: 'Veuillez entrer un prénom' }]}
+            >
                 <Input />
             </Form.Item>
-            <Form.Item name="lastname" label="Nom" rules={[{required: true, message: 'Veuillez entrer un nom'}]}>
+            <Form.Item name="lastname" label="Nom" rules={[{ required: true, message: 'Veuillez entrer un nom' }]}>
                 <Input />
             </Form.Item>
-            <Button type="primary" htmlType="submit" loading={createPlayerMutate.isPending}>Créer le joueur</Button>
+            <Form.Item name="teamIds" label="Team" rules={[{ required: true, message: 'Veuillez choisir une team' }]}>
+                <Select
+                    mode="tags"
+                    loading={isTeamsLoading}
+                    options={teamsResponse?.map((team) => ({ label: team.name, value: team.id }))}
+                />
+            </Form.Item>
+            <Button type="primary" htmlType="submit" loading={createPlayerMutate.isPending}>
+                Créer le joueur
+            </Button>
             {contextHolder}
         </Form>
     );
