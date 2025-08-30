@@ -54,5 +54,12 @@ export const useGetMenuItemElements: () => MenuItem[] = () => {
             () => navigate(ROUTES.RANKING),
             false
         ),
+        getItem(
+            'Mathématiques',
+            ROUTES.STATS_HELPER,
+            <FontAwesomeIcon icon={faMedal} />,
+            () => navigate(ROUTES.STATS_HELPER),
+            false
+        ),
     ];
 };

@@ -8,6 +8,7 @@ import { MainStats } from '../modules/mainStats/MainStats.tsx';
 import { NewMatch } from '../modules/newMatch/NewMatch.tsx';
 import { NotFound } from '../modules/notFound/NotFound.tsx';
 import { Register } from '../modules/register/Register.tsx';
+import { StatHelper } from '../modules/statHelper/StatHelper.tsx';
 import { ROUTES } from './constant.ts';
 
 export const routes: RouteObject[] = [
@@ -31,6 +32,14 @@ export const routes: RouteObject[] = [
         element: (
             <WithProtectionRoute isAdminRestricted>
                 <Invite />
+            </WithProtectionRoute>
+        ),
+    },
+    {
+        path: ROUTES.STATS_HELPER,
+        element: (
+            <WithProtectionRoute isAdminRestricted>
+                <StatHelper />
             </WithProtectionRoute>
         ),
     },
