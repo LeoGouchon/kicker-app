@@ -35,14 +35,7 @@ export const routes: RouteObject[] = [
             </WithProtectionRoute>
         ),
     },
-    {
-        path: ROUTES.STATS_HELPER,
-        element: (
-            <WithProtectionRoute isAdminRestricted>
-                <StatHelper />
-            </WithProtectionRoute>
-        ),
-    },
+    { path: ROUTES.STATS_HELPER, element: <StatHelper /> },
     { path: ROUTES.REGISTER, element: <Register /> },
     { path: ROUTES.NOT_FOUND, element: <NotFound /> },
 ];
