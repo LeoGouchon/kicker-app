@@ -1,5 +1,5 @@
 import { faSquarePlus } from '@fortawesome/free-regular-svg-icons';
-import { faMedal, faTableList } from '@fortawesome/free-solid-svg-icons';
+import { faCalculator, faMedal, faTableList } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { MenuProps } from 'antd';
 import React, { useContext } from 'react';
@@ -57,7 +57,7 @@ export const useGetMenuItemElements: () => MenuItem[] = () => {
         getItem(
             'Mathématiques',
             ROUTES.STATS_HELPER,
-            <FontAwesomeIcon icon={faMedal} />,
+            <FontAwesomeIcon icon={faCalculator} />,
             () => navigate(ROUTES.STATS_HELPER),
             false
         ),
