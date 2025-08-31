@@ -4,3 +4,8 @@ export type MatrixScore = {
     scoreDiff: number;
     deltaLose: number;
 };
+
+export type MatrixScoreRealResult = {
+    eloDelta: number;
+    score: number;
+};

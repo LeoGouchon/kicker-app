@@ -1,6 +1,7 @@
-import { Flex, Table, Tag, Typography } from 'antd';
+import { Divider, Flex, Table, Tag, Typography } from 'antd';
 
 import { useGetMatrixScore } from '../../hooks/useApiEndPoint/useMatrixScore.ts';
+import { RealResults } from './components/realResults/RealResults.tsx';
 import { ValueCell } from './StatHelper.style.tsx';
 
 export const StatHelper = () => {
@@ -32,6 +33,9 @@ export const StatHelper = () => {
 
     return (
         <Flex vertical gap={'large'}>
+            <Typography.Title level={2} style={{ margin: 0 }}>
+                Statistiques théoriques
+            </Typography.Title>
             <Flex vertical>
                 <Flex align="center" gap={'small'} style={{ height: '100%' }}>
                     <Typography.Title level={3} style={{ margin: 0 }}>
@@ -92,7 +96,7 @@ export const StatHelper = () => {
                     ]}
                 />
             </Flex>
-            <div>
+            <Flex vertical>
                 <Flex align="center" gap={'small'} style={{ height: '100%' }}>
                     <Typography.Title level={3} style={{ margin: 0 }}>
                         Perte de point potentiel
@@ -147,7 +151,12 @@ export const StatHelper = () => {
                         })),
                     ]}
                 />
-            </div>
+            </Flex>
+            <Divider />
+            <Typography.Title level={2} style={{ margin: 0 }}>
+                Statistiques appliquées
+            </Typography.Title>
+            <RealResults />
         </Flex>
     );
 };
