@@ -6,5 +6,6 @@ export const ROUTES = {
     HOME: '/',
     NOT_FOUND: '*',
     INVITE: '/invite',
-    REGISTER: '/register'
+    REGISTER: '/register',
+    STATS_HELPER: '/stats-helper',
 };
