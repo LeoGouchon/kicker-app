@@ -8,4 +8,5 @@ export const ROUTES = {
     INVITE: '/invite',
     REGISTER: '/register',
     STATS_HELPER: '/stats-helper',
+    PLAYER: '/player',
 };
