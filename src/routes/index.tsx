@@ -23,7 +23,7 @@ export const routes: RouteObject[] = [
         element: <MainStats />,
     },
     {
-        path: `${ROUTES.PLAYER}/:uuid(${uuidRegex})`,
+        path: `${ROUTES.PLAYER}/:uuid`,
         element: <Player />,
     },
     {

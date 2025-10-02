@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Space, Table, Tag } from 'antd';
 import type { SortOrder } from 'antd/es/table/interface';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+import { LinkTypographyStyled } from '../../components/typography/Typography.style.tsx';
 import { useGetInfiniteMatches } from '../../hooks/useApiEndPoint/useMatch.ts';
 import { ROUTES } from '../../routes/constant.ts';
 import type { Match } from '../../types/Match.type.ts';
@@ -76,14 +77,28 @@ export const History = () => {
                                 title: 'Joueur 1',
                                 dataIndex: 'player1A',
                                 align: 'center',
-                                render: (player) => `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`,
+                                render: (player) => (
+                                    <LinkTypographyStyled>
+                                        <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
+                                            {player.firstname} {player.lastname?.slice(0, 1) ?? ''}
+                                        </Link>
+                                    </LinkTypographyStyled>
+                                ),
                             },
                             {
                                 title: 'Joueur 2',
                                 dataIndex: 'player2A',
                                 align: 'center',
                                 render: (player) =>
-                                    player ? `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}` : '',
+                                    player ? (
+                                        <LinkTypographyStyled>
+                                            <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
+                                                {player.firstname} {player.lastname?.slice(0, 1) ?? ''}
+                                            </Link>
+                                        </LinkTypographyStyled>
+                                    ) : (
+                                        ''
+                                    ),
                             },
                         ],
                     },
@@ -110,16 +125,28 @@ export const History = () => {
                                 title: 'Joueur 1',
                                 dataIndex: 'player1B',
                                 align: 'center',
-                                render: (player) => {
-                                    return `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`;
-                                },
+                                render: (player) => (
+                                    <LinkTypographyStyled>
+                                        <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
+                                            {player.firstname} {player.lastname?.slice(0, 1) ?? ''}
+                                        </Link>
+                                    </LinkTypographyStyled>
+                                ),
                             },
                             {
                                 title: 'Joueur 2',
                                 dataIndex: 'player2B',
                                 align: 'center',
                                 render: (player) =>
-                                    player ? `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}` : '',
+                                    player ? (
+                                        <LinkTypographyStyled>
+                                            <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
+                                                {player.firstname} {player.lastname?.slice(0, 1) ?? ''}
+                                            </Link>
+                                        </LinkTypographyStyled>
+                                    ) : (
+                                        ''
+                                    ),
                             },
                         ],
                     },
