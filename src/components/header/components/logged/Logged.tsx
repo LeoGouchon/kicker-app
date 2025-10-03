@@ -56,7 +56,7 @@ export const Logged = () => {
     return (
         <>
             <Popover content={popoverContent} placement={'bottom'} trigger={'click'}>
-                <ClickyAvatar>{user?.email.slice(0, 1).toUpperCase()}</ClickyAvatar>
+                <ClickyAvatar>{user?.email?.slice(0, 1).toUpperCase()}</ClickyAvatar>
             </Popover>
             {contextHolder}
         </>
