@@ -16,7 +16,8 @@ export const History = () => {
 
     const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches(50, dateOrder);
 
-    const matches: Match[] = data?.pages.flatMap((page) => page.content);
+    const matches: Match[] =
+        (data?.pages ?? []).flatMap((page) => page?.content ?? []).filter((match) => match !== undefined) ?? [];
 
     const getSeasonTag = (date: string) => {
         const dateObject = new Date(date);
