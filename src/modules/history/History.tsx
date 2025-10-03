@@ -16,7 +16,7 @@ export const History = () => {
 
     const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches(50, dateOrder);
 
-    const matches: Match[] = data?.pages.flatMap((page) => page.content) ?? [];
+    const matches: Match[] = data?.pages.flatMap((page) => page.content);
 
     const getSeasonTag = (date: string) => {
         const dateObject = new Date(date);
@@ -38,11 +38,12 @@ export const History = () => {
         <>
             <Table
                 loading={isLoading}
-                dataSource={matches}
+                dataSource={matches ?? []}
                 pagination={false}
                 size={'small'}
-                rowKey={(record) => record.id}
+                rowKey={(record) => record?.id}
                 virtual
+                locale={{ emptyText: 'Aucun match trouvé' }}
                 onChange={(_, __, sorter) => {
                     if (!Array.isArray(sorter) && sorter?.field === 'createdAt') {
                         setDateOrder(sorter.order);
@@ -77,13 +78,14 @@ export const History = () => {
                                 title: 'Joueur 1',
                                 dataIndex: 'player1A',
                                 align: 'center',
-                                render: (player) => (
-                                    <LinkTypographyStyled>
-                                        <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
-                                            {player.firstname} {player.lastname?.slice(0, 1) ?? ''}
-                                        </Link>
-                                    </LinkTypographyStyled>
-                                ),
+                                render: (player) =>
+                                    player && (
+                                        <LinkTypographyStyled>
+                                            <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
+                                                {player.firstname} {player.lastname?.slice(0, 1) ?? ''}
+                                            </Link>
+                                        </LinkTypographyStyled>
+                                    ),
                             },
                             {
                                 title: 'Joueur 2',
@@ -108,12 +110,17 @@ export const History = () => {
                             {
                                 title: 'Score',
                                 align: 'center',
-                                render: (match) => (
-                                    <Space size={0}>
-                                        <Tag color={match.scoreA > match.scoreB ? 'green' : 'red'}>{match.scoreA}</Tag>
-                                        <Tag color={match.scoreA < match.scoreB ? 'green' : 'red'}>{match.scoreB}</Tag>
-                                    </Space>
-                                ),
+                                render: (match) =>
+                                    match && (
+                                        <Space size={0}>
+                                            <Tag color={match.scoreA > match.scoreB ? 'green' : 'red'}>
+                                                {match.scoreA}
+                                            </Tag>
+                                            <Tag color={match.scoreA < match.scoreB ? 'green' : 'red'}>
+                                                {match.scoreB}
+                                            </Tag>
+                                        </Space>
+                                    ),
                             },
                         ],
                     },
@@ -125,13 +132,14 @@ export const History = () => {
                                 title: 'Joueur 1',
                                 dataIndex: 'player1B',
                                 align: 'center',
-                                render: (player) => (
-                                    <LinkTypographyStyled>
-                                        <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
-                                            {player.firstname} {player.lastname?.slice(0, 1) ?? ''}
-                                        </Link>
-                                    </LinkTypographyStyled>
-                                ),
+                                render: (player) =>
+                                    player && (
+                                        <LinkTypographyStyled>
+                                            <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
+                                                {player.firstname} {player.lastname?.slice(0, 1) ?? ''}
+                                            </Link>
+                                        </LinkTypographyStyled>
+                                    ),
                             },
                             {
                                 title: 'Joueur 2',
