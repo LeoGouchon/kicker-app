@@ -1,7 +1,7 @@
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Badge, Result, Skeleton, Space, Table, Tag, Typography } from 'antd';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { FlexFullWidth } from '../../../../App.style.tsx';
 import { useGetGlobalStats } from '../../../../hooks/useApiEndPoint/useStats.ts';
@@ -9,10 +9,21 @@ import { useGetGlobalStats } from '../../../../hooks/useApiEndPoint/useStats.ts'
 const { Text } = Typography;
 
 export const SeasonStats = React.memo(
-    ({ year, quarter }: { year: number; quarter: number }) => {
+    ({ year: selectedYear, quarter: selectedQuarter }: { year: number; quarter: number }) => {
+        const isCurrentSeason = useCallback(() => {
+            const currentYear = new Date().getFullYear();
+            const currentQuarter = Math.floor((new Date().getMonth() + 1) / 3) + 1;
+
+            console.log({ currentYear, currentQuarter, selectedYear, selectedQuarter });
+
+            return selectedYear === currentYear && selectedQuarter === currentQuarter;
+        }, [selectedYear, selectedQuarter]);
+
+        const isAllTime = selectedYear === 0;
+
         const { isLoading = true, data: playerData } = useGetGlobalStats({
-            year: year,
-            quarter: quarter,
+            year: selectedYear,
+            quarter: selectedQuarter,
         });
 
         if (isLoading) return <Skeleton.Input />;
@@ -29,7 +40,9 @@ export const SeasonStats = React.memo(
         return (
             <FlexFullWidth vertical>
                 <Typography.Title level={2}>
-                    {year === 0 ? 'Toutes les saisons cumulées' : `Année ${year} - Trimestre ${quarter}`}
+                    {selectedYear === 0
+                        ? 'Toutes les saisons cumulées'
+                        : `Année ${selectedYear} - Trimestre ${selectedQuarter}`}
                 </Typography.Title>
                 <Typography.Title level={4}>Joueurs classés (min. 10 matchs)</Typography.Title>
                 <Table
@@ -48,9 +61,12 @@ export const SeasonStats = React.memo(
                             key: 'rankLastWeek',
                             dataIndex: 'rankLastWeek',
                             width: 60,
+                            hidden: !(isCurrentSeason() || isAllTime),
                             render: (_, record) => {
                                 const delta = record.rankLastWeek - record.rank;
-                                return delta === 0 ? (
+                                return record.rankLastWeek === 0 ? (
+                                    <Text style={{ color: 'var(--ant-blue)' }}>New</Text>
+                                ) : delta === 0 ? (
                                     <Text type="secondary">= 0</Text>
                                 ) : delta > 0 ? (
                                     <Text style={{ color: 'green' }}>
@@ -80,6 +96,7 @@ export const SeasonStats = React.memo(
                         },
                         {
                             title: 'Diff 7j',
+                            hidden: !(isCurrentSeason() || isAllTime),
                             sorter: (a, b) => a.currentElo - a.eloLastWeek - (b.currentElo - b.eloLastWeek),
                             render: (_, record) => {
                                 const delta = record.currentElo - record.eloLastWeek;
@@ -125,6 +142,7 @@ export const SeasonStats = React.memo(
                             key: 'lastMatches',
                             dataIndex: 'lastMatches',
                             title: 'Dernier matches',
+                            hidden: !(isCurrentSeason() || isAllTime),
                             render: (variable) => (
                                 <Space size={'small'}>
                                     {variable
@@ -207,6 +225,7 @@ export const SeasonStats = React.memo(
                             key: 'lastMatches',
                             dataIndex: 'lastMatches',
                             title: 'Dernier matches',
+                            hidden: !(isCurrentSeason() || isAllTime),
                             render: (variable) => (
                                 <Space size={'small'}>
                                     {variable
