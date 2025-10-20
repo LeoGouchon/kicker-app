@@ -1,15 +1,5 @@
 import { Card, Typography } from 'antd';
-import {
-    CategoryScale,
-    Chart as ChartJS,
-    Filler,
-    Legend,
-    LinearScale,
-    LineElement,
-    PointElement,
-    Title as ChartTitle,
-    Tooltip,
-} from 'chart.js';
+import type { ScriptableContext } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
 const { Title } = Typography;
@@ -35,7 +25,14 @@ export type AllTimeStats = {
     eloHistory: EloHistory[];
 };
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ChartTitle, Tooltip, Legend, Filler);
+const normalizeEloToPercent = (eloHistory: EloHistory[]) => {
+    const n = eloHistory.length;
+    if (n === 0) return { x: [], y: [] };
+
+    const x = eloHistory.map((_, i) => (i / (n - 1)) * 100);
+    const y = eloHistory.map((e) => e.elo);
+    return { x, y };
+};
 
 export const EloEvolution = ({
     seasonalStats,
@@ -44,23 +41,33 @@ export const EloEvolution = ({
     seasonalStats: SeasonalStats[];
     allTimeStats: AllTimeStats;
 }) => {
-    const labels = Array.from(new Set(seasonalStats.flatMap((s) => s.eloHistory.map((e) => e.date)))).sort();
+    const labels = Array.from({ length: 100 }, (_, i) => `${i + 1}%`);
 
     const seasonalData = {
         labels,
-        datasets: seasonalStats.map((season, idx) => ({
-            label: `${season.year} - ${season.quarter}`,
-            data: labels.map((label) => {
-                const found = season.eloHistory.find((e) => e.date === label);
-                return found ? found.elo : null;
-            }),
-            borderColor: `hsl(${(idx * 60) % 360}, 70%, 50%)`,
-            backgroundColor: `hsla(${(idx * 60) % 360}, 70%, 50%, 0.2)`,
-            tension: 0.3,
-            fill: true,
-            pointRadius: 3,
-            pointHoverRadius: 5,
-        })),
+        datasets: seasonalStats.map((season, idx) => {
+            const { x, y } = normalizeEloToPercent(season.eloHistory);
+            const hue = (idx * 60) % 360;
+
+            return {
+                label: `${season.year} - ${season.quarter}`,
+                data: x.map((percent, i) => ({ x: percent, y: y[i] })),
+                borderColor: `hsl(${hue}, 70%, 55%)`,
+                backgroundColor: (context: ScriptableContext<'line'>) => {
+                    const chart = context.chart;
+                    const { ctx, chartArea } = chart;
+                    if (!chartArea) return null; // chartArea pas dispo au premier render
+                    const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                    gradient.addColorStop(0, `hsla(${hue}, 70%, 55%, 0.6)`); // en haut
+                    gradient.addColorStop(1, `hsla(${hue}, 70%, 55%, 0)`); // transparent en bas
+                    return gradient;
+                },
+                tension: 0.3,
+                fill: true,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+            };
+        }),
     };
 
     const options = {
@@ -83,7 +90,14 @@ export const EloEvolution = ({
         },
         scales: {
             x: {
-                ticks: { color: '#999' },
+                type: 'linear' as const,
+                title: { display: true, text: '% de saison' },
+                min: 0,
+                max: 100,
+                ticks: {
+                    color: '#999',
+                    callback: (value: string | number) => `${value}%`,
+                },
                 grid: { color: '#333' },
             },
             y: {
@@ -96,7 +110,7 @@ export const EloEvolution = ({
     return (
         <Card>
             <Title level={4} style={{ margin: 0 }}>
-                Évolution ELO
+                Évolution ELO saisonnier
             </Title>
             <div style={{ height: 320 }}>
                 <Line data={seasonalData} options={options} />
