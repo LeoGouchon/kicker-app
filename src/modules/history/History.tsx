@@ -69,6 +69,22 @@ export const History = () => {
                         ],
                     },
                     {
+                        title: 'Elo',
+                        children: [
+                            {
+                                title: 'Global',
+                                dataIndex: 'deltaElo',
+                                align: 'right',
+                                render: (deltaElo: number) => <Tag>±{deltaElo}</Tag>,
+                            },
+                            {
+                                title: 'Saison',
+                                dataIndex: 'deltaEloSeasonal',
+                                render: (deltaEloSeasonal: number) => <Tag>±{deltaEloSeasonal}</Tag>,
+                            },
+                        ],
+                    },
+                    {
                         title: 'Equipe A',
                         dataIndex: 'teamA',
                         children: [
@@ -76,7 +92,8 @@ export const History = () => {
                                 title: 'Joueur 1',
                                 dataIndex: 'player1A',
                                 align: 'center',
-                                render: (player) => `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`,
+                                render: (player) =>
+                                    player ? `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}` : '',
                             },
                             {
                                 title: 'Joueur 2',
@@ -110,9 +127,8 @@ export const History = () => {
                                 title: 'Joueur 1',
                                 dataIndex: 'player1B',
                                 align: 'center',
-                                render: (player) => {
-                                    return `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}`;
-                                },
+                                render: (player) =>
+                                    player ? `${player.firstname} ${player.lastname?.slice(0, 1) ?? ''}` : '',
                             },
                             {
                                 title: 'Joueur 2',
