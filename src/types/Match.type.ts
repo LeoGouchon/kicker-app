@@ -9,6 +9,6 @@ export type Match = {
     player2A?: Player;
     player1B: Player;
     player2B?: Player;
-    deltaElo: number;
-    deltaEloSeasonal: number;
+    deltaElo?: number;
+    deltaEloSeasonal?: number;
 };
