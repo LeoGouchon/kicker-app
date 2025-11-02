@@ -1,5 +1,5 @@
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react';
-import { ConfigProvider, theme as antdTheme } from 'antd';
+import { App as AntdApp, ConfigProvider, theme as antdTheme } from 'antd';
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 interface ThemeContextType {
@@ -61,7 +61,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
                     cssVar: true,
                 }}
             >
-                <EmotionThemeProvider theme={emotionTheme}>{children}</EmotionThemeProvider>
+                <AntdApp>
+                    <EmotionThemeProvider theme={emotionTheme}>{children}</EmotionThemeProvider>
+                </AntdApp>
             </ConfigProvider>
         </ThemeContext.Provider>
     );
