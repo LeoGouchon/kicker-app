@@ -11,6 +11,7 @@ import { ROUTES } from '../../../routes/constant.ts';
 import type { Match } from '../../../types/Match.type.ts';
 
 const { useBreakpoint } = Grid;
+const DELETE_MATCH_DAYS = 7;
 
 export const useHistoryColumns = (): ColumnsType<Match> => {
     const navigate = useNavigate();
@@ -59,10 +60,10 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         render: (r: Match) => (
             <Flex vertical>
                 <span style={{ textWrap: 'nowrap' }}>
-                    {r.player1A ? `${r.player1A.firstname} ${r.player1A.lastname?.[0] ?? ''}` : ''}
+                    {r.player1A ? `${r.player1A.firstname} ${r.player1A.lastname?.[0] ?? ''}` : ''}.
                 </span>
                 <span style={{ textWrap: 'nowrap' }}>
-                    {r.player2A ? `${r.player2A.firstname} ${r.player2A.lastname?.[0] ?? ''}` : ''}
+                    {r.player2A ? `${r.player2A.firstname} ${r.player2A.lastname?.[0] ?? ''}` : ''}.
                 </span>
             </Flex>
         ),
@@ -74,10 +75,10 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         render: (r: Match) => (
             <Flex vertical>
                 <span style={{ textWrap: 'nowrap' }}>
-                    {r.player1B ? `${r.player1B.firstname} ${r.player1B.lastname?.[0] ?? ''}` : ''}
+                    {r.player1B ? `${r.player1B.firstname} ${r.player1B.lastname?.[0] ?? ''}` : ''}.
                 </span>
                 <span style={{ textWrap: 'nowrap' }}>
-                    {r.player2B ? `${r.player2B.firstname} ${r.player2B.lastname?.[0] ?? ''}` : ''}
+                    {r.player2B ? `${r.player2B.firstname} ${r.player2B.lastname?.[0] ?? ''}` : ''}.
                 </span>
             </Flex>
         ),
@@ -90,7 +91,14 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
             key: 'player1A',
             width: 140,
             align: 'right' as const,
-            render: (p: Match['player1A']) => (p ? `${p.firstname} ${p.lastname?.[0] ?? ''}` : ''),
+            render: (p: Match['player1A']) =>
+                p ? (
+                    <span style={{ textWrap: 'nowrap' }}>
+                        {p.firstname} {p.lastname?.[0] ?? ''}.
+                    </span>
+                ) : (
+                    ''
+                ),
         },
         {
             title: 'Équipe A - J2',
@@ -98,7 +106,14 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
             key: 'player2A',
             width: 140,
             align: 'right' as const,
-            render: (p: Match['player2A']) => (p ? `${p.firstname} ${p.lastname?.[0] ?? ''}` : ''),
+            render: (p: Match['player2A']) =>
+                p ? (
+                    <span style={{ textWrap: 'nowrap' }}>
+                        {p.firstname} {p.lastname?.[0] ?? ''}.
+                    </span>
+                ) : (
+                    ''
+                ),
         },
     ];
 
@@ -109,7 +124,14 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
             key: 'player1B',
             width: 140,
             align: 'left' as const,
-            render: (p: Match['player1B']) => (p ? `${p.firstname} ${p.lastname?.[0] ?? ''}` : ''),
+            render: (p: Match['player1B']) =>
+                p ? (
+                    <span style={{ textWrap: 'nowrap' }}>
+                        {p.firstname} {p.lastname?.[0] ?? ''}.
+                    </span>
+                ) : (
+                    ''
+                ),
         },
         {
             title: 'Équipe B - J2',
@@ -117,7 +139,14 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
             key: 'player2B',
             width: 140,
             align: 'left' as const,
-            render: (p: Match['player2B']) => (p ? `${p.firstname} ${p.lastname?.[0] ?? ''}` : ''),
+            render: (p: Match['player2B']) =>
+                p ? (
+                    <span style={{ textWrap: 'nowrap' }}>
+                        {p.firstname} {p.lastname?.[0] ?? ''}.
+                    </span>
+                ) : (
+                    ''
+                ),
         },
     ];
 
@@ -148,7 +177,10 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
                             label: 'Supprimer',
                             icon: <FontAwesomeIcon icon={faTrash} />,
                             danger: true,
-                            disabled: !(user && user.admin),
+                            disabled:
+                                !user?.admin ||
+                                new Date(Date.now() - DELETE_MATCH_DAYS * 24 * 60 * 60 * 1000) >
+                                    new Date(record.createdAt),
                             onClick: () => handleDelete(record.id),
                         },
                     ],

@@ -82,7 +82,15 @@ export const SeasonStats = React.memo(
                         {
                             key: 'name',
                             title: 'Nom',
-                            render: (record) => (record.firstname + ' ' + (record.lastname ?? '')).trim(),
+                            render: (record) => {
+                                const firstname = record.firstname
+                                    ? record.firstname[0].toUpperCase() + record.firstname.slice(1)
+                                    : '';
+                                const lastname = record.lastname
+                                    ? record.lastname[0].toUpperCase() + record.lastname.slice(1)
+                                    : '';
+                                return `${firstname} ${lastname}`.trim();
+                            },
                         },
                         {
                             key: 'elo',
