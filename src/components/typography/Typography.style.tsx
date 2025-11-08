@@ -7,6 +7,7 @@ export const LinkTypographyStyled = styled(Typography.Text)<TextProps>`
     && {
         color: var(--ant-color-text);
         cursor: pointer;
+        text-wrap: nowrap;
 
         &:hover {
             color: var(--ant-color-text-secondary);

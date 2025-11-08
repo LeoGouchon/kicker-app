@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { App, Dropdown, Flex, Grid, Space, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useContext, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+import { LinkTypographyStyled } from '../../../components/typography/Typography.style.tsx';
 import { UserContext } from '../../../context/UserContext.tsx';
 import { useDeleteMatch } from '../../../hooks/useApiEndPoint/useMatch.ts';
 import { ROUTES } from '../../../routes/constant.ts';
@@ -59,12 +60,18 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         key: 'teamA',
         render: (r: Match) => (
             <Flex vertical>
-                <span style={{ textWrap: 'nowrap' }}>
-                    {r.player1A ? `${r.player1A.firstname} ${r.player1A.lastname?.[0] ?? ''}` : ''}.
-                </span>
-                <span style={{ textWrap: 'nowrap' }}>
-                    {r.player2A ? `${r.player2A.firstname} ${r.player2A.lastname?.[0] ?? ''}` : ''}.
-                </span>
+                <LinkTypographyStyled>
+                    <Link to={ROUTES.PLAYER + '/' + r.player1A.id} style={{ all: 'unset' }}>
+                        {r.player1A ? `${r.player1A.firstname} ${r.player1A.lastname?.[0] ?? ''}` : ''}.
+                    </Link>
+                </LinkTypographyStyled>
+                {r.player2A && (
+                    <LinkTypographyStyled>
+                        <Link to={ROUTES.PLAYER + '/' + r.player2A.id} style={{ all: 'unset' }}>
+                            {r.player2A ? `${r.player2A.firstname} ${r.player2A.lastname?.[0] ?? ''}` : ''}.
+                        </Link>
+                    </LinkTypographyStyled>
+                )}
             </Flex>
         ),
     };
@@ -74,12 +81,18 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         key: 'teamB',
         render: (r: Match) => (
             <Flex vertical>
-                <span style={{ textWrap: 'nowrap' }}>
-                    {r.player1B ? `${r.player1B.firstname} ${r.player1B.lastname?.[0] ?? ''}` : ''}.
-                </span>
-                <span style={{ textWrap: 'nowrap' }}>
-                    {r.player2B ? `${r.player2B.firstname} ${r.player2B.lastname?.[0] ?? ''}` : ''}.
-                </span>
+                <LinkTypographyStyled>
+                    <Link to={ROUTES.PLAYER + '/' + r.player1B.id} style={{ all: 'unset' }}>
+                        {r.player1B ? `${r.player1B.firstname} ${r.player1B.lastname?.[0] ?? ''}` : ''}.
+                    </Link>
+                </LinkTypographyStyled>
+                {r.player2B && (
+                    <LinkTypographyStyled>
+                        <Link to={ROUTES.PLAYER + '/' + r.player2B.id} style={{ all: 'unset' }}>
+                            {r.player2B ? `${r.player2B.firstname} ${r.player2B.lastname?.[0] ?? ''}` : ''}.
+                        </Link>
+                    </LinkTypographyStyled>
+                )}
             </Flex>
         ),
     };
@@ -93,9 +106,11 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
             align: 'right' as const,
             render: (p: Match['player1A']) =>
                 p ? (
-                    <span style={{ textWrap: 'nowrap' }}>
-                        {p.firstname} {p.lastname?.[0] ?? ''}.
-                    </span>
+                    <LinkTypographyStyled>
+                        <Link to={ROUTES.PLAYER + '/' + p.id} style={{ all: 'unset' }}>
+                            {`${p.firstname} ${p.lastname?.[0] ?? ''}`}.
+                        </Link>
+                    </LinkTypographyStyled>
                 ) : (
                     ''
                 ),
@@ -108,9 +123,11 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
             align: 'right' as const,
             render: (p: Match['player2A']) =>
                 p ? (
-                    <span style={{ textWrap: 'nowrap' }}>
-                        {p.firstname} {p.lastname?.[0] ?? ''}.
-                    </span>
+                    <LinkTypographyStyled>
+                        <Link to={ROUTES.PLAYER + '/' + p.id} style={{ all: 'unset' }}>
+                            {`${p.firstname} ${p.lastname?.[0] ?? ''}`}.
+                        </Link>
+                    </LinkTypographyStyled>
                 ) : (
                     ''
                 ),
@@ -126,9 +143,11 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
             align: 'left' as const,
             render: (p: Match['player1B']) =>
                 p ? (
-                    <span style={{ textWrap: 'nowrap' }}>
-                        {p.firstname} {p.lastname?.[0] ?? ''}.
-                    </span>
+                    <LinkTypographyStyled>
+                        <Link to={ROUTES.PLAYER + '/' + p.id} style={{ all: 'unset' }}>
+                            {`${p.firstname} ${p.lastname?.[0] ?? ''}`}.
+                        </Link>
+                    </LinkTypographyStyled>
                 ) : (
                     ''
                 ),
@@ -141,9 +160,11 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
             align: 'left' as const,
             render: (p: Match['player2B']) =>
                 p ? (
-                    <span style={{ textWrap: 'nowrap' }}>
-                        {p.firstname} {p.lastname?.[0] ?? ''}.
-                    </span>
+                    <LinkTypographyStyled>
+                        <Link to={ROUTES.PLAYER + '/' + p.id} style={{ all: 'unset' }}>
+                            {`${p.firstname} ${p.lastname?.[0] ?? ''}`}.
+                        </Link>
+                    </LinkTypographyStyled>
                 ) : (
                     ''
                 ),
