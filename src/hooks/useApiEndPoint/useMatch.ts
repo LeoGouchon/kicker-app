@@ -1,9 +1,9 @@
-import {useInfiniteQuery, useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import type {SortOrder} from 'antd/es/table/interface';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { SortOrder } from 'antd/es/table/interface';
 
-import type {Match} from '../../types/Match.type.ts';
-import type {Pagination} from '../../types/Pagination.type.ts';
-import {api} from '../../utils/api.ts';
+import type { Match } from '../../types/Match.type.ts';
+import type { Pagination } from '../../types/Pagination.type.ts';
+import { api } from '../../utils/api.ts';
 
 type UseGetMatchesParams = {
     page: number;
@@ -42,22 +42,35 @@ export const useCreateMatch = () => {
 
     return useMutation({
         mutationFn: async (match: {
-            scoreA: number,
-            scoreB: number,
-            player1AId: string,
-            player2AId?: string,
-            player1BId: string,
-            player2BId?: string
+            scoreA: number;
+            scoreB: number;
+            player1AId: string;
+            player2AId?: string;
+            player1BId: string;
+            player2BId?: string;
         }): Promise<Match> => {
             try {
-                return await api.post('/kicker/matches', match).then(res => res.data);
+                return await api.post('/kicker/matches', match).then((res) => res.data);
             } catch (error) {
                 console.error('Erreur lors de la création du match', error);
                 throw error;
             }
         },
         onSuccess: () => {
-            return queryClient.invalidateQueries({queryKey: ['matches'], exact: false});
-        }
+            return queryClient.invalidateQueries({ queryKey: ['matches'], exact: false });
+        },
+    });
+};
+
+export const useDeleteMatch = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (id: string): Promise<void> => {
+            await api.delete(`/kicker/matches/${id}`);
+        },
+        onSuccess: () => {
+            return queryClient.invalidateQueries({ queryKey: ['matches'], exact: false });
+        },
     });
 };

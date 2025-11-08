@@ -5,7 +5,6 @@ export const StyledLayout = styled(Layout)<LayoutProps>`
     min-height: 100vh;
     max-width: 100vw;
     position: relative;
-    overflow-x: hidden;
 `;
 
 export const StyledContent = styled(Layout.Content)`
