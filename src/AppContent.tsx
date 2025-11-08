@@ -26,7 +26,7 @@ export const AppContent = () => {
     return (
         <StyledLayout hasSider={screenSize > 0}>
             {screenSize > 0 && <Sider />}
-            <Layout>
+            <Layout style={{ overflowX: 'hidden' }}>
                 <Header />
                 <StyledContent>
                     <StyledMainContent>{routing}</StyledMainContent>

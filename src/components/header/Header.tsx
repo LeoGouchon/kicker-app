@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Drawer, Flex, Menu, Tag } from 'antd';
+import { Button, Drawer, Flex, Tag } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,14 +10,12 @@ import { ROUTES } from '../../routes/constant.ts';
 import { isDev } from '../../utils/envChoice.ts';
 import { Logged } from './components/logged/Logged.tsx';
 import { ThemeSwitcher } from './components/themeSwitcher/ThemeSwitcher.tsx';
-import { StyledHeader } from './Header.style.tsx';
+import { StyledHeader, StyledMenu } from './Header.style.tsx';
 
 export const Header = () => {
     const navigate = useNavigate();
     const { screenSize } = useTheme();
     const menuItems: MenuItem[] = useGetMenuItemElements();
-
-    const theme = useTheme();
 
     const isUserLoggedIn = localStorage.getItem('token');
 
@@ -47,9 +45,8 @@ export const Header = () => {
             </StyledHeader>
             {screenSize === 0 && (
                 <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
-                    <Menu
+                    <StyledMenu
                         selectedKeys={[location.pathname]}
-                        theme={theme.isDarkTheme ? 'dark' : 'light'}
                         mode="vertical"
                         items={menuItems}
                         onClick={() => setIsDrawerOpen(false)}
