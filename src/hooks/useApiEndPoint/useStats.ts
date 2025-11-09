@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { GlobalStats } from '../../types/GlobalStats.type.ts';
+import type { PlayerStats } from '../../types/PlayerStats.type.ts';
 import type { SeasonsStats } from '../../types/SeasonsStats.type.ts';
 import { api } from '../../utils/api.ts';
 
@@ -44,5 +45,15 @@ export const useGetSeasonsStats = () => {
                     seasonIndex: index + 1,
                 })),
         }),
+    });
+};
+
+export const useGetPlayerStats = ({ playerId }: { playerId: string }) => {
+    return useQuery({
+        queryKey: ['player-stats', playerId],
+        queryFn: async (): Promise<PlayerStats> => {
+            const res = await api.get(`/kicker/stats/player/${playerId}`);
+            return res.data;
+        },
     });
 };
