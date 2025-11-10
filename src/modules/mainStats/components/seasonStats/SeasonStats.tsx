@@ -94,7 +94,7 @@ export const SeasonStats = React.memo(
                                     : '';
                                 return (
                                     <LinkTypographyStyled>
-                                        <Link to={`${ROUTES.PLAYER}/${record.id}`} style={{ all: 'unset' }}>
+                                        <Link to={`${ROUTES.PLAYER}/${record.playerId}`} style={{ all: 'unset' }}>
                                             {firstname} {lastname}
                                         </Link>
                                     </LinkTypographyStyled>

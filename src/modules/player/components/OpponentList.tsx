@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { LinkTypographyStyled } from '../../../components/typography/Typography.style.tsx';
+import { MAX_DEFAULT_PLAYER_TO_SHOW, MINIMUM_GAME_AGAINST_PLAYER } from '../../../constants.tsx';
 import { ROUTES } from '../../../routes/constant.ts';
 import type { PlayerStats } from '../../../types/PlayerStats.type.ts';
 import { VerticalCardStats } from '../Player.style.tsx';
@@ -10,24 +11,20 @@ import { VerticalCardStats } from '../Player.style.tsx';
 const { Text, Title } = Typography;
 
 export const OpponentList = React.memo(({ data }: { data: PlayerStats['statsPerOpponent'] }) => {
-    const [visibleCount, setVisibleCount] = useState(10);
+    const [visibleCount, setVisibleCount] = useState(MAX_DEFAULT_PLAYER_TO_SHOW);
 
-    const opponents = data.sort((a, b) => {
-        const aHasEnough = a.wins + a.loses >= 5;
-        const bHasEnough = b.wins + b.loses >= 5;
-        if (aHasEnough && bHasEnough) return b.wins / (b.wins + b.loses) - a.wins / (a.wins + a.loses);
-        if (bHasEnough) return 1;
-        if (aHasEnough) return -1;
-        return b.wins - a.wins;
-    });
+    const opponents = data
+        .filter((opponent) => opponent.wins + opponent.loses >= MINIMUM_GAME_AGAINST_PLAYER)
+        .sort((a, b) => b.wins / (b.wins + b.loses) - a.wins / (a.wins + a.loses));
 
     const visibleOpponents = opponents.slice(0, visibleCount);
 
     return (
         <VerticalCardStats>
             <Title level={4} style={{ margin: 0 }}>
-                Adversaires les plus difficiles
+                Adversaires
             </Title>
+            <Text type={'secondary'}>Du + facile au + difficile</Text>
             <List
                 dataSource={visibleOpponents}
                 renderItem={(opponent) => (
@@ -48,7 +45,7 @@ export const OpponentList = React.memo(({ data }: { data: PlayerStats['statsPerO
             {visibleCount < opponents.length && (
                 <div style={{ textAlign: 'center', marginTop: 12 }}>
                     <Button type="link" onClick={() => setVisibleCount((v) => v + 10)}>
-                        Load more
+                        Charger plus
                     </Button>
                 </div>
             )}
