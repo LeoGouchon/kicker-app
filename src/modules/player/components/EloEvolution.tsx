@@ -46,17 +46,24 @@ const getSeasonProgress = () => {
 const normalizeEloToPercent = (eloHistory: EloHistory[], seasonProgress = 1) => {
     const n = eloHistory.length;
     if (n === 0) return { x: [], y: [] };
+    if (n === 1) return { x: [0], y: [eloHistory[0].elo] };
 
-    const checkedSeasonProgress = Math.min(Math.max(seasonProgress, 0), 1);
-    let cutoff = Math.floor(n * checkedSeasonProgress);
-    if (cutoff < 2 && n >= 2) cutoff = 2;
-    if (cutoff > n) cutoff = n;
+    const p = Math.min(Math.max(seasonProgress, 0), 1);
+    const t = (n - 1) * p;
+    const lastIndex = Math.floor(t);
 
-    const sliced = eloHistory.slice(0, cutoff);
-
-    const maxX = checkedSeasonProgress * 100;
-    const x = cutoff > 1 ? sliced.map((_, i) => (i / (n - 1)) * maxX) : [0];
+    const sliced = eloHistory.slice(0, lastIndex + 1);
+    const x = sliced.map((_, i) => (i / (n - 1)) * 100);
     const y = sliced.map((e) => e.elo);
+
+    if (t % 1 !== 0 && lastIndex < n - 1) {
+        const i0 = lastIndex,
+            i1 = i0 + 1;
+        const a = t - i0;
+        const elo = (1 - a) * eloHistory[i0].elo + a * eloHistory[i1].elo;
+        x.push((t / (n - 1)) * 100);
+        y.push(elo);
+    }
 
     return { x, y };
 };
