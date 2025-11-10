@@ -5,6 +5,7 @@ import { useGetPlayerStats } from '../../hooks/useApiEndPoint/useStats.ts';
 import { uuidRegex } from '../../routes';
 import { ROUTES } from '../../routes/constant.ts';
 import { EloEvolution } from './components/EloEvolution.tsx';
+import { GameHistory } from './components/GameHistory.tsx';
 import { OpponentList } from './components/OpponentList.tsx';
 import { PartnerList } from './components/PartnerList.tsx';
 import { SmallCardStat } from './Player.style.tsx';
@@ -100,6 +101,7 @@ export const Player = () => {
                     </SmallCardStat>
                 </Flex>
                 <EloEvolution seasonalStats={data.seasonalStats} allTimeStats={data.allTimeStats} />
+                <GameHistory />
             </Flex>
             <Flex vertical gap={'small'} style={{ flex: 1 }}>
                 <PartnerList data={data.statsPerPartner} />

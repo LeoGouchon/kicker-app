@@ -5,16 +5,40 @@ import type { ColumnsType } from 'antd/es/table';
 import { useContext, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { LinkTypographyStyled } from '../../../components/typography/Typography.style.tsx';
-import { UserContext } from '../../../context/UserContext.tsx';
-import { useDeleteMatch } from '../../../hooks/useApiEndPoint/useMatch.ts';
-import { ROUTES } from '../../../routes/constant.ts';
-import type { Match } from '../../../types/Match.type.ts';
+import { UserContext } from '../context/UserContext.tsx';
+import { useDeleteMatch } from '../hooks/useApiEndPoint/useMatch.ts';
+import { ROUTES } from '../routes/constant.ts';
+import type { Match } from '../types/Match.type.ts';
+import { LinkTypographyStyled } from './typography/Typography.style.tsx';
 
 const { useBreakpoint } = Grid;
 const DELETE_MATCH_DAYS = 7;
 
-export const useHistoryColumns = (): ColumnsType<Match> => {
+export type ColumnKey =
+    | 'teamA'
+    | 'teamA_J1'
+    | 'teamA_J2'
+    | 'score'
+    | 'teamB'
+    | 'teamB_J1'
+    | 'teamB_J2'
+    | 'date'
+    | 'delay_from_today'
+    | 'season'
+    | 'eloDelta'
+    | 'actions';
+
+type HistoryColumnsOptions = {
+    isCondensed?: boolean;
+    visibleKeys?: ColumnKey[];
+    excludeKeys?: ColumnKey[];
+};
+
+export const useHistoryColumns = ({
+    isCondensed = false,
+    visibleKeys,
+    excludeKeys = [],
+}: HistoryColumnsOptions): ColumnsType<Match> => {
     const navigate = useNavigate();
     const { modal, message } = App.useApp();
 
@@ -50,7 +74,7 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
                 onClick={() => navigate(`${ROUTES.RANKING}/${year}/${quarter}`)}
                 icon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
             >
-                {`${year}-${quarter}`}
+                {` ${year}-${quarter}`}
             </Tag>
         );
     };
@@ -68,7 +92,7 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
                 {r.player2A && (
                     <LinkTypographyStyled>
                         <Link to={ROUTES.PLAYER + '/' + r.player2A.id} style={{ all: 'unset' }}>
-                            {r.player2A ? `${r.player2A.firstname} ${r.player2A.lastname?.[0] ?? ''}` : ''}.
+                            {`${r.player2A.firstname} ${r.player2A.lastname?.[0] ?? ''}`}.
                         </Link>
                     </LinkTypographyStyled>
                 )}
@@ -89,7 +113,7 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
                 {r.player2B && (
                     <LinkTypographyStyled>
                         <Link to={ROUTES.PLAYER + '/' + r.player2B.id} style={{ all: 'unset' }}>
-                            {r.player2B ? `${r.player2B.firstname} ${r.player2B.lastname?.[0] ?? ''}` : ''}.
+                            {`${r.player2B.firstname} ${r.player2B.lastname?.[0] ?? ''}`}.
                         </Link>
                     </LinkTypographyStyled>
                 )}
@@ -101,7 +125,7 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         {
             title: 'Équipe A - J1',
             dataIndex: 'player1A',
-            key: 'player1A',
+            key: 'teamA_J1',
             width: 140,
             align: 'right' as const,
             render: (p: Match['player1A']) =>
@@ -118,7 +142,7 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         {
             title: 'Équipe A - J2',
             dataIndex: 'player2A',
-            key: 'player2A',
+            key: 'teamA_J2',
             width: 140,
             align: 'right' as const,
             render: (p: Match['player2A']) =>
@@ -138,7 +162,7 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         {
             title: 'Équipe B - J1',
             dataIndex: 'player1B',
-            key: 'player1B',
+            key: 'teamB_J1',
             width: 140,
             align: 'left' as const,
             render: (p: Match['player1B']) =>
@@ -155,7 +179,7 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         {
             title: 'Équipe B - J2',
             dataIndex: 'player2B',
-            key: 'player2B',
+            key: 'teamB_J2',
             width: 140,
             align: 'left' as const,
             render: (p: Match['player2B']) =>
@@ -181,6 +205,49 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
                 <Tag color={m.scoreA > m.scoreB ? 'green' : 'red'}>{m.scoreA}</Tag>
                 <Tag color={m.scoreA < m.scoreB ? 'green' : 'red'}>{m.scoreB}</Tag>
             </Space>
+        ),
+    };
+
+    const dateColumn = {
+        title: 'Date',
+        dataIndex: 'createdAt',
+        key: 'date',
+        align: 'right' as const,
+        sorter: true,
+        render: (d: string | null) => (d ? new Date(d).toLocaleDateString('fr-FR') : '(date inconnue)'),
+    };
+
+    const delay_from_today = {
+        title: '',
+        dataIndex: 'createdAt',
+        key: 'delay_from_today',
+        align: 'right' as const,
+        render: (d: string | null) => {
+            const now = new Date().getTime();
+            const createdAt = d ? new Date(d).getTime() : 0;
+            const diffTime = Math.abs(now - createdAt);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return d ? `${diffDays} ${diffDays > 1 ? 'jours' : 'jour'}` : '(date inconnue)';
+        },
+    };
+
+    const seasonColumn = {
+        title: 'Saison',
+        dataIndex: 'createdAt',
+        key: 'season',
+        align: 'left' as const,
+        render: (d: string | null) => (d ? getSeasonTag(d) : ''),
+    };
+
+    const eloColumn = {
+        title: 'Elo global / saisonnier',
+        key: 'eloDelta',
+        align: 'center' as const,
+        render: (record: Match) => (
+            <Flex justify="center">
+                <Tag>±{record.deltaElo}</Tag>
+                <Tag>±{record.deltaEloSeasonal}</Tag>
+            </Flex>
         ),
     };
 
@@ -215,39 +282,36 @@ export const useHistoryColumns = (): ColumnsType<Match> => {
         ),
     };
 
-    return useMemo(
-        () => [
-            ...(isMobile ? [teamACompact] : teamADetails),
-            scoreColumn,
-            ...(isMobile ? [teamBCompact] : teamBDetails),
-            {
-                title: 'Date',
-                dataIndex: 'createdAt',
-                key: 'date',
-                align: 'right' as const,
-                sorter: true,
-                render: (d: string | null) => (d ? new Date(d).toLocaleDateString('fr-FR') : '(date inconnue)'),
-            },
-            {
-                title: 'Saison',
-                dataIndex: 'createdAt',
-                key: 'season',
-                align: 'left' as const,
-                render: (d: string | null) => (d ? getSeasonTag(d) : ''),
-            },
-            {
-                title: 'Elo global / saisonnier',
-                key: 'eloDelta',
-                align: 'center' as const,
-                render: (record: Match) => (
-                    <Flex justify="center">
-                        <Tag>±{record.deltaElo}</Tag>
-                        <Tag>±{record.deltaEloSeasonal}</Tag>
-                    </Flex>
-                ),
-            },
-            actionsColumn,
-        ],
-        [isMobile, user]
-    );
+    const allColumns: ColumnsType<Match> = [
+        ...(isMobile || isCondensed ? [teamACompact] : teamADetails),
+        scoreColumn,
+        ...(isMobile || isCondensed ? [teamBCompact] : teamBDetails),
+        dateColumn,
+        delay_from_today,
+        seasonColumn,
+        eloColumn,
+        actionsColumn,
+    ];
+
+    let finalColumns: ColumnsType<Match>;
+
+    if (visibleKeys && visibleKeys.length > 0) {
+        const order = new Map(visibleKeys.map((k, i) => [k, i]));
+
+        finalColumns = allColumns
+            .filter((column) => {
+                const key = column.key as ColumnKey | undefined;
+                return key && order.has(key) && !excludeKeys.includes(key);
+            })
+            .sort((a, b) => {
+                return order.get(a.key as ColumnKey)! - order.get(b.key as ColumnKey)!;
+            });
+    } else {
+        finalColumns = allColumns.filter((c) => {
+            const key = c.key as ColumnKey | undefined;
+            return key && !excludeKeys.includes(key);
+        });
+    }
+
+    return useMemo(() => finalColumns, [isMobile, user, isCondensed, visibleKeys?.join(), excludeKeys.join()]);
 };

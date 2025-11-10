@@ -21,11 +21,23 @@ export const useGetMatches = ({ page, size }: UseGetMatchesParams) => {
     });
 };
 
-export const useGetInfiniteMatches = (size: number = 10, dateOrder: SortOrder = 'ascend') => {
+export const useGetInfiniteMatches = ({
+    size = 10,
+    dateOrder = 'descend',
+    playerIds,
+}: {
+    size?: number;
+    dateOrder?: SortOrder;
+    playerIds?: string[];
+}) => {
+    const formattedPlayerIds = playerIds ? '&playerIds=' + playerIds?.join('playerIds=') : '';
+
     return useInfiniteQuery({
-        queryKey: ['matches', size, dateOrder],
+        queryKey: ['matches', size, dateOrder, playerIds],
         queryFn: async ({ pageParam = 0 }: { pageParam: number }): Promise<Pagination<Match>> => {
-            const res = await api.get(`/kicker/matches?page=${pageParam}&size=${size}&dateOrder=${dateOrder}`);
+            const res = await api.get(
+                `/kicker/matches?page=${pageParam}&size=${size}&dateOrder=${dateOrder}${formattedPlayerIds}`
+            );
             return res.data;
         },
         initialPageParam: 0,
