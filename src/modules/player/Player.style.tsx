@@ -3,7 +3,7 @@ import { Card } from 'antd';
 
 export const SmallCardStat = styled(Card)`
     flex: 1;
-    height: 100%;
+    min-width: 200px;
 `;
 
 export const SmallCardStatNoBorder = styled(SmallCardStat)`

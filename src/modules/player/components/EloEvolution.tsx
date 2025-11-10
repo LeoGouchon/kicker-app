@@ -1,4 +1,5 @@
 import { Card, theme, Typography } from 'antd';
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import type { ScriptableContext } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -70,6 +71,8 @@ const normalizeEloToPercent = (eloHistory: EloHistory[], seasonProgress = 1) => 
 
 export const EloEvolution = ({ seasonalStats }: { seasonalStats: SeasonalStats[]; allTimeStats: AllTimeStats }) => {
     const { token } = theme.useToken();
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
 
     const legendColor = token.colorTextSecondary;
     const axisText = token.colorTextSecondary;
@@ -138,7 +141,7 @@ export const EloEvolution = ({ seasonalStats }: { seasonalStats: SeasonalStats[]
     };
 
     return (
-        <Card>
+        <Card size={isMobile ? 'small' : 'default'}>
             <Title level={4} style={{ margin: 0 }}>
                 Évolution ELO saisonnier
             </Title>
