@@ -1,4 +1,4 @@
-import { Card, Typography } from 'antd';
+import { Card, theme, Typography } from 'antd';
 import type { ScriptableContext } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -61,39 +61,36 @@ const normalizeEloToPercent = (eloHistory: EloHistory[], seasonProgress = 1) => 
     return { x, y };
 };
 
-export const EloEvolution = ({
-    seasonalStats,
-    // allTimeStats,
-}: {
-    seasonalStats: SeasonalStats[];
-    allTimeStats: AllTimeStats;
-}) => {
+export const EloEvolution = ({ seasonalStats }: { seasonalStats: SeasonalStats[]; allTimeStats: AllTimeStats }) => {
+    const { token } = theme.useToken();
+
+    const legendColor = token.colorTextSecondary;
+    const axisText = token.colorTextSecondary;
+    const axisTitle = token.colorText;
+    const gridColor = token.colorBorderSecondary;
+
     const labels = Array.from({ length: 100 }, (_, i) => `${i + 1}%`);
     const { year: currentYear, quarter: currentQuarter } = getCurrentYearAndQuarter();
 
     const seasonalData = {
         labels,
         datasets: seasonalStats
-            .filter((season) => season.eloHistory.length > MATCH_PER_SEASON_MIN_NUMBER)
+            .filter((s) => s.eloHistory.length > MATCH_PER_SEASON_MIN_NUMBER)
             .map((season: SeasonalStats, idx) => {
-                const isCurrentSeason = season.year === currentYear && season.quarter === currentQuarter;
-                const seasonProgress = isCurrentSeason ? getSeasonProgress() : 1;
-
-                const { x, y } = normalizeEloToPercent(season.eloHistory, seasonProgress);
+                const isCurrent = season.year === currentYear && season.quarter === currentQuarter;
+                const { x, y } = normalizeEloToPercent(season.eloHistory, isCurrent ? getSeasonProgress() : 1);
                 const hue = (idx * 30 - 140) % 360;
-
                 return {
                     label: `${season.year} - ${season.quarter}`,
                     data: x.map((percent, i) => ({ x: percent, y: y[i] })),
-                    borderColor: `hsl(${hue}, 70%, ${65 - idx * 5}%)`,
+                    borderColor: `hsla(${hue}, 70%, ${65 - idx * 5}%, ${1 - idx * 0.3})`,
                     backgroundColor: (context: ScriptableContext<'line'>) => {
-                        const chart = context.chart;
-                        const { ctx, chartArea } = chart;
+                        const { ctx, chartArea } = context.chart;
                         if (!chartArea) return undefined;
-                        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                        gradient.addColorStop(0, `hsla(${hue}, 70%, 55%, ${0.6 - idx * 0.1})`);
-                        gradient.addColorStop(1, `hsla(${hue}, 70%, 55%, 0)`);
-                        return gradient;
+                        const g = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                        g.addColorStop(0, `hsla(${hue}, 70%, 55%, ${0.6 - idx * 0.1})`);
+                        g.addColorStop(1, `hsla(${hue}, 70%, 55%, 0)`);
+                        return g;
                     },
                     tension: 0.3,
                     fill: true,
@@ -106,36 +103,29 @@ export const EloEvolution = ({
     const options = {
         responsive: true,
         maintainAspectRatio: false,
-        interaction: {
-            mode: 'index' as const,
-            intersect: false,
-        },
+        interaction: { mode: 'index' as const, intersect: false },
         plugins: {
             legend: {
                 position: 'top' as const,
-                labels: {
-                    color: '#aaa',
-                },
+                labels: { color: legendColor },
             },
-            title: {
-                display: false,
-            },
+            title: { display: false },
         },
         scales: {
             x: {
                 type: 'linear' as const,
-                title: { display: true, text: '% de saison' },
+                title: { display: true, text: '% de saison', color: axisTitle },
                 min: 0,
                 max: 100,
                 ticks: {
-                    color: '#999',
-                    callback: (value: string | number) => `${value}%`,
+                    color: axisText,
+                    callback: (value: number | string) => `${value}%`,
                 },
-                grid: { color: '#333' },
+                grid: { color: gridColor },
             },
             y: {
-                ticks: { color: '#999' },
-                grid: { color: '#333' },
+                ticks: { color: axisText },
+                grid: { color: gridColor },
             },
         },
     };
