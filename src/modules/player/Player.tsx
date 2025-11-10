@@ -8,7 +8,7 @@ import { EloEvolution } from './components/EloEvolution.tsx';
 import { GameHistory } from './components/GameHistory.tsx';
 import { OpponentList } from './components/OpponentList.tsx';
 import { PartnerList } from './components/PartnerList.tsx';
-import { SmallCardStat } from './Player.style.tsx';
+import { SmallCardStat, SmallCardStatNoBorder } from './Player.style.tsx';
 
 const { Title, Text } = Typography;
 
@@ -28,25 +28,11 @@ export const Player = () => {
         <Flex gap={'middle'} wrap>
             <Flex vertical gap={'middle'} style={{ flex: 3 }}>
                 <Flex gap={'small'} align={'center'} wrap>
-                    <SmallCardStat>
-                        <Title level={4} style={{ margin: 0 }}>
-                            Classement
+                    <SmallCardStatNoBorder variant={'borderless'}>
+                        <Title level={2} style={{ margin: 0 }}>
+                            {data.firstname} {data.lastname}
                         </Title>
-                        <Flex gap={'middle'}>
-                            <Flex vertical style={{ flex: 1 }}>
-                                <Title level={2} style={{ margin: 0 }}>
-                                    {data.allTimeStats.rank}
-                                </Title>
-                                <Text type="secondary">Général</Text>
-                            </Flex>
-                            <Flex vertical style={{ flex: 1 }}>
-                                <Title level={2} style={{ margin: 0 }}>
-                                    {data.seasonalStats[data.seasonalStats.length - 1].rank}
-                                </Title>
-                                <Text type="secondary">Saison</Text>
-                            </Flex>
-                        </Flex>
-                    </SmallCardStat>
+                    </SmallCardStatNoBorder>
                     <SmallCardStat>
                         <Title level={4} style={{ margin: 0 }}>
                             % Victoire

@@ -6,8 +6,11 @@ export const SmallCardStat = styled(Card)`
     height: 100%;
 `;
 
+export const SmallCardStatNoBorder = styled(SmallCardStat)`
+    box-shadow: none !important;
+`;
+
 export const VerticalCardStats = styled(Card)`
-    flex: 1;
     min-width: 200px;
     width: 100%;
 `;
