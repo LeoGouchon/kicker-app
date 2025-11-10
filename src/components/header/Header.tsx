@@ -1,7 +1,7 @@
-import { useTheme } from '@emotion/react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Drawer, Flex, Tag } from 'antd';
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,9 @@ import { StyledHeader, StyledMenu } from './Header.style.tsx';
 
 export const Header = () => {
     const navigate = useNavigate();
-    const { screenSize } = useTheme();
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
+
     const menuItems: MenuItem[] = useGetMenuItemElements();
 
     const isUserLoggedIn = localStorage.getItem('token');
@@ -24,17 +26,18 @@ export const Header = () => {
     return (
         <>
             <StyledHeader>
-                {isDev ? <Tag color={'error'}>Dev mode</Tag> : <Tag color={'success'}>Current live!</Tag>}
-                <Flex gap={'middle'}>
+                {!isMobile &&
+                    (isDev ? <Tag color={'error'}>Dev mode</Tag> : <Tag color={'success'}>Current live!</Tag>)}
+                <Flex gap={'middle'} justify={'space-between'} style={{ width: '100%' }}>
                     <ThemeSwitcher />
                     {isUserLoggedIn ? (
                         <Logged />
                     ) : (
-                        <Button type="primary" onClick={() => navigate(ROUTES.LOGIN)}>
+                        <Button type="link" size={'small'} onClick={() => navigate(ROUTES.LOGIN)}>
                             Se connecter
                         </Button>
                     )}
-                    {screenSize === 0 && (
+                    {isMobile && (
                         <Button
                             type="text"
                             icon={<FontAwesomeIcon icon={faBars} />}
@@ -43,7 +46,7 @@ export const Header = () => {
                     )}
                 </Flex>
             </StyledHeader>
-            {screenSize === 0 && (
+            {isMobile && (
                 <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
                     <StyledMenu
                         selectedKeys={[location.pathname]}

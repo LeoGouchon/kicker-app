@@ -2,24 +2,21 @@ import { Button, Table } from 'antd';
 import type { SortOrder } from 'antd/es/table/interface';
 import { useState } from 'react';
 
+import { useHistoryColumns } from '../../components/HistoryColumns.tsx';
 import { useGetInfiniteMatches } from '../../hooks/useApiEndPoint/useMatch.ts';
 import type { Match } from '../../types/Match.type.ts';
-import { useHistoryColumns } from './components/HistoryColumns.tsx';
 
 export const History = () => {
-    const [dateOrder, setDateOrder] = useState<SortOrder | undefined>('descend');
+    const [dateOrder, setDateOrder] = useState<SortOrder>('descend');
 
-    const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches(50, dateOrder);
+    const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches({
+        size: 50,
+        dateOrder: dateOrder,
+    });
 
     const matches: Match[] = data?.pages.flatMap((p) => p.content) ?? [];
 
-    const columns = useHistoryColumns();
-    const lockedKeys = ['player1A', 'player2A', 'score', 'player1B', 'player2B'];
-
-    const visibleKeys = columns.map((c) => c.key).filter(Boolean) as string[];
-    const filteredColumns = columns.filter(
-        (column) => lockedKeys.includes(column.key as string) || visibleKeys.includes(column.key as string)
-    );
+    const columns = useHistoryColumns({ excludeKeys: ['delay_from_today'] });
 
     return (
         <>
@@ -29,10 +26,10 @@ export const History = () => {
                 pagination={false}
                 rowKey={(r) => r.id}
                 scroll={{ x: true }}
-                columns={filteredColumns}
+                columns={columns}
                 onChange={(_, __, sorter) => {
                     if (!Array.isArray(sorter) && sorter?.field === 'createdAt') {
-                        setDateOrder(sorter.order);
+                        setDateOrder(sorter.order || 'descend');
                     } else {
                         setDateOrder(null);
                     }

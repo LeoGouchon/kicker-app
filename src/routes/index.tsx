@@ -7,9 +7,12 @@ import { Login } from '../modules/login/Login.tsx';
 import { MainStats } from '../modules/mainStats/MainStats.tsx';
 import { NewMatch } from '../modules/newMatch/NewMatch.tsx';
 import { NotFound } from '../modules/notFound/NotFound.tsx';
+import { Player } from '../modules/player/Player.tsx';
 import { Register } from '../modules/register/Register.tsx';
 import { StatHelper } from '../modules/statHelper/StatHelper.tsx';
 import { ROUTES } from './constant.ts';
+
+export const uuidRegex = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
 
 export const routes: RouteObject[] = [
     { path: ROUTES.HOME, element: <History /> },
@@ -18,6 +21,10 @@ export const routes: RouteObject[] = [
     {
         path: `${ROUTES.RANKING}/*`,
         element: <MainStats />,
+    },
+    {
+        path: `${ROUTES.PLAYER}/:uuid`,
+        element: <Player />,
     },
     {
         path: ROUTES.NEW_MATCH,
