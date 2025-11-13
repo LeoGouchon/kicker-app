@@ -79,11 +79,7 @@ export const Player = () => {
                             </Flex>
                             <Flex vertical style={{ flex: 1 }}>
                                 <Title level={2} style={{ margin: 0 }}>
-                                    {
-                                        data.seasonalStats[data.seasonalStats.length - 1].eloHistory[
-                                            data.seasonalStats[data.seasonalStats.length - 1].eloHistory.length - 1
-                                        ].elo
-                                    }
+                                    {data.seasonalStats[0].eloHistory[data.seasonalStats[0].eloHistory.length - 1]?.elo}
                                 </Title>
                                 <Text type="secondary">Saison</Text>
                             </Flex>
