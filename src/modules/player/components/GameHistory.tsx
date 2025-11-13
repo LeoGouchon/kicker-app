@@ -23,14 +23,19 @@ export const GameHistory = React.memo(() => {
         {
             key: 'winner',
             width: 10,
-            onCell: (record: Match) => ({
-                style: {
-                    backgroundColor:
-                        record.scoreA > record.scoreB ? 'var(--ant-color-error)' : 'var(--ant-color-success)',
-                    padding: 0,
-                    opacity: 0.7,
-                },
-            }),
+            onCell: (record: Match) => {
+                const isPlayerInTeamA = record.player1A?.id === uuid || record.player2A?.id === uuid;
+                const isTeamAWin = record.scoreA > record.scoreB;
+                const isCurrentPlayerWin = (isPlayerInTeamA && isTeamAWin) || (!isPlayerInTeamA && !isTeamAWin);
+
+                return {
+                    style: {
+                        backgroundColor: isCurrentPlayerWin ? 'var(--ant-color-success)' : 'var(--ant-color-error)',
+                        padding: 0,
+                        opacity: 0.7,
+                    },
+                };
+            },
         },
     ];
 
