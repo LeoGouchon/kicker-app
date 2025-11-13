@@ -5,7 +5,7 @@ import { Line } from 'react-chartjs-2';
 
 const { Title } = Typography;
 
-const MATCH_PER_SEASON_MIN_NUMBER = 0;
+const MATCH_PER_SEASON_MIN_NUMBER = 10;
 
 export type EloHistory = {
     date: string;
@@ -49,25 +49,14 @@ const normalizeEloToPercent = (eloHistory: EloHistory[], seasonProgress = 1) => 
     if (n === 0) return { x: [], y: [] };
     if (n === 1) return { x: [0], y: [eloHistory[0].elo] };
 
-    const p = Math.min(Math.max(seasonProgress, 0), 1);
-    const t = (n - 1) * p;
-    const lastIndex = Math.floor(t);
-
-    const sliced = eloHistory.slice(0, lastIndex + 1);
-    const x = sliced.map((_, i) => (i / (n - 1)) * 100);
+    const sliced = eloHistory;
+    const x = sliced.map((_, i) => (i / (n - 1)) * 100 * seasonProgress);
     const y = sliced.map((e) => e.elo);
-
-    if (t % 1 !== 0 && lastIndex < n - 1) {
-        const i0 = lastIndex,
-            i1 = i0 + 1;
-        const a = t - i0;
-        const elo = (1 - a) * eloHistory[i0].elo + a * eloHistory[i1].elo;
-        x.push((t / (n - 1)) * 100);
-        y.push(elo);
-    }
 
     return { x, y };
 };
+
+const { Text } = Typography;
 
 export const EloEvolution = ({ seasonalStats }: { seasonalStats: SeasonalStats[]; allTimeStats: AllTimeStats }) => {
     const { token } = theme.useToken();
@@ -85,7 +74,7 @@ export const EloEvolution = ({ seasonalStats }: { seasonalStats: SeasonalStats[]
     const seasonalData = {
         labels,
         datasets: seasonalStats
-            .filter((s) => s.eloHistory.length > MATCH_PER_SEASON_MIN_NUMBER)
+            .filter((s) => s.eloHistory.length >= MATCH_PER_SEASON_MIN_NUMBER)
             .map((season: SeasonalStats, idx) => {
                 const isCurrent = season.year === currentYear && season.quarter === currentQuarter;
                 const { x, y } = normalizeEloToPercent(season.eloHistory, isCurrent ? getSeasonProgress() : 1);
@@ -145,9 +134,15 @@ export const EloEvolution = ({ seasonalStats }: { seasonalStats: SeasonalStats[]
             <Title level={4} style={{ margin: 0 }}>
                 Évolution ELO saisonnier
             </Title>
-            <div style={{ height: 320 }}>
-                <Line data={seasonalData} options={options} />
-            </div>
+            {seasonalData.datasets.length === 0 ? (
+                <Text type="secondary">
+                    Aucune saison avec les {MATCH_PER_SEASON_MIN_NUMBER} matchs nécessaires pour être classé.
+                </Text>
+            ) : (
+                <div style={{ height: 320 }}>
+                    <Line data={seasonalData} options={options} />
+                </div>
+            )}
         </Card>
     );
 };
