@@ -55,9 +55,9 @@ export const Player = () => {
                             <Flex vertical style={{ flex: 1 }}>
                                 <Title level={2} style={{ margin: 0 }}>
                                     {(
-                                        (data.seasonalStats[data.seasonalStats.length - 1].wins /
-                                            (data.seasonalStats[data.seasonalStats.length - 1].wins +
-                                                data.seasonalStats[data.seasonalStats.length - 1].losses)) *
+                                        (data.seasonalStats[0].wins /
+                                            (data.seasonalStats[0].wins +
+                                                data.seasonalStats[0].losses)) *
                                         100
                                     ).toFixed(0)}
                                     %
