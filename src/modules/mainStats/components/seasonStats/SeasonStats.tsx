@@ -15,7 +15,7 @@ export const SeasonStats = React.memo(
     ({ year: selectedYear, quarter: selectedQuarter }: { year: number; quarter: number }) => {
         const isCurrentSeason = useCallback(() => {
             const currentYear = new Date().getFullYear();
-            const currentQuarter = Math.floor((new Date().getMonth() + 1) / 3) + 1;
+            const currentQuarter = Math.floor(new Date().getMonth() / 3) + 1;
 
             console.log({ currentYear, currentQuarter, selectedYear, selectedQuarter });
 
