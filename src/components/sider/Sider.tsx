@@ -30,6 +30,7 @@ export const Sider = () => {
                     <Button
                         block
                         type="primary"
+                        style={{ backgroundColor: 'transparent', border: 'none', paddingBottom: '8px' }}
                         icon={
                             isCollapsed ? (
                                 <FontAwesomeIcon icon={faArrowRight} />
