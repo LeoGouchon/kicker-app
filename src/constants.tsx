@@ -2,3 +2,4 @@
 export const MAX_DEFAULT_PLAYER_TO_SHOW = 10;
 export const MINIMUM_GAME_AGAINST_PLAYER = 5;
 export const MINIMUM_GAME_WITH_PLAYER = 5;
+export const MATCH_PER_SEASON_MIN_NUMBER = 10;
