@@ -10,7 +10,7 @@ import { useCreateMatch } from '../../hooks/useApiEndPoint/useMatch.ts';
 import { useGetPlayers } from '../../hooks/useApiEndPoint/usePlayer.ts';
 import { ROUTES } from '../../routes/constant.ts';
 import { CreatePlayer } from './components/createPlayer/CreatePlayer.tsx';
-import { KickerBackground, WrapperTeamSelection } from './NewMatch.style.tsx';
+import { WrapperTeamSelection } from './NewMatch.style.tsx';
 
 export const NewMatch = () => {
     const [form] = useForm();
@@ -73,8 +73,7 @@ export const NewMatch = () => {
 
     return (
         <FlexFullWidth vertical gap={'large'}>
-            <KickerBackground></KickerBackground>
-            <Form form={form} size="large" layout="vertical" onFinish={handleFinish}>
+            <Form form={form} size={isMobile ? 'middle' : 'large'} layout="vertical" onFinish={handleFinish}>
                 <FlexFullWidth vertical gap={'middle'}>
                     <Typography.Title level={3}>Créer un match</Typography.Title>
                     <FlexFullWidth gap={'small'} vertical={isMobile}>

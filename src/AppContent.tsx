@@ -29,8 +29,8 @@ export const AppContent = () => {
             {!isMobile && <Sider />}
             <Layout style={{ overflowX: 'hidden' }}>
                 <Header />
-                <StyledContent>
-                    <StyledMainContent>{routing}</StyledMainContent>
+                <StyledContent isMobile={isMobile}>
+                    <StyledMainContent isMobile={isMobile}>{routing}</StyledMainContent>
                 </StyledContent>
                 <Footer />
             </Layout>

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Layout, Menu, type MenuProps } from 'antd';
 
-export const StyledHeader = styled(Layout.Header)`
+export const StyledHeader = styled(Layout.Header)<{ isMobile: boolean }>`
     background-color: var(--ant-color-bg-container);
     display: flex;
     justify-content: space-between;
@@ -11,12 +11,12 @@ export const StyledHeader = styled(Layout.Header)`
 
     gap: 16px;
     margin-bottom: 8px;
-    padding: ${({ theme }) => (theme.screenSize === 0 ? '0 16px' : '0 50px')};
-    margin-left: ${({ theme }) => (theme.screenSize === 0 ? '8px' : '16px')};
-    margin-right: ${({ theme }) => (theme.screenSize === 0 ? '8px' : '16px')};
+    padding: ${({ isMobile }) => (isMobile ? '0 16px' : '0 50px')};
+    margin-left: ${({ isMobile }) => (isMobile ? '8px' : '16px')};
+    margin-right: ${({ isMobile }) => (isMobile ? '8px' : '16px')};
 
-    ${({ theme }) =>
-        theme.screenSize === 0 &&
+    ${({ isMobile }) =>
+        isMobile &&
         `
         position: sticky;
         top: 0;
