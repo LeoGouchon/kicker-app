@@ -1,13 +1,13 @@
-import { Typography } from 'antd';
+import { Empty, theme } from 'antd';
 import type { ChartOptions, ScriptableContext } from 'chart.js';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
 import { MATCH_PER_SEASON_MIN_NUMBER } from '../../../../constants.tsx';
-import { getBackgroundColor, GLOBAL_CHART_DATASETS_OPTIONS } from '../../../../utils/chart.ts';
+import { getBackgroundColor, getBorderColor, GLOBAL_CHART_DATASETS_OPTIONS } from '../../../../utils/chart.ts';
+import { getQuarterChanges, getQuarterLabel } from '../../../../utils/quarterChanges.ts';
 import type { AllTimeStats, EloHistory } from './SeasonedElo.tsx';
-
-const { Text } = Typography;
 
 const getOverallData = (eloHistory: EloHistory[]) => {
     const lastEloPerDay = new Map<string, number>();
@@ -27,8 +27,29 @@ const getOverallData = (eloHistory: EloHistory[]) => {
 
 export const GlobalElo = React.memo(
     ({ data, chartOptions }: { data: AllTimeStats; chartOptions: ChartOptions<'line'> }) => {
-        const idx = 1;
-        const hue = (idx * 30 - 140) % 360;
+        const { token } = theme.useToken();
+
+        const quarterMarkers = getQuarterChanges(data.eloHistory);
+
+        const annotations = quarterMarkers.reduce(
+            (acc, quarter, currentIndex) => {
+                acc[`quarter${currentIndex}`] = {
+                    type: 'line' as const,
+                    xMin: new Intl.DateTimeFormat('fr-FR').format(quarter),
+                    xMax: new Intl.DateTimeFormat('fr-FR').format(quarter),
+                    borderDash: [5, 5],
+                    borderColor: token.colorBorder,
+                    label: {
+                        display: true,
+                        content: getQuarterLabel(new Date(quarter)),
+                        position: 'end',
+                        backgroundColor: token.colorBorder,
+                    },
+                };
+                return acc;
+            },
+            {} as Record<string, AnnotationOptions>
+        );
 
         const chartData = {
             datasets: [
@@ -40,7 +61,7 @@ export const GlobalElo = React.memo(
                         )
                     ),
                     data: getOverallData(data.eloHistory),
-                    borderColor: `hsla(${hue}, 70%, ${65 - idx * 5}%, ${1 - idx * 0.3})`,
+                    borderColor: getBorderColor(1),
                     backgroundColor: (context: ScriptableContext<'line'>) => getBackgroundColor(context, 1),
                     ...GLOBAL_CHART_DATASETS_OPTIONS,
                 },
@@ -49,14 +70,21 @@ export const GlobalElo = React.memo(
 
         const options = {
             ...chartOptions,
+            plugins: {
+                ...chartOptions.plugins,
+                annotation: {
+                    annotations: annotations,
+                },
+            },
         };
 
         return (
             <>
-                {chartData.datasets[0].data.length < MATCH_PER_SEASON_MIN_NUMBER ? (
-                    <Text type="secondary">
-                        Nombre de matchs necessaires pour calculer l'Élo : {MATCH_PER_SEASON_MIN_NUMBER}
-                    </Text>
+                {data.eloHistory.length < MATCH_PER_SEASON_MIN_NUMBER ? (
+                    <Empty
+                        style={{ marginTop: 24 }}
+                        description={`Nombre de matchs necessaires pour calculer l'Élo : ${MATCH_PER_SEASON_MIN_NUMBER}`}
+                    />
                 ) : (
                     <div style={{ height: 320 }}>
                         <Line data={chartData} options={options} />

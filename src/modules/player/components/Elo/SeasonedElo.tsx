@@ -1,12 +1,10 @@
-import { theme, Typography } from 'antd';
+import { Empty, theme } from 'antd';
 import type { ChartOptions, ScriptableContext } from 'chart.js';
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 
 import { MATCH_PER_SEASON_MIN_NUMBER } from '../../../../constants.tsx';
 import { getBackgroundColor, getBorderColor, GLOBAL_CHART_DATASETS_OPTIONS } from '../../../../utils/chart.ts';
-
-const { Text } = Typography;
 
 export type EloHistory = {
     date: string;
@@ -102,9 +100,10 @@ export const SeasonedElo = React.memo(
         return (
             <>
                 {seasonalData.datasets.length === 0 ? (
-                    <Text type="secondary">
-                        Aucune saison avec les {MATCH_PER_SEASON_MIN_NUMBER} matchs nécessaires pour être classé.
-                    </Text>
+                    <Empty
+                        style={{ marginTop: 24 }}
+                        description={`Aucune saison avec les ${MATCH_PER_SEASON_MIN_NUMBER} matchs nécessaires pour être classé.`}
+                    />
                 ) : (
                     <div style={{ height: 320 }}>
                         <Line data={seasonalData} options={options} />
