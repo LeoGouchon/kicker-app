@@ -1,6 +1,6 @@
-import { useTheme } from '@emotion/react';
 import { Button, Divider, Form, InputNumber, Select, Typography } from 'antd';
 import { useForm, useWatch } from 'antd/es/form/Form';
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +16,9 @@ export const NewMatch = () => {
     const [form] = useForm();
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
-    const { screenSize } = useTheme();
+
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
 
     const { isLoading, data: playersResponse } = useGetPlayers({ page: 0, size: 100 });
 
@@ -75,7 +77,7 @@ export const NewMatch = () => {
             <Form form={form} size="large" layout="vertical" onFinish={handleFinish}>
                 <FlexFullWidth vertical gap={'middle'}>
                     <Typography.Title level={3}>Créer un match</Typography.Title>
-                    <FlexFullWidth gap={'small'} vertical={screenSize === 0}>
+                    <FlexFullWidth gap={'small'} vertical={isMobile}>
                         <FlexFullWidth vertical>
                             <WrapperTeamSelection vertical team="1">
                                 <Typography.Title level={4}>Equipe 1</Typography.Title>

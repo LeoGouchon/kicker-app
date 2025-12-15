@@ -1,5 +1,5 @@
-import { useTheme } from '@emotion/react';
 import { Layout } from 'antd';
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useLocation, useRoutes } from 'react-router-dom';
 
 import { StyledContent, StyledLayout, StyledMainContent } from './App.style';
@@ -13,7 +13,8 @@ export const AppContent = () => {
     const routing = useRoutes(routes);
     const { pathname } = useLocation();
 
-    const { screenSize } = useTheme();
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
 
     const isLoginPage = pathname === ROUTES.LOGIN;
     const isInvitePage = pathname === ROUTES.INVITE;
@@ -24,8 +25,8 @@ export const AppContent = () => {
     }
 
     return (
-        <StyledLayout hasSider={screenSize > 0}>
-            {screenSize > 0 && <Sider />}
+        <StyledLayout hasSider={!isMobile}>
+            {!isMobile && <Sider />}
             <Layout style={{ overflowX: 'hidden' }}>
                 <Header />
                 <StyledContent>
