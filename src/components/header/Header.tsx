@@ -2,9 +2,10 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Drawer, Flex, Tag } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { UserContext } from '../../context/UserContext.tsx';
 import { type MenuItem, useGetMenuItemElements } from '../../hooks/useMenuItems.tsx';
 import { ROUTES } from '../../routes/constant.ts';
 import { isDev } from '../../utils/envChoice.ts';
@@ -19,7 +20,7 @@ export const Header = () => {
 
     const menuItems: MenuItem[] = useGetMenuItemElements();
 
-    const isUserLoggedIn = localStorage.getItem('token');
+    const { user } = useContext(UserContext);
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -30,7 +31,7 @@ export const Header = () => {
                     (isDev ? <Tag color={'error'}>Dev mode</Tag> : <Tag color={'success'}>Current live!</Tag>)}
                 <Flex gap={'middle'} justify={'space-between'} style={{ width: '100%' }}>
                     <ThemeSwitcher />
-                    {isUserLoggedIn ? (
+                    {user ? (
                         <Logged />
                     ) : (
                         <Button type="link" size={'small'} onClick={() => navigate(ROUTES.LOGIN)}>
