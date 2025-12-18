@@ -1,4 +1,4 @@
-import { Button, Divider, Form, InputNumber, Select, Typography } from 'antd';
+import { Button, Divider, Form, Radio, Select, Typography } from 'antd';
 import { useForm, useWatch } from 'antd/es/form/Form';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useContext } from 'react';
@@ -127,18 +127,48 @@ export const NewMatch = () => {
                                 <Form.Item
                                     name="scoreA"
                                     label="Score"
+                                    dependencies={['scoreB']}
                                     rules={[
                                         { required: true, type: 'number', message: 'Veuillez entrer un score' },
                                         {
-                                            validator: (_, value) =>
-                                                (value === 10) === (form.getFieldValue('scoreB') !== 10)
-                                                    ? Promise.resolve()
-                                                    : Promise.reject(),
+                                            validator: (_, value) => {
+                                                const scoreB = form.getFieldValue('scoreB');
+
+                                                if (!scoreB) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value === 10 && scoreB !== 10) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value !== 10 && scoreB === 10) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value === scoreB) {
+                                                    return Promise.reject();
+                                                }
+
+                                                if (value < 10 && scoreB < 10) {
+                                                    return Promise.reject();
+                                                }
+                                            },
                                             message: 'Un des deux scores doit être égal à 10',
                                         },
                                     ]}
                                 >
-                                    <InputNumber min={-10} max={10} step={1} placeholder={'0'} />
+                                    <Radio.Group>
+                                        {Array.from({ length: 11 }, (_, index) => index).map((index) => (
+                                            <Radio.Button
+                                                key={index}
+                                                value={index}
+                                                onClick={() => form.setFieldValue('scoreA', index)}
+                                            >
+                                                {index}
+                                            </Radio.Button>
+                                        ))}
+                                    </Radio.Group>
                                 </Form.Item>
                             </WrapperTeamSelection>
                         </FlexFullWidth>
@@ -192,18 +222,44 @@ export const NewMatch = () => {
                                 <Form.Item
                                     name="scoreB"
                                     label="Score"
+                                    dependencies={['scoreA']}
                                     rules={[
                                         { required: true, type: 'number', message: 'Veuillez entrer un score' },
                                         {
-                                            validator: (_, value) =>
-                                                (value === 10) === (form.getFieldValue('scoreA') !== 10)
-                                                    ? Promise.resolve()
-                                                    : Promise.reject(),
+                                            validator: (_, value) => {
+                                                const scoreA = form.getFieldValue('scoreA');
+
+                                                if (!scoreA) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value === 10 && scoreA !== 10) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value !== 10 && scoreA === 10) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value === scoreA) {
+                                                    return Promise.reject();
+                                                }
+                                            },
                                             message: 'Un des deux scores doit être égal à 10',
                                         },
                                     ]}
                                 >
-                                    <InputNumber min={-10} max={10} step={1} placeholder={'0'} />
+                                    <Radio.Group size={isMobile ? 'middle' : 'large'}>
+                                        {Array.from({ length: 11 }, (_, index) => index).map((index) => (
+                                            <Radio.Button
+                                                key={index}
+                                                value={index}
+                                                onClick={() => form.setFieldValue('scoreB', index)}
+                                            >
+                                                {index}
+                                            </Radio.Button>
+                                        ))}
+                                    </Radio.Group>
                                 </Form.Item>
                             </WrapperTeamSelection>
                         </FlexFullWidth>

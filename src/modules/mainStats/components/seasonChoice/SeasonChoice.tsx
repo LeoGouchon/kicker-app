@@ -108,7 +108,6 @@ export const SeasonChoice = React.memo(() => {
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-expect-error
                         const [year, quarter] = value.split('-');
-                        console.log(value);
                         navigate(
                             ROUTES.RANKING +
                                 (parseInt(year) !== 0 && parseInt(quarter) !== 0 ? `/${year}/${quarter}` : '')

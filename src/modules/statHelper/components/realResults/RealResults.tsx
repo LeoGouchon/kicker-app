@@ -74,8 +74,6 @@ export const RealResults = React.memo(() => {
     const maxCount = Math.max(...groupedArray.map((row) => row.count));
     const minCount = Math.min(...groupedArray.map((row) => row.count));
 
-    console.log(groupedArray, tableData, maxCount, minCount);
-
     return (
         <Flex vertical>
             <Flex align="center" gap={'small'} style={{ height: '100%' }}>
