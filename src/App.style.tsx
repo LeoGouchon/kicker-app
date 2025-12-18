@@ -7,12 +7,12 @@ export const StyledLayout = styled(Layout)<LayoutProps>`
     position: relative;
 `;
 
-export const StyledContent = styled(Layout.Content)<{ isMobile: boolean }>`
-    margin: ${({ isMobile }) => (isMobile ? '0 8px' : '0 16px')};
+export const StyledContent = styled(Layout.Content)<{ ismobile: boolean }>`
+    margin: ${({ ismobile }) => (ismobile ? '0 8px' : '0 16px')};
 `;
 
-export const StyledMainContent = styled.div<{ isMobile: boolean }>`
-    padding: ${({ isMobile }) => (isMobile ? '8px' : '24px')};
+export const StyledMainContent = styled.div<{ ismobile: boolean }>`
+    padding: ${({ ismobile }) => (ismobile ? '8px' : '24px')};
     min-height: 360px;
     background-color: var(--ant-color-bg-container);
     border-radius: var(--ant-border-radius-lg);

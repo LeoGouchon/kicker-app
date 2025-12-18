@@ -26,7 +26,7 @@ export const Header = () => {
 
     return (
         <>
-            <StyledHeader isMobile={isMobile}>
+            <StyledHeader ismobile={isMobile}>
                 {!isMobile &&
                     (isDev ? <Tag color={'error'}>Dev mode</Tag> : <Tag color={'success'}>Current live!</Tag>)}
                 <Flex gap={'middle'} justify={'space-between'} style={{ width: '100%' }}>
