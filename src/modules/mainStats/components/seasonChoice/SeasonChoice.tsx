@@ -1,19 +1,24 @@
 import { faFutbol, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Flex, Select, Skeleton, Typography } from 'antd';
+import { Flex, Select, Skeleton, Typography } from 'antd';
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { FlexFullWidth } from '../../../../App.style.tsx';
 import { useGetSeasonsStats } from '../../../../hooks/useApiEndPoint/useStats.ts';
 import { ROUTES } from '../../../../routes/constant.ts';
-import { SeasonCardWrapper, StyledDivider } from './SeasonChoice.style.tsx';
+import { SeasonCard } from './components/SeasonCard.tsx';
+import { StyledDivider } from './SeasonChoice.style.tsx';
 
 const { Title, Text } = Typography;
 
 export const SeasonChoice = React.memo(() => {
     const { pathname } = useLocation();
     const navigate = useNavigate();
+
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
 
     const currentSelectedYear = pathname.split('/')[2] || '0';
     const currentSelectedQuarter = pathname.split('/')[3] || '0';
@@ -41,63 +46,6 @@ export const SeasonChoice = React.memo(() => {
                 ),
             })) ?? [];
 
-    const SeasonCard = ({
-        title,
-        nbMatches = 0,
-        nbPlayers = 0,
-        year = 0,
-        quarter = 0,
-        isActive = false,
-    }: {
-        title: string;
-        nbMatches?: number;
-        nbPlayers?: number;
-        year?: number;
-        quarter?: number;
-        isActive?: boolean;
-    }) => (
-        <Button
-            variant="filled"
-            color={
-                year.toString() === currentSelectedYear && quarter.toString() === currentSelectedQuarter
-                    ? 'primary'
-                    : 'default'
-            }
-            onClick={() => {
-                navigate(ROUTES.RANKING + (year !== 0 && quarter !== 0 ? `/${year}/${quarter}` : ''));
-            }}
-        >
-            <SeasonCardWrapper gap={'small'} align={'baseline'}>
-                <Title level={4}>{title}</Title>
-                <Flex gap={2} align={'center'}>
-                    <FontAwesomeIcon icon={faFutbol} />
-                    <Text>{nbMatches}</Text>
-                </Flex>
-                <Flex gap={2} align={'center'}>
-                    <FontAwesomeIcon icon={faUser} />
-                    <Text>{nbPlayers}</Text>
-                </Flex>
-                {isActive && (
-                    <Text>
-                        Encore{' '}
-                        {Math.ceil(
-                            (Date.UTC(
-                                new Date().getUTCMonth() >= 9
-                                    ? new Date().getUTCFullYear() + 1
-                                    : new Date().getUTCFullYear(),
-                                ((Math.floor(new Date().getUTCMonth() / 3) + 1) % 4) * 3,
-                                1
-                            ) -
-                                Date.now()) /
-                                (1000 * 60 * 60 * 24)
-                        )}
-                        j.
-                    </Text>
-                )}
-            </SeasonCardWrapper>
-        </Button>
-    );
-
     if (isLoading)
         return (
             <FlexFullWidth gap={'small'} style={{ width: '100%' }} align={'center'}>
@@ -114,7 +62,7 @@ export const SeasonChoice = React.memo(() => {
                 nbMatches={seasonsData?.totalMatches}
                 nbPlayers={seasonsData?.totalPlayers}
             />
-            <StyledDivider type={'vertical'} size={'large'} />
+            {!isMobile && <StyledDivider type={'vertical'} size={'large'} />}
             {seasonsData?.seasonsStats.slice(-1).map((season) => (
                 <SeasonCard
                     key={`${season.year}-${season.quarter}`}
@@ -160,7 +108,6 @@ export const SeasonChoice = React.memo(() => {
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         // @ts-expect-error
                         const [year, quarter] = value.split('-');
-                        console.log(value);
                         navigate(
                             ROUTES.RANKING +
                                 (parseInt(year) !== 0 && parseInt(quarter) !== 0 ? `/${year}/${quarter}` : '')

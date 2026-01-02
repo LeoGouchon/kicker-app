@@ -1,6 +1,6 @@
-import { useTheme } from '@emotion/react';
-import { Button, Divider, Form, InputNumber, Select, Typography } from 'antd';
+import { Button, Divider, Form, Radio, Select, Typography } from 'antd';
 import { useForm, useWatch } from 'antd/es/form/Form';
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,13 +10,15 @@ import { useCreateMatch } from '../../hooks/useApiEndPoint/useMatch.ts';
 import { useGetPlayers } from '../../hooks/useApiEndPoint/usePlayer.ts';
 import { ROUTES } from '../../routes/constant.ts';
 import { CreatePlayer } from './components/createPlayer/CreatePlayer.tsx';
-import { KickerBackground, WrapperTeamSelection } from './NewMatch.style.tsx';
+import { WrapperTeamSelection } from './NewMatch.style.tsx';
 
 export const NewMatch = () => {
     const [form] = useForm();
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
-    const { screenSize } = useTheme();
+
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
 
     const { isLoading, data: playersResponse } = useGetPlayers({ page: 0, size: 100 });
 
@@ -71,11 +73,10 @@ export const NewMatch = () => {
 
     return (
         <FlexFullWidth vertical gap={'large'}>
-            <KickerBackground></KickerBackground>
-            <Form form={form} size="large" layout="vertical" onFinish={handleFinish}>
+            <Form form={form} size={isMobile ? 'middle' : 'large'} layout="vertical" onFinish={handleFinish}>
                 <FlexFullWidth vertical gap={'middle'}>
                     <Typography.Title level={3}>Créer un match</Typography.Title>
-                    <FlexFullWidth gap={'small'} vertical={screenSize === 0}>
+                    <FlexFullWidth gap={'small'} vertical={isMobile}>
                         <FlexFullWidth vertical>
                             <WrapperTeamSelection vertical team="1">
                                 <Typography.Title level={4}>Equipe 1</Typography.Title>
@@ -126,18 +127,48 @@ export const NewMatch = () => {
                                 <Form.Item
                                     name="scoreA"
                                     label="Score"
+                                    dependencies={['scoreB']}
                                     rules={[
                                         { required: true, type: 'number', message: 'Veuillez entrer un score' },
                                         {
-                                            validator: (_, value) =>
-                                                (value === 10) === (form.getFieldValue('scoreB') !== 10)
-                                                    ? Promise.resolve()
-                                                    : Promise.reject(),
+                                            validator: (_, value) => {
+                                                const scoreB = form.getFieldValue('scoreB');
+
+                                                if (!scoreB) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value === 10 && scoreB !== 10) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value !== 10 && scoreB === 10) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value === scoreB) {
+                                                    return Promise.reject();
+                                                }
+
+                                                if (value < 10 && scoreB < 10) {
+                                                    return Promise.reject();
+                                                }
+                                            },
                                             message: 'Un des deux scores doit être égal à 10',
                                         },
                                     ]}
                                 >
-                                    <InputNumber min={-10} max={10} step={1} placeholder={'0'} />
+                                    <Radio.Group>
+                                        {Array.from({ length: 11 }, (_, index) => index).map((index) => (
+                                            <Radio.Button
+                                                key={index}
+                                                value={index}
+                                                onClick={() => form.setFieldValue('scoreA', index)}
+                                            >
+                                                {index}
+                                            </Radio.Button>
+                                        ))}
+                                    </Radio.Group>
                                 </Form.Item>
                             </WrapperTeamSelection>
                         </FlexFullWidth>
@@ -191,18 +222,44 @@ export const NewMatch = () => {
                                 <Form.Item
                                     name="scoreB"
                                     label="Score"
+                                    dependencies={['scoreA']}
                                     rules={[
                                         { required: true, type: 'number', message: 'Veuillez entrer un score' },
                                         {
-                                            validator: (_, value) =>
-                                                (value === 10) === (form.getFieldValue('scoreA') !== 10)
-                                                    ? Promise.resolve()
-                                                    : Promise.reject(),
+                                            validator: (_, value) => {
+                                                const scoreA = form.getFieldValue('scoreA');
+
+                                                if (!scoreA) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value === 10 && scoreA !== 10) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value !== 10 && scoreA === 10) {
+                                                    return Promise.resolve();
+                                                }
+
+                                                if (value === scoreA) {
+                                                    return Promise.reject();
+                                                }
+                                            },
                                             message: 'Un des deux scores doit être égal à 10',
                                         },
                                     ]}
                                 >
-                                    <InputNumber min={-10} max={10} step={1} placeholder={'0'} />
+                                    <Radio.Group size={isMobile ? 'middle' : 'large'}>
+                                        {Array.from({ length: 11 }, (_, index) => index).map((index) => (
+                                            <Radio.Button
+                                                key={index}
+                                                value={index}
+                                                onClick={() => form.setFieldValue('scoreB', index)}
+                                            >
+                                                {index}
+                                            </Radio.Button>
+                                        ))}
+                                    </Radio.Group>
                                 </Form.Item>
                             </WrapperTeamSelection>
                         </FlexFullWidth>

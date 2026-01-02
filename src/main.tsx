@@ -11,13 +11,14 @@ import {
     PointElement,
     Tooltip,
 } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './App.tsx';
 import { ThemeProvider } from './context/ThemeProvider.tsx';
 
-ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement, Tooltip, Legend, Filler);
+ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement, Tooltip, Legend, Filler, annotationPlugin);
 
 const queryClient = new QueryClient();
 
