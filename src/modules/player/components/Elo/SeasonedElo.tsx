@@ -95,7 +95,7 @@ export const SeasonedElo = React.memo(
                     },
                 },
             },
-        };
+        } as ChartOptions<'line'>;
 
         return (
             <>
