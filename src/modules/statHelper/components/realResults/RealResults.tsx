@@ -6,15 +6,14 @@ import React from 'react';
 import { useGetMatrixScoreRealResults } from '../../../../hooks/useApiEndPoint/useMatrixScore.ts';
 import type { MatrixScoreRealResult } from '../../../../types/MatrixScore.type.ts';
 import { ValueCell } from '../../StatHelper.style.tsx';
+import { TableSummary } from './TableSummary.tsx';
 
 const DELTA_ELO_STEP = 100;
-const MAX_ELO_DIFF = 600;
-const MIN_ELO_DIFF = -600;
 
 export const RealResults = React.memo(() => {
     const { isLoading, data } = useGetMatrixScoreRealResults();
 
-    const scoreDiffs = Array.from({ length: 20 }, (_, i) => i - 10); // [-10..9]
+    const scoreDiffs = Array.from({ length: 20 }, (_, i) => i - 10); // [0..9]
 
     // Group data per delta Elo / score
     const groupedData: Record<string, number> =
@@ -33,8 +32,8 @@ export const RealResults = React.memo(() => {
         ([key, count]) => {
             const [bucketStr, scoreStr] = key.split('_');
             return {
-                bucket: parseInt(bucketStr, 10),
-                score: parseInt(scoreStr, 10),
+                bucket: Number.parseInt(bucketStr, 10),
+                score: Number.parseInt(scoreStr, 10),
                 count,
             };
         }
@@ -50,15 +49,22 @@ export const RealResults = React.memo(() => {
         return acc;
     }, {});
 
-    // Generate all buckets between -600 and 600
+    const maxEloDiff = data?.reduce((acc, item: MatrixScoreRealResult) => Math.max(acc, item.eloDelta), 1) ?? 1;
+    const minEloDiff = data?.reduce((acc, item: MatrixScoreRealResult) => Math.min(acc, item.eloDelta), 1) ?? 1;
+
+    const eloMax = Math.floor(maxEloDiff / 100) * 100;
+    const eloMin = Math.floor(minEloDiff / 100) * 100;
+
     const bucketsRange = Array.from(
-        { length: Math.ceil((MAX_ELO_DIFF - MIN_ELO_DIFF) / DELTA_ELO_STEP) + 1 },
-        (_, i) => MIN_ELO_DIFF + i * DELTA_ELO_STEP
+        { length: Math.ceil((Math.floor(eloMax / 100) * 100 - Math.floor(eloMin / 100) * 100) / DELTA_ELO_STEP) + 1 },
+        (_, i) => eloMin + i * DELTA_ELO_STEP
     ).reverse();
 
     // Create data for visual Table
     const tableData = bucketsRange.map((bucket) => {
         const existing = pivotedData[bucket] ?? {};
+
+        let rowTotal = 0;
 
         const row: Record<string, number> = {
             key: bucket,
@@ -66,13 +72,42 @@ export const RealResults = React.memo(() => {
         };
 
         for (const score of scoreDiffs) {
-            row[score] = existing[score] ?? 0;
+            const value = existing[score] ?? 0;
+            row[score] = value;
+            rowTotal += value;
         }
+
+        row.total = rowTotal;
 
         return row;
     });
+
+    const totalRow: Record<string, number | string> = {
+        key: 'total',
+        eloDiff: 'Total',
+    };
+
+    let grandTotal = 0;
+
+    for (const score of scoreDiffs) {
+        const columnTotal = tableData.reduce((sum, row) => sum + (row[score] ?? 0), 0);
+        totalRow[score] = columnTotal;
+        grandTotal += columnTotal;
+    }
+
+    totalRow.total = grandTotal;
+
     const maxCount = Math.max(...groupedArray.map((row) => row.count));
     const minCount = Math.min(...groupedArray.map((row) => row.count));
+
+    const totalColumn = {
+        dataIndex: 'total',
+        title: 'Total',
+        align: 'center' as const,
+        width: 80,
+        onCell: () => ({ style: { padding: 0 } }),
+        render: (val: number) => <b>{val}</b>,
+    };
 
     return (
         <Flex vertical>
@@ -131,7 +166,7 @@ export const RealResults = React.memo(() => {
                         align: 'center' as const,
                         render: (score?: number) => (
                             <ValueCell
-                                normalizedValue={score !== undefined ? (maxCount - score) / (maxCount - minCount) : 0}
+                                normalizedValue={score === undefined ? 0 : (maxCount - score) / (maxCount - minCount)}
                                 isGain={true}
                                 scoreDifference={scoreDiff}
                             >
@@ -140,7 +175,9 @@ export const RealResults = React.memo(() => {
                         ),
                         onCell: () => ({ style: { padding: 0 } }),
                     })),
+                    totalColumn,
                 ]}
+                summary={() => <TableSummary scoreDiffs={scoreDiffs} totalRow={totalRow} />}
             />
         </Flex>
     );
