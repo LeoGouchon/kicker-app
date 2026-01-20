@@ -45,8 +45,7 @@ export const StatHelper = () => {
                 </Flex>
                 <Typography.Text>
                     En fonction du <strong>score adverse</strong> (ligne) et la différence de{' '}
-                    <strong>ELO Adversaire - votre ELO </strong>
-                    (colonne)
+                    <strong>ELO Adversaire - votre ELO</strong> (colonne)
                 </Typography.Text>
                 <Typography.Text type="secondary">
                     Exemple : vous avez 500 points ELO de <strong>moins</strong> que votre adversaire et vous avez gagné
