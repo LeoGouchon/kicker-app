@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import type { DuoStats } from '../../types/DuoStats.type.ts';
 import type { GlobalStats } from '../../types/GlobalStats.type.ts';
 import type { PlayerStats } from '../../types/PlayerStats.type.ts';
 import type { SeasonsStats } from '../../types/SeasonsStats.type.ts';
@@ -53,6 +54,16 @@ export const useGetPlayerStats = ({ playerId }: { playerId: string }) => {
         queryKey: ['player-stats', playerId],
         queryFn: async (): Promise<PlayerStats> => {
             const res = await api.get(`/kicker/stats/player/${playerId}`);
+            return res.data;
+        },
+    });
+};
+
+export const useGetDuoStats = () => {
+    return useQuery({
+        queryKey: ['duo-stats'],
+        queryFn: async (): Promise<DuoStats[]> => {
+            const res = await api.get('/kicker/stats/duo');
             return res.data;
         },
     });
