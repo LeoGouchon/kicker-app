@@ -3,7 +3,9 @@ import type { SortOrder } from 'antd/es/table/interface';
 
 import type { Match } from '../../types/Match.type.ts';
 import type { Pagination } from '../../types/Pagination.type.ts';
+import type { PlayerFilter } from '../../types/PlayerFilter.type.ts';
 import { api } from '../../utils/api.ts';
+import { constructComplexPlayerFilter } from '../../utils/apiConstruct/constructComplexPlayerFilter.ts';
 
 type UseGetMatchesParams = {
     page: number;
@@ -25,18 +27,22 @@ export const useGetInfiniteMatches = ({
     size = 10,
     dateOrder = 'descend',
     playerIds,
+    playerFilter,
 }: {
     size?: number;
     dateOrder?: SortOrder;
+    playerFilter?: PlayerFilter;
     playerIds?: string[];
 }) => {
     const formattedPlayerIds = playerIds ? '&playerIds=' + playerIds?.join('playerIds=') : '';
+    const formattedDateOrder = dateOrder ? '&dateOrder=' + dateOrder : '';
+    const formattedPlayerFilter = constructComplexPlayerFilter(playerFilter);
 
     return useInfiniteQuery({
         queryKey: ['matches', size, dateOrder, playerIds],
         queryFn: async ({ pageParam = 0 }: { pageParam: number }): Promise<Pagination<Match>> => {
             const res = await api.get(
-                `/kicker/matches?page=${pageParam}&size=${size}&dateOrder=${dateOrder}${formattedPlayerIds}`
+                `/kicker/matches?page=${pageParam}&size=${size}${formattedDateOrder}${formattedPlayerIds}${formattedPlayerFilter}`
             );
             return res.data;
         },
