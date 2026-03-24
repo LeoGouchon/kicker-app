@@ -9,4 +9,5 @@ export const ROUTES = {
     REGISTER: '/register',
     STATS_HELPER: '/stats-helper',
     PLAYER: '/player',
+    DUO: '/duo',
 };

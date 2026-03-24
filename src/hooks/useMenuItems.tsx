@@ -1,5 +1,5 @@
 import { faSquarePlus } from '@fortawesome/free-regular-svg-icons';
-import { faCalculator, faMedal, faTableList } from '@fortawesome/free-solid-svg-icons';
+import { faCalculator, faMedal, faTableList, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { MenuProps } from 'antd';
 import React, { useContext } from 'react';
@@ -47,6 +47,7 @@ export const useGetMenuItemElements: () => MenuItem[] = () => {
             () => navigate(ROUTES.HISTORY),
             false
         ),
+        getItem('Duo', ROUTES.DUO, <FontAwesomeIcon icon={faUserGroup} />, () => navigate(ROUTES.DUO), false),
         getItem(
             'Classement',
             ROUTES.RANKING,
