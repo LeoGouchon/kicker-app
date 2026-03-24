@@ -4,7 +4,14 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 
 import { MATCH_PER_SEASON_MIN_NUMBER } from '../../../../constants.tsx';
-import { getBackgroundColor, getBorderColor, GLOBAL_CHART_DATASETS_OPTIONS } from '../../../../utils/chart.ts';
+import {
+    getBackgroundColor,
+    getBorderColor,
+    getEloAnchorAnnotation,
+    getEloAxisRange,
+    GLOBAL_CHART_DATASETS_OPTIONS,
+    roundTickToStep,
+} from '../../../../utils/chart.ts';
 
 export type EloHistory = {
     date: string;
@@ -59,25 +66,37 @@ export const SeasonedElo = React.memo(
     ({ data: seasonalStats, chartOptions }: { data: SeasonalStats[]; chartOptions: ChartOptions<'line'> }) => {
         const { token } = theme.useToken();
         const axisTitle = token.colorText;
+        const anchorElo = 1500;
 
         const labels = Array.from({ length: 100 }, (_, i) => `${i + 1}%`);
         const { year: currentYear, quarter: currentQuarter } = getCurrentYearAndQuarter();
+        const eligibleSeasons = seasonalStats.filter((s) => s.eloHistory.length >= MATCH_PER_SEASON_MIN_NUMBER);
+        const axisRange = getEloAxisRange({
+            values: eligibleSeasons.flatMap((season) => season.eloHistory.map((entry) => entry.elo)),
+            targetRange: 500,
+            anchorElo,
+        });
 
         const seasonalData = {
             labels,
-            datasets: seasonalStats
-                .filter((s) => s.eloHistory.length >= MATCH_PER_SEASON_MIN_NUMBER)
-                .map((season: SeasonalStats, idx) => {
-                    const isCurrent = season.year === currentYear && season.quarter === currentQuarter;
-                    const { x, y } = normalizeEloToPercent(season.eloHistory, isCurrent ? getSeasonProgress() : 1);
-                    return {
-                        label: `${season.year} - ${season.quarter}`,
-                        data: x.map((percent, i) => ({ x: percent, y: y[i] })),
-                        borderColor: getBorderColor(idx),
-                        backgroundColor: (context: ScriptableContext<'line'>) => getBackgroundColor(context, idx),
-                        ...GLOBAL_CHART_DATASETS_OPTIONS,
-                    };
-                }),
+            datasets: eligibleSeasons.map((season: SeasonalStats, idx) => {
+                const isCurrent = season.year === currentYear && season.quarter === currentQuarter;
+                const { x, y } = normalizeEloToPercent(season.eloHistory, isCurrent ? getSeasonProgress() : 1);
+                return {
+                    label: `${season.year} - ${season.quarter}`,
+                    data: x.map((percent, i) => ({ x: percent, y: y[i] })),
+                    borderColor: getBorderColor(idx),
+                    backgroundColor: (context: ScriptableContext<'line'>) => getBackgroundColor(context, idx),
+                    ...GLOBAL_CHART_DATASETS_OPTIONS,
+                };
+            }),
+        };
+
+        const annotations = {
+            anchor1500: getEloAnchorAnnotation({
+                anchorElo,
+                color: token.colorBorderSecondary,
+            }),
         };
 
         const options = {
@@ -93,6 +112,20 @@ export const SeasonedElo = React.memo(
                     ticks: {
                         callback: (value: number | string) => `${value}%`,
                     },
+                },
+                y: {
+                    ...chartOptions?.scales?.y,
+                    ticks: {
+                        ...chartOptions?.scales?.y?.ticks,
+                        callback: (value: number | string) => roundTickToStep({ value, step: 10 }),
+                    },
+                    ...(axisRange ? { min: axisRange.min, max: axisRange.max } : {}),
+                },
+            },
+            plugins: {
+                ...chartOptions.plugins,
+                annotation: {
+                    annotations: annotations,
                 },
             },
         };

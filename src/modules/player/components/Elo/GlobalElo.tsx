@@ -5,7 +5,14 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 
 import { MATCH_PER_SEASON_MIN_NUMBER } from '../../../../constants.tsx';
-import { getBackgroundColor, getBorderColor, GLOBAL_CHART_DATASETS_OPTIONS } from '../../../../utils/chart.ts';
+import {
+    getBackgroundColor,
+    getBorderColor,
+    getEloAnchorAnnotation,
+    getEloAxisRange,
+    GLOBAL_CHART_DATASETS_OPTIONS,
+    roundTickToStep,
+} from '../../../../utils/chart.ts';
 import { getQuarterChanges, getQuarterLabel } from '../../../../utils/quarterChanges.ts';
 import type { AllTimeStats, EloHistory } from './SeasonedElo.tsx';
 
@@ -29,6 +36,14 @@ export const GlobalElo = React.memo(
     ({ data, chartOptions }: { data: AllTimeStats; chartOptions: ChartOptions<'line'> }) => {
         const { token } = theme.useToken();
 
+        const pointsHistoryOverTime = getOverallData(data.eloHistory);
+        const anchorElo = 1500;
+        const axisRange = getEloAxisRange({
+            values: pointsHistoryOverTime.map((point) => point.y),
+            targetRange: 500,
+            anchorElo,
+        });
+
         const quarterMarkers = getQuarterChanges(data.eloHistory);
 
         const annotations = quarterMarkers.reduce(
@@ -51,6 +66,11 @@ export const GlobalElo = React.memo(
             {} as Record<string, AnnotationOptions>
         );
 
+        annotations.anchor1500 = getEloAnchorAnnotation({
+            anchorElo,
+            color: token.colorBorderSecondary,
+        });
+
         const chartData = {
             datasets: [
                 {
@@ -60,7 +80,7 @@ export const GlobalElo = React.memo(
                             new Date(item.date)
                         )
                     ),
-                    data: getOverallData(data.eloHistory),
+                    data: pointsHistoryOverTime,
                     borderColor: getBorderColor(1),
                     backgroundColor: (context: ScriptableContext<'line'>) => getBackgroundColor(context, 1),
                     ...GLOBAL_CHART_DATASETS_OPTIONS,
@@ -70,6 +90,17 @@ export const GlobalElo = React.memo(
 
         const options = {
             ...chartOptions,
+            scales: {
+                ...chartOptions?.scales,
+                y: {
+                    ...chartOptions?.scales?.y,
+                    ticks: {
+                        ...chartOptions?.scales?.y?.ticks,
+                        callback: (value: number | string) => roundTickToStep({ value, step: 10 }),
+                    },
+                    ...(axisRange ? { min: axisRange.min, max: axisRange.max } : {}),
+                },
+            },
             plugins: {
                 ...chartOptions.plugins,
                 annotation: {

@@ -20,7 +20,7 @@ export const NewMatch = () => {
     const screens = useBreakpoint();
     const isMobile = !screens.md;
 
-    const { isLoading, data: playersResponse } = useGetPlayers({ page: 0, size: 100 });
+    const { isLoading, data: playersResponse } = useGetPlayers({ page: 0, size: 50 });
 
     const createMatchMutate = useCreateMatch();
 
@@ -93,7 +93,7 @@ export const NewMatch = () => {
                                         filterOption={(input, option) =>
                                             option?.label
                                                 .normalize('NFD')
-                                                .replace(/[\u0300-\u036f]/g, '')
+                                                .replaceAll(/[\u0300-\u036f]/g, '')
                                                 .toLowerCase()
                                                 .includes(input.toLowerCase()) ?? false
                                         }
@@ -118,7 +118,7 @@ export const NewMatch = () => {
                                         filterOption={(input, option) =>
                                             option?.label
                                                 .normalize('NFD')
-                                                .replace(/[\u0300-\u036f]/g, '')
+                                                .replaceAll(/[\u0300-\u036f]/g, '')
                                                 .toLowerCase()
                                                 .includes(input.toLowerCase()) ?? false
                                         }
@@ -188,7 +188,7 @@ export const NewMatch = () => {
                                         filterOption={(input, option) =>
                                             option?.label
                                                 .normalize('NFD')
-                                                .replace(/[\u0300-\u036f]/g, '')
+                                                .replaceAll(/[\u0300-\u036f]/g, '')
                                                 .toLowerCase()
                                                 .includes(input.toLowerCase()) ?? false
                                         }
@@ -213,7 +213,7 @@ export const NewMatch = () => {
                                         filterOption={(input, option) =>
                                             option?.label
                                                 .normalize('NFD')
-                                                .replace(/[\u0300-\u036f]/g, '')
+                                                .replaceAll(/[\u0300-\u036f]/g, '')
                                                 .toLowerCase()
                                                 .includes(input.toLowerCase()) ?? false
                                         }
