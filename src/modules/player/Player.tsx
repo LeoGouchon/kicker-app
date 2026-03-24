@@ -56,8 +56,7 @@ export const Player = () => {
                                 <Title level={2} style={{ margin: 0 }}>
                                     {(
                                         (data.seasonalStats[0].wins /
-                                            (data.seasonalStats[0].wins +
-                                                data.seasonalStats[0].losses)) *
+                                            (data.seasonalStats[0].wins + data.seasonalStats[0].losses)) *
                                         100
                                     ).toFixed(0)}
                                     %
@@ -73,13 +72,13 @@ export const Player = () => {
                         <Flex gap={'middle'}>
                             <Flex vertical style={{ flex: 1 }}>
                                 <Title level={2} style={{ margin: 0 }}>
-                                    {data.allTimeStats.eloHistory[data.allTimeStats.eloHistory.length - 1].elo}
+                                    {data.allTimeStats.eloHistory.at(-1)?.elo}
                                 </Title>
                                 <Text type="secondary">Général</Text>
                             </Flex>
                             <Flex vertical style={{ flex: 1 }}>
                                 <Title level={2} style={{ margin: 0 }}>
-                                    {data.seasonalStats[0].eloHistory[data.seasonalStats[0].eloHistory.length - 1]?.elo}
+                                    {data.seasonalStats[0].eloHistory.at(-1)?.elo}
                                 </Title>
                                 <Text type="secondary">Saison</Text>
                             </Flex>
