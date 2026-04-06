@@ -10,7 +10,7 @@ export const History = () => {
     const [dateOrder, setDateOrder] = useState<SortOrder>('descend');
 
     const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches({
-        size: 50,
+        size: 20,
         dateOrder: dateOrder,
     });
 
