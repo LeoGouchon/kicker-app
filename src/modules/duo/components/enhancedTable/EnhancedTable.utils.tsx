@@ -3,7 +3,7 @@ import { RankTag, type RankTone } from './EnhancedTable.style.tsx';
 
 export type MetricKey = keyof Pick<
     TableData,
-    'matches' | 'winRate' | 'eloGainAvg' | 'eloGainTotal' | 'biggestAdvantage'
+    'matches' | 'winRate' | 'eloGainAvg' | 'eloGainTotal' | 'biggestAdvantage' | 'biggestWin' | 'performanceVsExpected'
 >;
 
 export type MetricConfig = {
@@ -27,18 +27,18 @@ const podiumTagTones: Record<number, RankTone> = {
 export const metrics: MetricConfig[] = [
     {
         key: 'matches',
-        title: 'Matchs',
-        description: 'Nombre de matchs joues.',
+        title: 'Nombre matchs',
+        description: 'Nombre de matchs joués.',
     },
     {
         key: 'winRate',
         title: 'Pourcentage victoire',
-        description: 'Ratio victoire / matchs.',
+        description: '%Victoire = victoire / matchs.',
         isPercentage: true,
     },
     {
         key: 'eloGainAvg',
-        title: 'Moyenne ELO gagne',
+        title: 'Moyenne ELO gagné',
         description: "Nombre d'ELO moyen gagne par match au classement general.",
     },
     {
@@ -48,8 +48,19 @@ export const metrics: MetricConfig[] = [
     },
     {
         key: 'biggestAdvantage',
-        title: 'Plus grand avantage',
-        description: "Delta ELO moyen entre le duo et l'adversaire.",
+        title: 'Facilité adversaire',
+        description: "Delta ELO moyen entre le duo et l'adversaire. > 0 = plus facile, < 0 = plus difficile.",
+    },
+    {
+        key: 'biggestWin',
+        title: 'Meilleure victoire',
+        description: "Victoire ayant offert le plus d'ELO au classement général.",
+    },
+    {
+        key: 'performanceVsExpected',
+        title: 'Performance vs Attendue',
+        description:
+            "Performance relative par rapport à l'adversaire. > 0 = performance supérieure aux attentes, < 0 = performance inferieure aux attentes.",
     },
 ];
 

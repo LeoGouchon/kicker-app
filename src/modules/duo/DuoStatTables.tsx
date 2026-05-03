@@ -75,6 +75,32 @@ export const DuoStatTables = () => {
         }))
     );
 
+    const biggestWinMetrics = buildRankedMetrics(
+        duoStatsWithKeys.map(({ key, duo }) => ({
+            key,
+            value: duo.eloGainMax,
+        }))
+    );
+
+    const performanceVsExpected = buildRankedMetrics(
+        duoStatsWithKeys.map(({ key, duo }) => {
+            const duoElo = (duo.player1EloAvg + duo.player2EloAvg) / 2;
+            const expectedWinRate = 1 / (1 + Math.pow(10, (duo.opponentEloAvg - duoElo) / 400));
+            const actualWinRate = duo.wins / duo.matches;
+
+            const k = 10; // Trust constant
+            const confidence = duo.matches / (duo.matches + k);
+
+            const performance = actualWinRate - expectedWinRate;
+            const adjustedPerformance = Number((performance * confidence).toFixed(3));
+
+            return {
+                key,
+                value: adjustedPerformance,
+            };
+        })
+    );
+
     const getMetric = (metrics: Map<string, RankedMetric>, key: string): RankedMetric =>
         metrics.get(key) || {
             rank: 0,
@@ -92,6 +118,8 @@ export const DuoStatTables = () => {
                 eloGainAvg: getMetric(avgEloGainMetrics, key),
                 eloGainTotal: getMetric(totalEloGainMetrics, key),
                 biggestAdvantage: getMetric(biggestAdvantageMetrics, key),
+                biggestWin: getMetric(biggestWinMetrics, key),
+                performanceVsExpected: getMetric(performanceVsExpected, key),
             };
         })
         .sort((a, b) => a.winRate.rank - b.winRate.rank);
