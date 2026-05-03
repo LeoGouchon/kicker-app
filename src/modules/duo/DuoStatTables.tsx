@@ -18,14 +18,27 @@ export const DuoStatTables = () => {
     const buildRankedMetrics = (metricValues: Array<{ key: string; value: number }>): Map<string, RankedMetric> =>
         metricValues
             .sort((a, b) => b.value - a.value)
-            .reduce((metrics, duo, index) => {
-                metrics.set(duo.key, {
-                    rank: index + 1,
-                    value: duo.value,
-                });
+            .reduce(
+                (rankState, duo, index) => {
+                    const rank = duo.value === rankState.previousValue ? rankState.previousRank : index + 1;
 
-                return metrics;
-            }, new Map<string, RankedMetric>());
+                    rankState.metrics.set(duo.key, {
+                        rank,
+                        value: duo.value,
+                    });
+
+                    return {
+                        metrics: rankState.metrics,
+                        previousRank: rank,
+                        previousValue: duo.value,
+                    };
+                },
+                {
+                    metrics: new Map<string, RankedMetric>(),
+                    previousRank: 0,
+                    previousValue: undefined as number | undefined,
+                }
+            ).metrics;
 
     const matchesMetrics = buildRankedMetrics(
         duoStatsWithKeys.map(({ key, duo }) => ({

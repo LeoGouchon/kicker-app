@@ -1,50 +1,18 @@
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Flex, Grid, Table, Tooltip } from 'antd';
 
 import { LinkPlayer } from '../../../../components/linkPlayer/LinkPlayer.tsx';
 import type { TableData } from '../../types/TableData.type';
-import { EnhancedTableCard, MetricTitle, TableTitle } from './EnhancedTable.style.tsx';
+import { EnhancedTableCard, TableTitle } from './EnhancedTable.style.tsx';
+import { getRankSorter, getTopBottomByMetric, metrics, renderMetricValue, renderRank } from './EnhancedTable.utils.tsx';
 
 const { useBreakpoint } = Grid;
-
-type MetricConfig = {
-    key: keyof Pick<TableData, 'matches' | 'winRate' | 'eloGainAvg' | 'eloGainTotal' | 'biggestAdvantage'>;
-    title: string;
-    description: string;
-    isPercentage?: boolean;
-};
-
-const metrics: MetricConfig[] = [
-    {
-        key: 'matches',
-        title: 'Matchs',
-        description: 'Nombre de matchs joues.',
-    },
-    {
-        key: 'winRate',
-        title: 'Pourcentage victoire',
-        description: 'Ratio victoire / matchs.',
-        isPercentage: true,
-    },
-    {
-        key: 'eloGainAvg',
-        title: 'Moyenne ELO gagne',
-        description: "Nombre d'ELO moyen gagne par match au classement general.",
-    },
-    {
-        key: 'eloGainTotal',
-        title: 'Total ELO gagne',
-        description: "Total des points ELO gagnes au classement general sur l'ensemble des matchs.",
-    },
-    {
-        key: 'biggestAdvantage',
-        title: 'Plus grand avantage',
-        description: "Delta ELO moyen entre le duo et l'adversaire.",
-    },
-];
 
 export const EnhancedTable = ({ data }: { data: TableData[] }) => {
     const screens = useBreakpoint();
     const isMobile = !screens.md;
+    const topBottomByMetric = getTopBottomByMetric(data);
 
     return (
         <EnhancedTableCard>
@@ -70,7 +38,7 @@ export const EnhancedTable = ({ data }: { data: TableData[] }) => {
                         <Table.Column<TableData>
                             title="Joueurs"
                             fixed="left"
-                            width={160}
+                            width={100}
                             render={(_, record) => (
                                 <Flex vertical>
                                     <LinkPlayer player={record.player1} showFullLastName />
@@ -99,28 +67,27 @@ export const EnhancedTable = ({ data }: { data: TableData[] }) => {
                             key={metric.key}
                             title={
                                 <Tooltip title={metric.description}>
-                                    <MetricTitle>{metric.title}</MetricTitle>
+                                    <>
+                                        {metric.title} <FontAwesomeIcon icon={faInfoCircle} />
+                                    </>
                                 </Tooltip>
                             }
                         >
                             <Table.Column<TableData>
                                 key={metric.key + '-rank'}
-                                title="Rank"
+                                title="#"
                                 align="center"
-                                width={64}
-                                sorter={(a, b) => a[metric.key].rank - b[metric.key].rank}
+                                width={isMobile ? 48 : 64}
+                                sorter={getRankSorter(metric)}
                                 defaultSortOrder={metric.key === 'winRate' ? 'ascend' : undefined}
                                 sortDirections={['ascend', 'descend']}
-                                render={(_, record) => record[metric.key].rank}
+                                render={(_, record) => renderRank(record, metric, topBottomByMetric)}
                             />
                             <Table.Column<TableData>
                                 title="Valeur"
                                 align="right"
                                 width={88}
-                                render={(_, record) => {
-                                    const value = record[metric.key].value;
-                                    return metric.isPercentage ? `${value}%` : value;
-                                }}
+                                render={(_, record) => renderMetricValue(record, metric)}
                             />
                         </Table.ColumnGroup>
                     ))}

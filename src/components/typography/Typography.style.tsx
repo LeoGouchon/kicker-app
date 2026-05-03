@@ -8,6 +8,9 @@ export const LinkTypographyStyled = styled(Typography.Text)<TextProps>`
         color: var(--ant-color-text);
         cursor: pointer;
         text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         &:hover {
             color: var(--ant-color-text-secondary);
