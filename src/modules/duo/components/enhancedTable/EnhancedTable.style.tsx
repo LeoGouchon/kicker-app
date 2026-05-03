@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Typography } from 'antd';
+import { Tag, type TagProps, Typography } from 'antd';
 
 const { Title } = Typography;
 
@@ -13,8 +13,18 @@ export const TableTitle = styled(Title)`
     line-height: 1;
 `;
 
-export const MetricTitle = styled.span`
-    display: inline-block;
-    white-space: normal;
-    line-height: 1.2;
+type RankTagProps = {
+    rankTone?: 'gold' | 'silver' | 'bronze' | 'top' | 'bottom';
+} & TagProps;
+
+export type RankTone = NonNullable<RankTagProps['rankTone']>;
+
+export const RankTag = styled(Tag, {
+    shouldForwardProp: (prop) => prop !== 'rankTone',
+})<RankTagProps>`
+    ${({ rankTone }) => (rankTone ? `background-color: var(--kicker-tag-${rankTone}-bg);` : '')}
+    ${({ rankTone }) => (rankTone ? `color: var(--kicker-tag-${rankTone}-color);` : '')}
+    padding: 2px 0;
+    width: 100%;
+    text-align: center;
 `;
