@@ -14,4 +14,6 @@ export type TableData = {
     eloGainAvg: RankedMetric;
     eloGainTotal: RankedMetric;
     biggestAdvantage: RankedMetric;
+    biggestWin: RankedMetric;
+    performanceVsExpected: RankedMetric;
 };
