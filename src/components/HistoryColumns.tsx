@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { App, Dropdown, Flex, Grid, Space, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useContext, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../context/UserContext.tsx';
 import { useDeleteMatch } from '../hooks/useApiEndPoint/useMatch.ts';
 import { ROUTES } from '../routes/constant.ts';
 import type { Match } from '../types/Match.type.ts';
-import { LinkTypographyStyled } from './typography/Typography.style.tsx';
+import { LinkPlayer } from './linkPlayer/LinkPlayer.tsx';
 
 const { useBreakpoint } = Grid;
 const DELETE_MATCH_DAYS = 7;
@@ -84,18 +84,8 @@ export const useHistoryColumns = ({
         key: 'teamA',
         render: (r: Match) => (
             <Flex vertical>
-                <LinkTypographyStyled>
-                    <Link to={ROUTES.PLAYER + '/' + r.player1A.id} style={{ all: 'unset' }}>
-                        {r.player1A ? `${r.player1A.firstname} ${r.player1A.lastname?.[0] ?? ''}` : ''}.
-                    </Link>
-                </LinkTypographyStyled>
-                {r.player2A && (
-                    <LinkTypographyStyled>
-                        <Link to={ROUTES.PLAYER + '/' + r.player2A.id} style={{ all: 'unset' }}>
-                            {`${r.player2A.firstname} ${r.player2A.lastname?.[0] ?? ''}`}.
-                        </Link>
-                    </LinkTypographyStyled>
-                )}
+                <LinkPlayer player={r.player1A} />
+                {r.player2A && <LinkPlayer player={r.player2A} />}
             </Flex>
         ),
     };
@@ -105,18 +95,8 @@ export const useHistoryColumns = ({
         key: 'teamB',
         render: (r: Match) => (
             <Flex vertical>
-                <LinkTypographyStyled>
-                    <Link to={ROUTES.PLAYER + '/' + r.player1B.id} style={{ all: 'unset' }}>
-                        {r.player1B ? `${r.player1B.firstname} ${r.player1B.lastname?.[0] ?? ''}` : ''}.
-                    </Link>
-                </LinkTypographyStyled>
-                {r.player2B && (
-                    <LinkTypographyStyled>
-                        <Link to={ROUTES.PLAYER + '/' + r.player2B.id} style={{ all: 'unset' }}>
-                            {`${r.player2B.firstname} ${r.player2B.lastname?.[0] ?? ''}`}.
-                        </Link>
-                    </LinkTypographyStyled>
-                )}
+                <LinkPlayer player={r.player1B} />
+                {r.player2B && <LinkPlayer player={r.player2B} />}
             </Flex>
         ),
     };
@@ -128,16 +108,7 @@ export const useHistoryColumns = ({
             key: 'teamA_J1',
             width: 140,
             align: 'right' as const,
-            render: (p: Match['player1A']) =>
-                p ? (
-                    <LinkTypographyStyled>
-                        <Link to={ROUTES.PLAYER + '/' + p.id} style={{ all: 'unset' }}>
-                            {`${p.firstname} ${p.lastname?.[0] ?? ''}`}.
-                        </Link>
-                    </LinkTypographyStyled>
-                ) : (
-                    ''
-                ),
+            render: (p: Match['player1A']) => p && <LinkPlayer player={p} />,
         },
         {
             title: 'Équipe A - J2',
@@ -145,16 +116,7 @@ export const useHistoryColumns = ({
             key: 'teamA_J2',
             width: 140,
             align: 'right' as const,
-            render: (p: Match['player2A']) =>
-                p ? (
-                    <LinkTypographyStyled>
-                        <Link to={ROUTES.PLAYER + '/' + p.id} style={{ all: 'unset' }}>
-                            {`${p.firstname} ${p.lastname?.[0] ?? ''}`}.
-                        </Link>
-                    </LinkTypographyStyled>
-                ) : (
-                    ''
-                ),
+            render: (p: Match['player2A']) => p && <LinkPlayer player={p} />,
         },
     ];
 
@@ -165,16 +127,7 @@ export const useHistoryColumns = ({
             key: 'teamB_J1',
             width: 140,
             align: 'left' as const,
-            render: (p: Match['player1B']) =>
-                p ? (
-                    <LinkTypographyStyled>
-                        <Link to={ROUTES.PLAYER + '/' + p.id} style={{ all: 'unset' }}>
-                            {`${p.firstname} ${p.lastname?.[0] ?? ''}`}.
-                        </Link>
-                    </LinkTypographyStyled>
-                ) : (
-                    ''
-                ),
+            render: (p: Match['player1B']) => p && <LinkPlayer player={p} />,
         },
         {
             title: 'Équipe B - J2',
@@ -182,16 +135,7 @@ export const useHistoryColumns = ({
             key: 'teamB_J2',
             width: 140,
             align: 'left' as const,
-            render: (p: Match['player2B']) =>
-                p ? (
-                    <LinkTypographyStyled>
-                        <Link to={ROUTES.PLAYER + '/' + p.id} style={{ all: 'unset' }}>
-                            {`${p.firstname} ${p.lastname?.[0] ?? ''}`}.
-                        </Link>
-                    </LinkTypographyStyled>
-                ) : (
-                    ''
-                ),
+            render: (p: Match['player2B']) => p && <LinkPlayer player={p} />,
         },
     ];
 
@@ -313,5 +257,5 @@ export const useHistoryColumns = ({
         });
     }
 
-    return useMemo(() => finalColumns, [isMobile, user, isCondensed, visibleKeys?.join(), excludeKeys.join()]);
+    return useMemo(() => finalColumns, []);
 };
