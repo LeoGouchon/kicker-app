@@ -2,12 +2,10 @@ import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Badge, Result, Skeleton, Space, Table, Tag, Typography } from 'antd';
 import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
 
 import { FlexFullWidth } from '../../../../App.style.tsx';
-import { LinkTypographyStyled } from '../../../../components/typography/Typography.style.tsx';
+import { LinkPlayer } from '../../../../components/linkPlayer/LinkPlayer.tsx';
 import { useGetGlobalStats } from '../../../../hooks/useApiEndPoint/useStats.ts';
-import { ROUTES } from '../../../../routes/constant.ts';
 
 const { Text } = Typography;
 
@@ -83,21 +81,7 @@ export const SeasonStats = React.memo(
                         {
                             key: 'name',
                             title: 'Nom',
-                            render: (record) => {
-                                const firstname = record.firstname
-                                    ? record.firstname[0].toUpperCase() + record.firstname.slice(1)
-                                    : '';
-                                const lastname = record.lastname
-                                    ? record.lastname[0].toUpperCase() + record.lastname.slice(1)
-                                    : '';
-                                return (
-                                    <LinkTypographyStyled>
-                                        <Link to={`${ROUTES.PLAYER}/${record.playerId}`} style={{ all: 'unset' }}>
-                                            {firstname} {lastname}
-                                        </Link>
-                                    </LinkTypographyStyled>
-                                );
-                            },
+                            render: (record) => <LinkPlayer player={record} showFullLastName />,
                         },
                         {
                             key: 'elo',
@@ -194,21 +178,7 @@ export const SeasonStats = React.memo(
                         {
                             key: 'name',
                             title: 'Nom',
-                            render: (record) => {
-                                const firstname = record.firstname
-                                    ? record.firstname[0].toUpperCase() + record.firstname.slice(1)
-                                    : '';
-                                const lastname = record.lastname
-                                    ? record.lastname[0].toUpperCase() + record.lastname.slice(1)
-                                    : '';
-                                return (
-                                    <LinkTypographyStyled>
-                                        <Link to={`${ROUTES.PLAYER}/${record.playerId}`} style={{ all: 'unset' }}>
-                                            {firstname} {lastname}
-                                        </Link>
-                                    </LinkTypographyStyled>
-                                );
-                            },
+                            render: (record) => <LinkPlayer player={record} showFullLastName />,
                         },
                         {
                             key: 'elo',
