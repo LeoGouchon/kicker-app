@@ -1,74 +1,24 @@
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Flex, Grid, Table, Tooltip } from 'antd';
+import { Flex, Grid, Table } from 'antd';
 import { useEffect, useMemo, useState } from 'react';
 
 import { LinkPlayer } from '../../../../components/linkPlayer/LinkPlayer.tsx';
 import type { TableData } from '../../types/TableData.type';
 import { Filters } from './components/filters/Filters.tsx';
 import { EnhancedTableCard, TableTitle } from './EnhancedTable.style.tsx';
+import type { MetricKey } from './EnhancedTable.types.ts';
 import {
+    getDefaultVisibleMetricKeys,
     getRankSorter,
+    getStoredFilters,
     getTopBottomByMetric,
-    type MetricKey,
     metrics,
+    renderMetricTitle,
     renderMetricValue,
     renderRank,
+    storeFilters,
 } from './EnhancedTable.utils.tsx';
 
 const { useBreakpoint } = Grid;
-const STORAGE_KEY = 'kicker.duo.enhancedTable.filters';
-
-type StoredFilters = {
-    playerIdFilter?: string;
-    visibleMetricKeys?: MetricKey[];
-};
-
-const getDefaultVisibleMetricKeys = () => metrics.map((metric) => metric.key);
-
-const isMetricKey = (value: unknown): value is MetricKey => {
-    return typeof value === 'string' && metrics.some((metric) => metric.key === value);
-};
-
-const getStoredFilters = (): StoredFilters => {
-    if (typeof window === 'undefined') {
-        return {};
-    }
-
-    const storedFilters = window.localStorage.getItem(STORAGE_KEY);
-
-    if (!storedFilters) {
-        return {};
-    }
-
-    try {
-        const parsedFilters: unknown = JSON.parse(storedFilters);
-
-        if (!parsedFilters || typeof parsedFilters !== 'object') {
-            return {};
-        }
-
-        const filters = parsedFilters as Record<string, unknown>;
-        const visibleMetricKeys = Array.isArray(filters.visibleMetricKeys)
-            ? filters.visibleMetricKeys.filter(isMetricKey)
-            : undefined;
-
-        return {
-            playerIdFilter: typeof filters.playerIdFilter === 'string' ? filters.playerIdFilter : undefined,
-            visibleMetricKeys: visibleMetricKeys?.length ? visibleMetricKeys : undefined,
-        };
-    } catch {
-        return {};
-    }
-};
-
-const storeFilters = (filters: StoredFilters) => {
-    if (typeof globalThis === 'undefined') {
-        return;
-    }
-
-    globalThis.localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
-};
 
 export const EnhancedTable = ({ data }: { data: TableData[] }) => {
     const screens = useBreakpoint();
@@ -114,7 +64,7 @@ export const EnhancedTable = ({ data }: { data: TableData[] }) => {
                     dataSource={filteredData}
                     rowKey="key"
                     tableLayout={'fixed'}
-                    scroll={{ x: isMobile ? 1120 : 1280 }}
+                    scroll={{ x: isMobile ? 300 : 1280 }}
                     pagination={{
                         responsive: true,
                         align: 'center',
@@ -128,7 +78,7 @@ export const EnhancedTable = ({ data }: { data: TableData[] }) => {
                         <Table.Column<TableData>
                             title="Joueurs"
                             fixed="left"
-                            width={100}
+                            width={120}
                             render={(_, record) => (
                                 <Flex vertical>
                                     <LinkPlayer player={record.player1} showFullLastName />
@@ -152,35 +102,44 @@ export const EnhancedTable = ({ data }: { data: TableData[] }) => {
                             />
                         </>
                     )}
-                    {visibleMetrics.map((metric) => (
-                        <Table.ColumnGroup
-                            key={metric.key}
-                            title={
-                                <Tooltip title={metric.description}>
-                                    <>
-                                        {metric.title} <FontAwesomeIcon icon={faInfoCircle} />
-                                    </>
-                                </Tooltip>
-                            }
-                        >
+                    {visibleMetrics.map((metric) =>
+                        isMobile ? (
                             <Table.Column<TableData>
-                                key={metric.key + '-rank'}
-                                title="#"
+                                key={metric.key}
+                                title={renderMetricTitle(metric)}
                                 align="center"
-                                width={isMobile ? 48 : 64}
+                                width={150}
                                 sorter={getRankSorter(metric)}
                                 defaultSortOrder={metric.key === 'winRate' ? 'ascend' : undefined}
                                 sortDirections={['ascend', 'descend']}
-                                render={(_, record) => renderRank(record, metric, topBottomByMetric)}
+                                render={(_, record) => (
+                                    <Flex vertical gap={4}>
+                                        {renderRank(record, metric, topBottomByMetric)}
+                                        <span>{renderMetricValue(record, metric)}</span>
+                                    </Flex>
+                                )}
                             />
-                            <Table.Column<TableData>
-                                title="Valeur"
-                                align="right"
-                                width={88}
-                                render={(_, record) => renderMetricValue(record, metric)}
-                            />
-                        </Table.ColumnGroup>
-                    ))}
+                        ) : (
+                            <Table.ColumnGroup key={metric.key} title={renderMetricTitle(metric)}>
+                                <Table.Column<TableData>
+                                    key={metric.key + '-rank'}
+                                    title="#"
+                                    align="center"
+                                    width={64}
+                                    sorter={getRankSorter(metric)}
+                                    defaultSortOrder={metric.key === 'winRate' ? 'ascend' : undefined}
+                                    sortDirections={['ascend', 'descend']}
+                                    render={(_, record) => renderRank(record, metric, topBottomByMetric)}
+                                />
+                                <Table.Column<TableData>
+                                    title="Valeur"
+                                    align="right"
+                                    width={88}
+                                    render={(_, record) => renderMetricValue(record, metric)}
+                                />
+                            </Table.ColumnGroup>
+                        )
+                    )}
                 </Table>
             </Flex>
         </EnhancedTableCard>

@@ -2,7 +2,8 @@ import { Select, type SelectProps } from 'antd';
 import { type Dispatch, type SetStateAction, useMemo } from 'react';
 
 import type { TableData } from '../../../../types/TableData.type';
-import { type MetricKey, metrics } from '../../EnhancedTable.utils.tsx';
+import type { MetricKey } from '../../EnhancedTable.types.ts';
+import { metrics } from '../../EnhancedTable.utils.tsx';
 
 type FiltersProps = {
     data: TableData[];
