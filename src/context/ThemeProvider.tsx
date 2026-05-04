@@ -61,7 +61,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
                 }}
                 theme={{
                     algorithm: themeState === 'dark' ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
-                    cssVar: true,
+                    cssVar: {},
                 }}
             >
                 <AntdApp>

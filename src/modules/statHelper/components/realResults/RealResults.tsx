@@ -139,7 +139,7 @@ export const RealResults = React.memo(() => {
                         </Typography.Text>
                     }
                 >
-                    <Tag color="default" icon={<FontAwesomeIcon icon={faQuestion} />}>
+                    <Tag color="default" variant={'outlined'} icon={<FontAwesomeIcon icon={faQuestion} />}>
                         {' '}
                         J'ai pas compriiiis
                     </Tag>

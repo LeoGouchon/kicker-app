@@ -91,7 +91,7 @@ export const SeasonStats = React.memo(
                             defaultSortOrder: 'descend',
                             sorter: (a, b) => a.currentElo - b.currentElo,
                             dataIndex: 'currentElo',
-                            render: (variable) => <Tag>{variable}</Tag>,
+                            render: (variable) => <Tag variant={'outlined'}>{variable}</Tag>,
                         },
                         {
                             title: 'Diff 7j',
@@ -184,7 +184,7 @@ export const SeasonStats = React.memo(
                             key: 'elo',
                             title: 'Elo',
                             render: () => (
-                                <Tag>
+                                <Tag variant={'outlined'}>
                                     <Typography.Text
                                         style={{ filter: 'blur(3px)', pointerEvents: 'none', userSelect: 'none' }}
                                     >

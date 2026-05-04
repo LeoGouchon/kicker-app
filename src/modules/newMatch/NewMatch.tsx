@@ -35,12 +35,33 @@ export const NewMatch = () => {
     const joueurB2 = useWatch<string>('joueurB2', form);
 
     const getAvailablePlayerList = (selectName: 'joueurA1' | 'joueurB1' | 'joueurA2' | 'joueurB2') => {
-        const selectValuesToExclude = Object.keys({ joueurA1, joueurB1, joueurA2, joueurB2 })
-            .filter((key) => key !== selectName)
-            .map((key) => ({ joueurA1, joueurB1, joueurA2, joueurB2 })[key] ?? []);
+        const selectValuesToExclude = new Set(
+            Object.keys({ joueurA1, joueurB1, joueurA2, joueurB2 })
+                .filter((key) => key !== selectName)
+                .map((key) => ({ joueurA1, joueurB1, joueurA2, joueurB2 })[key] ?? [])
+        );
         return playersList
-            ?.filter((player) => !selectValuesToExclude.includes(player.value))
+            ?.filter((player) => !selectValuesToExclude.has(player.value))
             .sort((a, b) => a.label.localeCompare(b.label));
+    };
+
+    const getSearchablePlayerLabel = (label: unknown) => {
+        if (typeof label === 'string' || typeof label === 'number') {
+            return String(label);
+        }
+
+        return '';
+    };
+
+    const filterPlayerOption = (input: string, option?: { label?: unknown }) =>
+        getSearchablePlayerLabel(option?.label)
+            .normalize('NFD')
+            .replaceAll(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .includes(input.toLowerCase());
+
+    const playerSearch = {
+        filterOption: filterPlayerOption,
     };
 
     const handleFinish = async (formValues: {
@@ -89,14 +110,7 @@ export const NewMatch = () => {
                                         loading={isLoading}
                                         options={getAvailablePlayerList('joueurA1')}
                                         allowClear
-                                        showSearch
-                                        filterOption={(input, option) =>
-                                            option?.label
-                                                .normalize('NFD')
-                                                .replaceAll(/[\u0300-\u036f]/g, '')
-                                                .toLowerCase()
-                                                .includes(input.toLowerCase()) ?? false
-                                        }
+                                        showSearch={playerSearch}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -114,14 +128,7 @@ export const NewMatch = () => {
                                         loading={isLoading}
                                         options={getAvailablePlayerList('joueurA2')}
                                         allowClear
-                                        showSearch
-                                        filterOption={(input, option) =>
-                                            option?.label
-                                                .normalize('NFD')
-                                                .replaceAll(/[\u0300-\u036f]/g, '')
-                                                .toLowerCase()
-                                                .includes(input.toLowerCase()) ?? false
-                                        }
+                                        showSearch={playerSearch}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -184,14 +191,7 @@ export const NewMatch = () => {
                                         loading={isLoading}
                                         options={getAvailablePlayerList('joueurB1')}
                                         allowClear
-                                        showSearch
-                                        filterOption={(input, option) =>
-                                            option?.label
-                                                .normalize('NFD')
-                                                .replaceAll(/[\u0300-\u036f]/g, '')
-                                                .toLowerCase()
-                                                .includes(input.toLowerCase()) ?? false
-                                        }
+                                        showSearch={playerSearch}
                                     />
                                 </Form.Item>
                                 <Form.Item
@@ -209,14 +209,7 @@ export const NewMatch = () => {
                                         loading={isLoading}
                                         options={getAvailablePlayerList('joueurB2')}
                                         allowClear
-                                        showSearch
-                                        filterOption={(input, option) =>
-                                            option?.label
-                                                .normalize('NFD')
-                                                .replaceAll(/[\u0300-\u036f]/g, '')
-                                                .toLowerCase()
-                                                .includes(input.toLowerCase()) ?? false
-                                        }
+                                        showSearch={playerSearch}
                                     />
                                 </Form.Item>
                                 <Form.Item

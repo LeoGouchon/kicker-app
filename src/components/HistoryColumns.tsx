@@ -69,6 +69,7 @@ export const useHistoryColumns = ({
         const colors = ['blue', 'geekblue', 'purple', 'magenta'];
         return (
             <Tag
+                variant={'outlined'}
                 style={{ cursor: 'pointer', marginRight: 0 }}
                 color={colors[quarter - 1]}
                 onClick={() => navigate(`${ROUTES.RANKING}/${year}/${quarter}`)}
@@ -145,9 +146,13 @@ export const useHistoryColumns = ({
         align: 'center' as const,
         width: 100,
         render: (m: Match) => (
-            <Space size={0}>
-                <Tag color={m.scoreA > m.scoreB ? 'green' : 'red'}>{m.scoreA}</Tag>
-                <Tag color={m.scoreA < m.scoreB ? 'green' : 'red'}>{m.scoreB}</Tag>
+            <Space size={'small'}>
+                <Tag variant={'outlined'} color={m.scoreA > m.scoreB ? 'green' : 'red'}>
+                    {m.scoreA}
+                </Tag>
+                <Tag variant={'outlined'} color={m.scoreA < m.scoreB ? 'green' : 'red'}>
+                    {m.scoreB}
+                </Tag>
             </Space>
         ),
     };
@@ -188,9 +193,9 @@ export const useHistoryColumns = ({
         key: 'eloDelta',
         align: 'center' as const,
         render: (record: Match) => (
-            <Flex justify="center">
-                <Tag>±{record.deltaElo}</Tag>
-                <Tag>±{record.deltaEloSeasonal}</Tag>
+            <Flex justify="center" gap={'small'}>
+                <Tag variant={'outlined'}>±{record.deltaElo}</Tag>
+                <Tag variant={'outlined'}>±{record.deltaEloSeasonal}</Tag>
             </Flex>
         ),
     };

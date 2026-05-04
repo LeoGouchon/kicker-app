@@ -50,7 +50,7 @@ export const SeasonChoice = React.memo(() => {
         return (
             <FlexFullWidth gap={'small'} style={{ width: '100%' }} align={'center'}>
                 <Skeleton.Input active />
-                <StyledDivider type={'vertical'} size={'large'} />
+                <StyledDivider orientation={'vertical'} size={'large'} />
                 <Skeleton.Input active />
             </FlexFullWidth>
         );

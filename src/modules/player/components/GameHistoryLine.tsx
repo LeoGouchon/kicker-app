@@ -37,8 +37,9 @@ export const GameHistoryLine = React.memo(({ match, playerId }: { match: Match; 
                     </Flex>
                 </Col>
                 <Col span={4}>
-                    <Space size={0}>
+                    <Space size={'small'}>
                         <Tag
+                            variant={'outlined'}
                             color={
                                 isPlayerInTeamA
                                     ? match.scoreA > match.scoreB
@@ -52,6 +53,7 @@ export const GameHistoryLine = React.memo(({ match, playerId }: { match: Match; 
                             {isPlayerInTeamA ? match.scoreA : match.scoreB}
                         </Tag>
                         <Tag
+                            variant={'outlined'}
                             color={
                                 isPlayerInTeamA
                                     ? match.scoreA < match.scoreB
