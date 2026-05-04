@@ -1,9 +1,10 @@
-import { Select, type SelectProps } from 'antd';
+import { Button, Select, type SelectProps } from 'antd';
 import { type Dispatch, type SetStateAction, useMemo } from 'react';
 
 import type { TableData } from '../../../../types/TableData.type';
 import type { MetricKey } from '../../EnhancedTable.types.ts';
 import { metrics } from '../../EnhancedTable.utils.tsx';
+import { GlobalWrapper } from './Filters.style.tsx';
 
 type FiltersProps = {
     data: TableData[];
@@ -44,8 +45,13 @@ export const Filters = ({
     }, [data]);
     const metricOptions = useMemo(() => metrics.map((metric) => ({ label: metric.title, value: metric.key })), []);
 
+    const resetFilters = () => {
+        onPlayerIdFilterChange(undefined);
+        onVisibleMetricKeysChange(metricOptions.map((option) => option.value));
+    };
+
     return (
-        <>
+        <GlobalWrapper align={isMobile ? 'stretch' : 'center'} vertical={isMobile} gap={'small'}>
             <Select
                 allowClear
                 showSearch
@@ -66,6 +72,9 @@ export const Filters = ({
                 options={metricOptions}
                 style={{ width: isMobile ? '100%' : 360 }}
             />
-        </>
+            <Button type={'text'} onClick={() => resetFilters()} danger>
+                Réinitialiser les filtres
+            </Button>
+        </GlobalWrapper>
     );
 };

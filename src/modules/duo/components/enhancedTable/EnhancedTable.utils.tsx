@@ -33,7 +33,7 @@ export const metrics: MetricConfig[] = [
     },
     {
         key: 'eloGainTotal',
-        title: 'Total ELO gagne',
+        title: 'Total ELO gagné',
         description: "Total des points ELO gagnés au classement général sur l'ensemble des matchs.",
     },
     {

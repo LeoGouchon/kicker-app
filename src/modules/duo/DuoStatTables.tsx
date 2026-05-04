@@ -126,7 +126,7 @@ export const DuoStatTables = () => {
 
     return (
         <Flex vertical gap={'large'}>
-            <Title level={2}>Stats</Title>
+            <Title level={2}>Statistiques des duos</Title>
             <EnhancedTable data={tableData} />
         </Flex>
     );

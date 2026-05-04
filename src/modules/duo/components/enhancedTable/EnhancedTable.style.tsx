@@ -1,16 +1,16 @@
 import styled from '@emotion/styled';
-import { Tag, type TagProps, Typography } from 'antd';
-
-const { Title } = Typography;
+import { Tag, type TagProps } from 'antd';
 
 export const EnhancedTableCard = styled.div`
     width: 100%;
-`;
 
-export const TableTitle = styled(Title)`
-    margin: 0 !important;
-    padding: 0;
-    line-height: 1;
+    .ant-table-cell.kicker-stat-column-even {
+        background-color: color-mix(in srgb, var(--ant-color-bg-container), var(--ant-color-text) 1.5%);
+    }
+
+    .ant-table-tbody > tr.ant-table-row:hover > .ant-table-cell.kicker-stat-column-even {
+        background-color: var(--ant-color-fill-alter);
+    }
 `;
 
 type RankTagProps = {
