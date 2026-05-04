@@ -1,6 +1,7 @@
 import type { RouteObject } from 'react-router-dom';
 
 import { WithProtectionRoute } from '../components/withProtectionRoute/WithProtectionRoute.tsx';
+import { DuoStatTables } from '../modules/duo/DuoStatTables.tsx';
 import { History } from '../modules/history/History.tsx';
 import { Invite } from '../modules/invite/Invite.tsx';
 import { Login } from '../modules/login/Login.tsx';
@@ -45,4 +46,8 @@ export const routes: RouteObject[] = [
     { path: ROUTES.STATS_HELPER, element: <StatHelper /> },
     { path: ROUTES.REGISTER, element: <Register /> },
     { path: ROUTES.NOT_FOUND, element: <NotFound /> },
+    {
+        path: ROUTES.DUO,
+        element: <DuoStatTables />,
+    },
 ];

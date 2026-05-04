@@ -1,10 +1,8 @@
 import { Button, List, Typography } from 'antd';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
-import { LinkTypographyStyled } from '../../../components/typography/Typography.style.tsx';
+import { LinkPlayer } from '../../../components/linkPlayer/LinkPlayer.tsx';
 import { MAX_DEFAULT_PLAYER_TO_SHOW, MINIMUM_GAME_AGAINST_PLAYER } from '../../../constants.tsx';
-import { ROUTES } from '../../../routes/constant.ts';
 import type { PlayerStats } from '../../../types/PlayerStats.type.ts';
 import { VerticalCardStats } from '../Player.style.tsx';
 
@@ -29,13 +27,7 @@ export const OpponentList = React.memo(({ data }: { data: PlayerStats['statsPerO
                 dataSource={visibleOpponents}
                 renderItem={(opponent) => (
                     <List.Item key={opponent.id}>
-                        <LinkTypographyStyled>
-                            <Link to={`${ROUTES.PLAYER}/${opponent.id}`} style={{ all: 'unset' }}>
-                                <Text strong>
-                                    {opponent.firstname} {opponent.lastname}
-                                </Text>
-                            </Link>
-                        </LinkTypographyStyled>
+                        <LinkPlayer player={opponent} showFullLastName />
                         <Text>
                             {opponent.wins} / {opponent.loses}
                         </Text>
