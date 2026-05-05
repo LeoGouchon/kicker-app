@@ -1,40 +1,26 @@
-import { Button, Table } from 'antd';
-import type { SortOrder } from 'antd/es/table/interface';
-import { useState } from 'react';
+import { Button, Flex, Spin } from 'antd';
 
-import { useHistoryColumns } from '../../components/HistoryColumns.tsx';
 import { useGetInfiniteMatches } from '../../hooks/useApiEndPoint/useMatch.ts';
 import type { Match } from '../../types/Match.type.ts';
+import { MatchCard } from './components/MatchCard.tsx';
 
 export const History = () => {
-    const [dateOrder, setDateOrder] = useState<SortOrder>('descend');
-
     const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches({
         size: 20,
-        dateOrder: dateOrder,
+        dateOrder: 'descend',
     });
 
     const matches: Match[] = data?.pages.flatMap((p) => p.content) ?? [];
 
-    const columns = useHistoryColumns({ excludeKeys: ['delay_from_today'] });
-
     return (
         <>
-            <Table
-                loading={isLoading}
-                dataSource={matches}
-                pagination={false}
-                rowKey={(r) => r.id}
-                scroll={{ x: true }}
-                columns={columns}
-                onChange={(_, __, sorter) => {
-                    if (!Array.isArray(sorter) && sorter?.field === 'createdAt') {
-                        setDateOrder(sorter.order || 'descend');
-                    } else {
-                        setDateOrder(null);
-                    }
-                }}
-            />
+            <Spin spinning={isLoading}>
+                <Flex vertical gap={'small'} flex={1} align={'center'}>
+                    {matches.map((match) => (
+                        <MatchCard key={match.id} match={match} />
+                    ))}
+                </Flex>
+            </Spin>
 
             {hasNextPage && (
                 <div style={{ textAlign: 'center', marginTop: 16 }}>
