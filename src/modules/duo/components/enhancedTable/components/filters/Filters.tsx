@@ -55,7 +55,6 @@ export const Filters = ({
             <Select
                 allowClear
                 showSearch
-                optionFilterProp="label"
                 placeholder="Filtrer par joueur"
                 value={playerIdFilter}
                 onChange={onPlayerIdFilterChange}
@@ -65,7 +64,7 @@ export const Filters = ({
             <Select
                 mode="multiple"
                 maxTagCount="responsive"
-                optionFilterProp="label"
+                showSearch
                 placeholder="Categories"
                 value={visibleMetricKeys}
                 onChange={onVisibleMetricKeysChange}

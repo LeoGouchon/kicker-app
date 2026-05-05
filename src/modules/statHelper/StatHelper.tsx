@@ -41,7 +41,9 @@ export const StatHelper = () => {
                     <Typography.Title level={3} style={{ margin: 0 }}>
                         Gain de point potentiel
                     </Typography.Title>
-                    <Tag color="green">Gagnant du match</Tag>
+                    <Tag variant={'outlined'} color="green">
+                        Gagnant du match
+                    </Tag>
                 </Flex>
                 <Typography.Text>
                     En fonction du <strong>score adverse</strong> (ligne) et la différence de{' '}
@@ -100,7 +102,9 @@ export const StatHelper = () => {
                     <Typography.Title level={3} style={{ margin: 0 }}>
                         Perte de point potentiel
                     </Typography.Title>
-                    <Tag color="red">Perdant du match</Tag>
+                    <Tag variant={'outlined'} color="red">
+                        Perdant du match
+                    </Tag>
                 </Flex>
                 <Typography.Text>
                     En fonction de <strong>votre score</strong> (ligne) et la différence de{' '}

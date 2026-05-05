@@ -140,7 +140,7 @@ export const renderRank = (
 
     if (podiumTone) {
         return (
-            <RankTag bordered={false} rankTone={podiumTone}>
+            <RankTag variant={'filled'} rankTone={podiumTone}>
                 {formattedRank}
             </RankTag>
         );
@@ -148,7 +148,7 @@ export const renderRank = (
 
     if (top !== undefined && metricValue >= top) {
         return (
-            <RankTag bordered={false} rankTone="top">
+            <RankTag variant={'filled'} rankTone="top">
                 {formattedRank}
             </RankTag>
         );
@@ -156,7 +156,7 @@ export const renderRank = (
 
     if (bottom !== undefined && metricValue <= bottom) {
         return (
-            <RankTag bordered={false} rankTone="bottom">
+            <RankTag variant={'filled'} rankTone="bottom">
                 {formattedRank}
             </RankTag>
         );
