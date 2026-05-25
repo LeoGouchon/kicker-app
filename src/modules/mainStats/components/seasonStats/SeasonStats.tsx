@@ -6,6 +6,8 @@ import React, { useCallback } from 'react';
 import { FlexFullWidth } from '../../../../App.style.tsx';
 import { LinkPlayer } from '../../../../components/linkPlayer/LinkPlayer.tsx';
 import { useGetGlobalStats } from '../../../../hooks/useApiEndPoint/useStats.ts';
+import type { GlobalStats } from '../../../../types/GlobalStats.type.ts';
+import type { Player } from '../../../../types/Player.type.ts';
 
 const { Text } = Typography;
 
@@ -81,7 +83,18 @@ export const SeasonStats = React.memo(
                         {
                             key: 'name',
                             title: 'Nom',
-                            render: (record) => <LinkPlayer player={record} showFullLastName />,
+                            render: (_, player: GlobalStats) => (
+                                <LinkPlayer
+                                    player={
+                                        {
+                                            id: player.playerId,
+                                            lastname: player.lastname,
+                                            firstname: player.firstname,
+                                        } as Player
+                                    }
+                                    showFullLastName
+                                />
+                            ),
                         },
                         {
                             key: 'elo',
@@ -168,6 +181,7 @@ export const SeasonStats = React.memo(
                     size={'small'}
                     dataSource={playerData?.filter((player) => player.rank === 0)}
                     pagination={false}
+                    rowKey={(record) => record.playerId}
                     columns={[
                         {
                             key: 'id',
@@ -178,7 +192,18 @@ export const SeasonStats = React.memo(
                         {
                             key: 'name',
                             title: 'Nom',
-                            render: (record) => <LinkPlayer player={record} showFullLastName />,
+                            render: (_, player: GlobalStats) => (
+                                <LinkPlayer
+                                    player={
+                                        {
+                                            id: player.playerId,
+                                            lastname: player.lastname,
+                                            firstname: player.firstname,
+                                        } as Player
+                                    }
+                                    showFullLastName
+                                />
+                            ),
                         },
                         {
                             key: 'elo',
@@ -247,3 +272,5 @@ export const SeasonStats = React.memo(
     },
     (prev, next) => prev.year === next.year && prev.quarter === next.quarter
 );
+
+SeasonStats.displayName = 'SeasonStats';
