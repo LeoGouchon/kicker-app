@@ -3,13 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { App, Dropdown, Flex, Grid, Space, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useContext, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../context/UserContext.tsx';
 import { useDeleteMatch } from '../hooks/useApiEndPoint/useMatch.ts';
-import { ROUTES } from '../routes/constant.ts';
 import type { Match } from '../types/Match.type.ts';
 import { LinkPlayer } from './linkPlayer/LinkPlayer.tsx';
+import { SeasonTag } from './seasonTag/SeasonTag.tsx';
 
 const { useBreakpoint } = Grid;
 const DELETE_MATCH_DAYS = 7;
@@ -39,7 +38,6 @@ export const useHistoryColumns = ({
     visibleKeys,
     excludeKeys = [],
 }: HistoryColumnsOptions): ColumnsType<Match> => {
-    const navigate = useNavigate();
     const { modal, message } = App.useApp();
 
     const { user } = useContext(UserContext);
@@ -60,24 +58,6 @@ export const useHistoryColumns = ({
                     onError: () => message.error('Erreur lors de la suppression du match'),
                 }),
         });
-    };
-
-    const getSeasonTag = (date: string) => {
-        const d = new Date(date);
-        const year = d.getFullYear();
-        const quarter = Math.ceil((d.getMonth() + 1) / 3);
-        const colors = ['blue', 'geekblue', 'purple', 'magenta'];
-        return (
-            <Tag
-                variant={'outlined'}
-                style={{ cursor: 'pointer', marginRight: 0 }}
-                color={colors[quarter - 1]}
-                onClick={() => navigate(`${ROUTES.RANKING}/${year}/${quarter}`)}
-                icon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
-            >
-                {` ${year}-${quarter}`}
-            </Tag>
-        );
     };
 
     const teamACompact = {
@@ -185,7 +165,7 @@ export const useHistoryColumns = ({
         dataIndex: 'createdAt',
         key: 'season',
         align: 'left' as const,
-        render: (d: string | null) => (d ? getSeasonTag(d) : ''),
+        render: (d: string | null) => (d ? <SeasonTag date={d} /> : ''),
     };
 
     const eloColumn = {
