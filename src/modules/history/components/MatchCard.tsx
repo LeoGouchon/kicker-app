@@ -1,4 +1,5 @@
 import { App, Button, Divider, Flex, Space, Typography } from 'antd';
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useContext } from 'react';
 
 import { LinkPlayer } from '../../../components/linkPlayer/LinkPlayer.tsx';
@@ -17,6 +18,8 @@ const DELETE_MATCH_DAYS = 7;
 
 export const MatchCard = ({ match }: props) => {
     const { modal, message } = App.useApp();
+    const screens = useBreakpoint();
+    const isMobile = !screens.md;
 
     const user = useContext(UserContext).user;
     const formatDate = (date: string) => new Date(date).toLocaleDateString('fr-FR');
@@ -57,20 +60,59 @@ export const MatchCard = ({ match }: props) => {
                     <SeasonTag date={match.createdAt} />
                 </Flex>
             </HeaderWrapper>
+
             <Divider style={{ margin: 0 }} />
+
             <ContentWrapper>
                 <TeamPlayerWrapper vertical gap={'small'} side="left">
-                    <LinkPlayer player={match.player1B} />
-                    {match.player2B && <LinkPlayer player={match.player2B} />}
+                    <Flex vertical={isMobile} gap={0}>
+                        <Text type={'secondary'} style={{ fontSize: '12px' }}>
+                            ({match.player1B.globalEloBeforeMatch}/{match.player1B.seasonalEloBeforeMatch})&nbsp;
+                        </Text>
+                        <LinkPlayer player={match.player1B} />
+                    </Flex>
+                    {match.player2B && (
+                        <span>
+                            <Text type={'secondary'} style={{ fontSize: '12px' }}>
+                                ({match.player2B.globalEloBeforeMatch}/{match.player2B.seasonalEloBeforeMatch})
+                            </Text>
+                            &nbsp;
+                            <LinkPlayer player={match.player2B} />
+                        </span>
+                    )}
                 </TeamPlayerWrapper>
 
-                <Flex flex={1} justify="center" align="center" gap={'small'}>
-                    <TeamScore level={2}>{match.scoreA}</TeamScore>-<TeamScore level={2}>{match.scoreB}</TeamScore>
+                <Flex vertical flex={1} align={'center'}>
+                    <Flex flex={1} justify="center" align="center" gap={'small'}>
+                        <TeamScore level={2}>{match.scoreA}</TeamScore>-<TeamScore level={2}>{match.scoreB}</TeamScore>
+                    </Flex>
+                    <Flex flex={1} justify="center" align="center" gap={'medium'}>
+                        <Text type={match.scoreA > match.scoreB ? 'success' : 'danger'}>
+                            {Math.round(match.winChanceTeamA * 100)}%
+                        </Text>
+                        <Text type={match.scoreA > match.scoreB ? 'danger' : 'success'}>
+                            {Math.round(match.winChanceTeamB * 100)}%
+                        </Text>
+                    </Flex>
                 </Flex>
 
                 <TeamPlayerWrapper vertical gap={'small'} side="right">
-                    <LinkPlayer player={match.player1A} />
-                    {match.player2A && <LinkPlayer player={match.player2A} />}
+                    <span>
+                        <LinkPlayer player={match.player1A} />
+                        &nbsp;
+                        <Text type={'secondary'} style={{ fontSize: '12px' }}>
+                            ({match.player1A.globalEloBeforeMatch}/{match.player1A.seasonalEloBeforeMatch})
+                        </Text>
+                    </span>
+                    {match.player2A && (
+                        <span>
+                            <LinkPlayer player={match.player2A} />
+                            &nbsp;
+                            <Text type={'secondary'} style={{ fontSize: '12px' }}>
+                                ({match.player2A.globalEloBeforeMatch}/{match.player2A.seasonalEloBeforeMatch})
+                            </Text>
+                        </span>
+                    )}
                 </TeamPlayerWrapper>
             </ContentWrapper>
             {user && user.admin && (
