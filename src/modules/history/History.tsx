@@ -1,4 +1,4 @@
-import { Button, Flex, Spin } from 'antd';
+import { Button, Empty, Flex, Spin } from 'antd';
 
 import { useGetInfiniteMatches } from '../../hooks/useApiEndPoint/useMatch.ts';
 import type { Match } from '../../types/Match.type.ts';
@@ -11,18 +11,21 @@ export const History = () => {
     });
 
     const matches: Match[] = data?.pages.flatMap((p) => p.content) ?? [];
+    const isMatchListEmpty = matches?.length === 0;
 
     return (
         <>
             <Spin spinning={isLoading}>
                 <Flex vertical gap={'small'} flex={1} align={'center'}>
-                    {matches.map((match) => (
-                        <MatchCard key={match.id} match={match} />
-                    ))}
+                    {matches.length === 0 && !isLoading ? (
+                        <Empty description={"Aucun match dans l'historique"} />
+                    ) : (
+                        matches.map((match) => <MatchCard key={match.id} match={match} />)
+                    )}
                 </Flex>
             </Spin>
 
-            {hasNextPage && (
+            {!isMatchListEmpty && hasNextPage && (
                 <div style={{ textAlign: 'center', marginTop: 16 }}>
                     <Button onClick={() => fetchNextPage()} loading={isFetchingNextPage}>
                         Charger plus

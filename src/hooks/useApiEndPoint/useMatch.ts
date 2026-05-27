@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { SortOrder } from 'antd/es/table/interface';
 
 import type { Match } from '../../types/Match.type.ts';
@@ -10,15 +10,25 @@ import { constructComplexPlayerFilter } from '../../utils/apiConstruct/construct
 type UseGetMatchesParams = {
     page: number;
     size: number;
+    dateOrder?: SortOrder;
+    playerFilter?: PlayerFilter;
+    playerIds?: string[];
 };
 
-export const useGetMatches = ({ page, size }: UseGetMatchesParams) => {
+export const useGetMatches = ({ page, size, dateOrder = 'descend', playerIds, playerFilter }: UseGetMatchesParams) => {
+    const formattedPlayerIds = playerIds?.map((playerId) => `&playerIds=${playerId}`).join('') ?? '';
+    const formattedDateOrder = dateOrder ? '&dateOrder=' + dateOrder : '';
+    const formattedPlayerFilter = constructComplexPlayerFilter(playerFilter);
+
     return useQuery<Pagination<Match>>({
-        queryKey: ['matches', page, size],
+        queryKey: ['matches', page, size, dateOrder, playerIds, playerFilter],
         queryFn: async () => {
-            const res = await api.get(`/kicker/matches?page=${page}&size=${size}`);
+            const res = await api.get(
+                `/kicker/matches?page=${page}&size=${size}${formattedDateOrder}${formattedPlayerIds}${formattedPlayerFilter}`
+            );
             return res.data;
         },
+        placeholderData: keepPreviousData,
         staleTime: 1000 * 60,
     });
 };
@@ -34,7 +44,7 @@ export const useGetInfiniteMatches = ({
     playerFilter?: PlayerFilter;
     playerIds?: string[];
 }) => {
-    const formattedPlayerIds = playerIds ? '&playerIds=' + playerIds?.join('playerIds=') : '';
+    const formattedPlayerIds = playerIds?.map((playerId) => `&playerIds=${playerId}`).join('') ?? '';
     const formattedDateOrder = dateOrder ? '&dateOrder=' + dateOrder : '';
     const formattedPlayerFilter = constructComplexPlayerFilter(playerFilter);
 

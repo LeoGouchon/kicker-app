@@ -5,9 +5,13 @@ type Side = {
     side: 'left' | 'right';
 };
 
-export const GlobalWrapper = styled.div`
+type GlobalWrapperProps = {
+    fullWidth?: boolean;
+};
+
+export const GlobalWrapper = styled.div<GlobalWrapperProps>`
     width: 100%;
-    max-width: 720px;
+    max-width: ${(props) => (props.fullWidth ? 'none' : '720px')};
     display: flex;
     flex-direction: column;
     flex: 1;
