@@ -5,7 +5,6 @@ import type { TextProps } from 'antd/es/typography/Text';
 export const LinkTypographyStyled = styled(Typography.Text)<TextProps>`
     // Override the default antd styles thanks to the &&
     && {
-        color: var(--ant-color-text);
         cursor: pointer;
         text-wrap: nowrap;
         overflow: hidden;
@@ -13,7 +12,11 @@ export const LinkTypographyStyled = styled(Typography.Text)<TextProps>`
         white-space: nowrap;
 
         &:hover {
-            color: var(--ant-color-text-secondary);
+            color: ${(props) => {
+                if (props.type === 'success') return 'var(--ant-color-success-hover)';
+                if (props.type === 'danger') return 'var(--ant-color-error-hover)';
+                return 'var(--ant-color-text-secondary)';
+            }};
         }
     }
 `;

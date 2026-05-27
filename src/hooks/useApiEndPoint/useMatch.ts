@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { SortOrder } from 'antd/es/table/interface';
 
 import type { Match } from '../../types/Match.type.ts';
@@ -28,6 +28,7 @@ export const useGetMatches = ({ page, size, dateOrder = 'descend', playerIds, pl
             );
             return res.data;
         },
+        placeholderData: keepPreviousData,
         staleTime: 1000 * 60,
     });
 };

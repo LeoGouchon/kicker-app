@@ -30,7 +30,7 @@ export const Player = () => {
 
     return (
         <Flex gap={'middle'} vertical={isMobile} wrap={!isMobile}>
-            <Flex vertical gap={'middle'} style={{ flex: isMobile ? 1 : 3, minWidth: isMobile ? 0 : 'none' }}>
+            <Flex vertical gap={'large'} style={{ flex: isMobile ? 1 : 3, minWidth: isMobile ? 0 : 'none' }}>
                 <Flex gap={'small'} align={isMobile ? 'start' : 'center'} wrap>
                     <SmallCardStatNoBorder variant={'borderless'}>
                         <Title level={2} style={{ margin: 0 }}>

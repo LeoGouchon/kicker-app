@@ -19,12 +19,14 @@ import {
 
 type props = {
     match: Match;
+    fullWidth?: boolean;
+    highlightPlayerId?: string;
 };
 
 const { Text } = Typography;
 const DELETE_MATCH_DAYS = 7;
 
-export const MatchCard = ({ match }: props) => {
+export const MatchCard = ({ match, fullWidth = false, highlightPlayerId }: props) => {
     const { modal, message } = App.useApp();
     const screens = useBreakpoint();
     const isMobile = !screens.md;
@@ -34,13 +36,28 @@ export const MatchCard = ({ match }: props) => {
 
     const deleteMatch = useDeleteMatch();
 
+    const isTeamAWin = match.scoreA > match.scoreB;
+    const isHighlightedPlayerInTeamA =
+        highlightPlayerId === match.player1A.id || highlightPlayerId === match.player2A?.id;
+    const isHighlightedPlayerInTeamB =
+        highlightPlayerId === match.player1B.id || highlightPlayerId === match.player2B?.id;
+    const highlightedResultType =
+        (isHighlightedPlayerInTeamA && isTeamAWin) || (isHighlightedPlayerInTeamB && !isTeamAWin)
+            ? 'success'
+            : 'danger';
+    const highlightedScoreType = {
+        teamA: isHighlightedPlayerInTeamA ? highlightedResultType : undefined,
+        teamB: isHighlightedPlayerInTeamB ? highlightedResultType : undefined,
+    } as const;
+
     const renderPlayerWithElo = (player: Match['player1A'], eloPosition: 'before' | 'after') => {
+        const highlightType = highlightPlayerId === player.id ? highlightedResultType : undefined;
         const elo = (
-            <PlayerEloText type={'secondary'}>
+            <PlayerEloText type={highlightType ?? 'secondary'}>
                 ({player.globalEloBeforeMatch}/{player.seasonalEloBeforeMatch})
             </PlayerEloText>
         );
-        const playerName = <LinkPlayer player={player} />;
+        const playerName = <LinkPlayer highlightType={highlightType} player={player} />;
 
         return (
             <PlayerWithEloWrapper
@@ -78,7 +95,7 @@ export const MatchCard = ({ match }: props) => {
     };
 
     return (
-        <GlobalWrapper>
+        <GlobalWrapper fullWidth={fullWidth}>
             <HeaderWrapper>
                 <Flex align={'center'}>
                     <Space>
@@ -102,27 +119,33 @@ export const MatchCard = ({ match }: props) => {
 
             <ContentWrapper>
                 <TeamPlayerWrapper vertical gap={'small'} side="left">
-                    {renderPlayerWithElo(match.player1B, 'before')}
-                    {match.player2B && renderPlayerWithElo(match.player2B, 'before')}
+                    {renderPlayerWithElo(match.player1A, 'before')}
+                    {match.player2A && renderPlayerWithElo(match.player2A, 'before')}
                 </TeamPlayerWrapper>
 
                 <Flex vertical flex={1} align={'center'}>
                     <Flex flex={1} justify="center" align="center" gap={'small'}>
-                        <TeamScore level={2}>{match.scoreA}</TeamScore>-<TeamScore level={2}>{match.scoreB}</TeamScore>
+                        <TeamScore level={2} type={highlightedScoreType.teamA}>
+                            {match.scoreA}
+                        </TeamScore>
+                        -
+                        <TeamScore level={2} type={highlightedScoreType.teamB}>
+                            {match.scoreB}
+                        </TeamScore>
                     </Flex>
                     <Flex flex={1} justify="center" align="center" gap={'medium'}>
-                        <Text type={match.scoreA > match.scoreB ? 'success' : 'secondary'}>
+                        <Text type={match.scoreA > match.scoreB && !highlightPlayerId ? 'success' : 'secondary'}>
                             {Math.round(match.winChanceTeamA * 100)}%
                         </Text>
-                        <Text type={match.scoreA > match.scoreB ? 'secondary' : 'success'}>
+                        <Text type={match.scoreB > match.scoreA && !highlightPlayerId ? 'success' : 'secondary'}>
                             {Math.round(match.winChanceTeamB * 100)}%
                         </Text>
                     </Flex>
                 </Flex>
 
                 <TeamPlayerWrapper vertical gap={'small'} side="right">
-                    {renderPlayerWithElo(match.player1A, 'after')}
-                    {match.player2A && renderPlayerWithElo(match.player2A, 'after')}
+                    {renderPlayerWithElo(match.player1B, 'after')}
+                    {match.player2B && renderPlayerWithElo(match.player2B, 'after')}
                 </TeamPlayerWrapper>
             </ContentWrapper>
             {user && user.admin && (

@@ -4,7 +4,13 @@ import { ROUTES } from '../../routes/constant.ts';
 import type { Player } from '../../types/Player.type.ts';
 import { LinkTypographyStyled } from '../typography/Typography.style.tsx';
 
-export const LinkPlayer = ({ player, showFullLastName = false }: { player: Player; showFullLastName?: boolean }) => {
+type LinkPlayerProps = {
+    highlightType?: 'success' | 'danger';
+    player: Player;
+    showFullLastName?: boolean;
+};
+
+export const LinkPlayer = ({ highlightType, player, showFullLastName = false }: LinkPlayerProps) => {
     const firstname = player.firstname ? player.firstname[0].toUpperCase() + player.firstname.slice(1) : '';
 
     let lastname = player.lastname[0].toUpperCase() + player.lastname.slice(1);
@@ -13,7 +19,7 @@ export const LinkPlayer = ({ player, showFullLastName = false }: { player: Playe
     }
 
     return (
-        <LinkTypographyStyled>
+        <LinkTypographyStyled strong={!!highlightType} type={highlightType}>
             <Link to={ROUTES.PLAYER + '/' + player.id} style={{ all: 'unset' }}>
                 {firstname} {lastname}
             </Link>
