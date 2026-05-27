@@ -1,66 +1,66 @@
-import { Button, Flex, Table, Typography } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { Empty, Flex, Pagination, Spin, Typography } from 'antd';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { type ColumnKey, useHistoryColumns } from '../../../components/HistoryColumns.tsx';
-import { useGetInfiniteMatches } from '../../../hooks/useApiEndPoint/useMatch.ts';
-import type { Match } from '../../../types/Match.type.ts';
+import { useGetMatches } from '../../../hooks/useApiEndPoint/useMatch.ts';
+import { MatchCard } from '../../history/components/MatchCard.tsx';
 
 const { Text, Title } = Typography;
+const pageSize = 10;
 
 export const GameHistory = React.memo(() => {
     const { uuid } = useParams();
+    const [currentPage, setCurrentPage] = React.useState(1);
 
-    const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetInfiniteMatches(
-        uuid ? { playerIds: [uuid] } : {}
-    );
+    React.useEffect(() => {
+        setCurrentPage(1);
+    }, [uuid]);
 
-    const visibleKeys = ['teamA', 'score', 'teamB', 'eloDelta', 'delay_from_today', 'season'] as ColumnKey[];
-    const columns = useHistoryColumns({ isCondensed: true, visibleKeys });
-
-    const winnerColumn: ColumnsType<Match> = [
-        {
-            key: 'winner',
-            width: 10,
-            onCell: (record: Match) => {
-                const isPlayerInTeamA = record.player1A?.id === uuid || record.player2A?.id === uuid;
-                const isTeamAWin = record.scoreA > record.scoreB;
-                const isCurrentPlayerWin = (isPlayerInTeamA && isTeamAWin) || (!isPlayerInTeamA && !isTeamAWin);
-
-                return {
-                    style: {
-                        backgroundColor: isCurrentPlayerWin ? 'var(--ant-color-success)' : 'var(--ant-color-error)',
-                        padding: 0,
-                        opacity: 0.7,
-                    },
-                };
-            },
-        },
-    ];
-
-    const allColumns = [...winnerColumn, ...columns];
+    const { data, isLoading, isFetching } = useGetMatches({
+        page: currentPage - 1,
+        size: pageSize,
+        playerIds: uuid ? [uuid] : undefined,
+    });
+    const matches = data?.content ?? [];
+    const totalMatches = data?.totalElements ?? 0;
 
     return (
         <Flex vertical gap={'small'}>
-            <Title level={4} style={{ margin: 0 }}>
-                Historique des parties <Text type="secondary">({data?.pages[0]?.totalElements} matchs)</Text>
-            </Title>
-            <Table
-                loading={isLoading}
-                pagination={false}
-                scroll={{ x: true }}
-                rowKey={(r) => r.id}
-                showHeader={false}
-                columns={allColumns}
-                dataSource={data?.pages.flatMap((p) => p.content)}
-            />
-            {hasNextPage && (
-                <div style={{ textAlign: 'center', marginTop: 8 }}>
-                    <Button onClick={() => fetchNextPage()} loading={isFetchingNextPage} type={'link'}>
-                        Charger plus de matchs
-                    </Button>
-                </div>
+            <Flex align={'baseline'} justify={'space-between'}>
+                <Title level={4} style={{ margin: 0 }}>
+                    Historique des parties <Text type="secondary">({totalMatches} matchs)</Text>
+                </Title>
+                {totalMatches > pageSize && (
+                    <Pagination
+                        current={currentPage}
+                        pageSize={pageSize}
+                        showSizeChanger={false}
+                        total={totalMatches}
+                        onChange={setCurrentPage}
+                        align={'end'}
+                        size={'small'}
+                    />
+                )}
+            </Flex>
+            <Spin spinning={isLoading || isFetching}>
+                <Flex vertical gap={'small'} flex={1} align={'center'}>
+                    {matches.length === 0 && !isLoading ? (
+                        <Empty description={"Aucun match dans l'historique"} />
+                    ) : (
+                        matches.map((match) => <MatchCard key={match.id} match={match} />)
+                    )}
+                </Flex>
+            </Spin>
+            {totalMatches > pageSize && (
+                <Pagination
+                    current={currentPage}
+                    pageSize={pageSize}
+                    showSizeChanger={false}
+                    total={totalMatches}
+                    onChange={setCurrentPage}
+                    align={'end'}
+                    size={'small'}
+                />
             )}
         </Flex>
     );
