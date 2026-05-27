@@ -5,6 +5,8 @@ export const StyledLayout = styled(Layout)<LayoutProps>`
     min-height: 100vh;
     max-width: 100vw;
     position: relative;
+    display: flex;
+    justify-content: center;
 `;
 
 export const StyledContent = styled(Layout.Content)<{ ismobile: boolean }>`
