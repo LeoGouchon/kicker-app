@@ -1,18 +1,49 @@
 import axios from 'axios';
 
-import {ROUTES} from '../routes/constant.ts';
-import {mockApi} from './mockApi.ts';
+import { ROUTES } from '../routes/constant.ts';
+import { mockApi } from './mockApi.ts';
+
+const AUTHENTICATE_PATH = '/authenticate/';
 
 const realApi = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
 });
 
-realApi.interceptors.request.use((config) => {
+const refreshApi = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+    withCredentials: true,
+});
+
+export const authRequestConfig = {
+    withCredentials: true,
+};
+
+let refreshAccessTokenPromise: Promise<string> | undefined;
+
+export const refreshAccessToken = async () => {
+    refreshAccessTokenPromise ??= (
+        import.meta.env.VITE_MOCK_API === 'true'
+            ? mockApi.post('/authenticate/refresh-token', undefined, authRequestConfig)
+            : refreshApi.post('/authenticate/refresh-token', undefined, authRequestConfig)
+    )
+        .then((response) => response.data.token as string)
+        .finally(() => {
+            refreshAccessTokenPromise = undefined;
+        });
+
+    return refreshAccessTokenPromise;
+};
+
+realApi.interceptors.request.use(
+    (config) => {
+        const isAuthenticateRequest = config.url?.includes(AUTHENTICATE_PATH);
         const token = localStorage.getItem('token');
-        if (token) {
+
+        if (token && !isAuthenticateRequest) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+
         return config;
     },
     (error) => Promise.reject(error instanceof Error ? error : new Error(String(error)))
@@ -22,34 +53,27 @@ realApi.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
-        const token = localStorage.getItem('token');
+        const isAuthenticateRequest = originalRequest?.url?.includes(AUTHENTICATE_PATH);
 
-        const isRefreshingToken = originalRequest.url?.includes('/authenticate/refresh-token');
-
-        if (error.response?.status === 401 && token && !originalRequest._retry && !isRefreshingToken) {
+        if (error.response?.status === 401 && originalRequest && !originalRequest._retry && !isAuthenticateRequest) {
             originalRequest._retry = true;
 
             try {
-                const refreshResponse = await realApi.post('/authenticate/refresh-token');
-                const newAccessToken: string = refreshResponse.data.token;
+                const newAccessToken = await refreshAccessToken();
 
                 localStorage.setItem('token', newAccessToken);
-
-                realApi.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-                originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
                 return realApi(originalRequest);
             } catch (refreshError) {
-                console.error('Échec du refresh token:', refreshError);
+                console.error('Echec du refresh token:', refreshError);
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
-                window.location.replace(ROUTES.HOME);
+                globalThis.location.replace(ROUTES.HOME);
             }
         }
 
-        return Promise.reject(
-            error instanceof Error ? error : new Error(String(error))
-        );
+        throw error instanceof Error ? error : new Error(String(error));
     }
 );
 

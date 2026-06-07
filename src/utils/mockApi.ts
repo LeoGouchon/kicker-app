@@ -1,11 +1,11 @@
-import {mockLoginResponse} from './mockApiResponse/mockedLogin.ts';
-import {mockMatchGetResponse, mockMatchPostResponse} from './mockApiResponse/mockedMatch.ts';
-import {mockMeResponse} from './mockApiResponse/mockedMe.ts';
-import {mockPlayerGetResponse} from './mockApiResponse/mockedPlayer.ts';
+import { mockLoginResponse } from './mockApiResponse/mockedLogin.ts';
+import { mockMatchGetResponse, mockMatchPostResponse } from './mockApiResponse/mockedMatch.ts';
+import { mockMeResponse } from './mockApiResponse/mockedMe.ts';
+import { mockPlayerGetResponse } from './mockApiResponse/mockedPlayer.ts';
 
 export const mockApi = {
     get: async (url: string) => {
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
         let data;
         if (url.startsWith('/kicker/matches')) data = mockMatchGetResponse;
@@ -18,28 +18,30 @@ export const mockApi = {
             status: 200,
             statusText: 'OK',
             headers: {},
-            config: { url }
+            config: { url },
         };
     },
-    post: async (url: string, data?: unknown) => {
+    post: async (url: string, data?: unknown, config?: unknown) => {
         let responseData;
         if (url === '/authenticate/login') responseData = mockLoginResponse;
-        else if (url === '/authenticate/refresh-token') responseData = { token: 'mock-refresh-token' };
+        else if (url.startsWith('/authenticate/signup')) responseData = mockLoginResponse;
+        else if (url === '/authenticate/refresh-token') responseData = { token: 'mock-access-token' };
         else if (url === '/authenticate/logout') responseData = {};
-        else if (url.startsWith('/kicker/matches')) responseData = mockMatchPostResponse(data as Parameters<typeof mockMatchPostResponse>[0]);
-        else throw new Error('Mock not implemented for url: ' + url);
+        else if (url.startsWith('/kicker/matches')) {
+            responseData = mockMatchPostResponse(data as Parameters<typeof mockMatchPostResponse>[0]);
+        } else throw new Error('Mock not implemented for url: ' + url);
 
         return {
             data: responseData,
             status: 200,
             statusText: 'OK',
             headers: {},
-            config: { url, data }
+            config: { url, data, requestConfig: config },
         };
     },
     delete: async (url: string) => {
         console.log('delete', url);
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         return { status: 200, statusText: 'OK' };
-    }
+    },
 };

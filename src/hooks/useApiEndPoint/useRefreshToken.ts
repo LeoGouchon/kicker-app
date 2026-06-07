@@ -1,14 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { api } from '../../utils/api.ts';
+import { refreshAccessToken } from '../../utils/api.ts';
 
 export const useRefreshToken = () => {
     return useMutation({
         mutationFn: async () => {
-            const response = await api.post('/authenticate/refresh-token');
-            return response.data;
+            const token = await refreshAccessToken();
+            return { token };
         },
-        retryDelay: 1000,
-        retry: 5,
+        retry: false,
     });
 };
