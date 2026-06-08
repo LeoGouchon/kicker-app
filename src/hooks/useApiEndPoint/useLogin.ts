@@ -2,14 +2,18 @@ import { useMutation } from '@tanstack/react-query';
 import { useContext } from 'react';
 
 import { UserContext } from '../../context/UserContext.tsx';
-import { api } from '../../utils/api.ts';
+import { api, authRequestConfig } from '../../utils/api.ts';
 
 export const useLogin = () => {
     const { setUser } = useContext(UserContext);
 
     return useMutation({
         mutationFn: async ({ email, password }: { email: string; password: string }) => {
-            const response = await api.post('/authenticate/login', { email: email.toLowerCase().trim(), password });
+            const response = await api.post(
+                '/authenticate/login',
+                { email: email.toLowerCase().trim(), password },
+                authRequestConfig
+            );
             return response.data.token;
         },
         onSuccess: async (token: string) => {
@@ -22,11 +26,14 @@ export const useLogin = () => {
             } catch (err) {
                 console.error("Erreur lors de la récupération de l'utilisateur :", err);
                 localStorage.removeItem('token');
+                localStorage.removeItem('user');
                 setUser(undefined);
             }
         },
         onError: () => {
             localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(undefined);
         },
     });
 };
