@@ -17,8 +17,8 @@ export const renderMobilePlayerColumn = () => (
         width={120}
         render={(_, record) => (
             <Flex vertical>
-                <LinkPlayer player={record.player1} showFullLastName />
-                <LinkPlayer player={record.player2} showFullLastName />
+                <LinkPlayer player={record.player1} />
+                <LinkPlayer player={record.player2} />
             </Flex>
         )}
     />
@@ -31,14 +31,14 @@ export const renderDesktopPlayerColumns = () => (
             fixed="left"
             rowScope="row"
             width={100}
-            render={(_, record) => <LinkPlayer player={record.player1} showFullLastName />}
+            render={(_, record) => <LinkPlayer player={record.player1} />}
         />
         <Table.Column<TableData>
             title="Joueur 2"
             fixed="left"
             rowScope="row"
             width={100}
-            render={(_, record) => <LinkPlayer player={record.player2} showFullLastName />}
+            render={(_, record) => <LinkPlayer player={record.player2} />}
         />
     </>
 );
