@@ -45,6 +45,20 @@ export const EnhancedTable = ({ data }: { data: TableData[] }) => {
         storeFilters({ playerIdFilter, visibleMetricKeys });
     }, [playerIdFilter, visibleMetricKeys]);
 
+    useEffect(() => {
+        if (!playerIdFilter || data.length === 0) {
+            return;
+        }
+
+        const playerExists = data.some((record) =>
+            [record.player1, record.player2].some((player) => player.id === playerIdFilter)
+        );
+
+        if (!playerExists) {
+            setPlayerIdFilter(undefined);
+        }
+    }, [data, playerIdFilter]);
+
     return (
         <EnhancedTableCard>
             <Flex vertical gap={'middle'}>
