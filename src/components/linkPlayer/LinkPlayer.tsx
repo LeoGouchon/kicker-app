@@ -10,12 +10,14 @@ type LinkPlayerProps = {
     showFullLastName?: boolean;
 };
 
-export const LinkPlayer = ({ highlightType, player, showFullLastName = false }: LinkPlayerProps) => {
-    const firstname = player.firstname ? player.firstname[0].toUpperCase() + player.firstname.slice(1) : '';
+const capitalize = (value?: string | null) => (value ? value[0].toUpperCase() + value.slice(1) : '');
 
-    let lastname = player.lastname[0].toUpperCase() + player.lastname.slice(1);
+export const LinkPlayer = ({ highlightType, player, showFullLastName = false }: LinkPlayerProps) => {
+    const firstname = capitalize(player.firstname);
+
+    let lastname = capitalize(player.lastname);
     if (!showFullLastName) {
-        lastname = (lastname?.[0] ?? '') + '.';
+        lastname = lastname ? lastname[0] + '.' : '';
     }
 
     return (
