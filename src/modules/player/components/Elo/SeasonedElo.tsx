@@ -1,6 +1,6 @@
 import { Empty, theme, TreeSelect } from 'antd';
 import type { ChartOptions, ScriptableContext } from 'chart.js';
-import React from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 
 import { MATCH_PER_SEASON_MIN_NUMBER } from '../../../../constants.tsx';
@@ -72,6 +72,8 @@ const hasDistributionValue = (
 
 type SeriesKind = 'min' | 'max' | 'quartile' | 'performance';
 
+const SEASONED_ELO_SELECTED_SERIES_STORAGE_KEY = 'seasonedElo.selectedSeries';
+
 const getSeasonKey = (season: SeasonalStats) => `${season.year}-${season.quarter}`;
 const getSeriesValue = (season: SeasonalStats, kind: SeriesKind) => `${getSeasonKey(season)}:${kind}`;
 
@@ -86,7 +88,7 @@ const getAvailableSeriesValues = (season: SeasonalStats) => [
 ];
 const getSeasonMatchCount = (season: SeasonalStats) => season.wins + season.losses;
 
-export const SeasonedElo = React.memo(
+export const SeasonedElo = memo(
     ({ data: seasonalStats, chartOptions }: { data: SeasonalStats[]; chartOptions: ChartOptions<'line'> }) => {
         const { token } = theme.useToken();
         const axisTitle = token.colorText;
@@ -94,11 +96,11 @@ export const SeasonedElo = React.memo(
 
         const labels = Array.from({ length: 100 }, (_, i) => `${i + 1}%`);
         const { year: currentYear, quarter: currentQuarter } = getCurrentYearAndQuarter();
-        const eligibleSeasons = React.useMemo(
+        const eligibleSeasons = useMemo(
             () => seasonalStats.filter((s) => getSeasonMatchCount(s) >= MATCH_PER_SEASON_MIN_NUMBER),
             [seasonalStats]
         );
-        const defaultSelectedSeries = React.useMemo(() => {
+        const defaultSelectedSeries = useMemo(() => {
             const currentSeason = eligibleSeasons.find(
                 (season) => season.year === currentYear && season.quarter === currentQuarter
             );
@@ -107,13 +109,38 @@ export const SeasonedElo = React.memo(
 
             return latestSeason ? getAvailableSeriesValues(latestSeason) : [];
         }, [currentQuarter, currentYear, eligibleSeasons]);
-        const [selectedSeries, setSelectedSeries] = React.useState<string[]>(defaultSelectedSeries);
+        const availableSeriesValues = useMemo(
+            () => new Set(eligibleSeasons.flatMap((season) => getAvailableSeriesValues(season))),
+            [eligibleSeasons]
+        );
+        const [selectedSeries, setSelectedSeries] = useState<string[]>(() => {
+            const storedSelectedSeries = sessionStorage.getItem(SEASONED_ELO_SELECTED_SERIES_STORAGE_KEY);
+            if (!storedSelectedSeries) return defaultSelectedSeries;
 
-        React.useEffect(() => {
-            setSelectedSeries(defaultSelectedSeries);
-        }, [defaultSelectedSeries]);
+            try {
+                const parsed = JSON.parse(storedSelectedSeries);
+                if (!Array.isArray(parsed)) return defaultSelectedSeries;
 
-        const selectedSeriesSet = React.useMemo(() => new Set(selectedSeries), [selectedSeries]);
+                const selectedAvailableSeries = parsed.filter(
+                    (value): value is string => typeof value === 'string' && availableSeriesValues.has(value)
+                );
+                return selectedAvailableSeries;
+            } catch {
+                return defaultSelectedSeries;
+            }
+        });
+
+        useEffect(() => {
+            setSelectedSeries((currentSelectedSeries) => {
+                return currentSelectedSeries.filter((value) => availableSeriesValues.has(value));
+            });
+        }, [availableSeriesValues]);
+
+        useEffect(() => {
+            sessionStorage.setItem(SEASONED_ELO_SELECTED_SERIES_STORAGE_KEY, JSON.stringify(selectedSeries));
+        }, [selectedSeries]);
+
+        const selectedSeriesSet = useMemo(() => new Set(selectedSeries), [selectedSeries]);
         const treeData = seasonalStats.map((season) => {
             const matchCount = getSeasonMatchCount(season);
             const isSeasonEligible = matchCount >= MATCH_PER_SEASON_MIN_NUMBER;
@@ -331,7 +358,6 @@ export const SeasonedElo = React.memo(
                             style={{ width: '100%', marginBottom: 16 }}
                             treeCheckable
                             treeData={treeData}
-                            treeDefaultExpandAll
                             value={selectedSeries}
                             onChange={(value: string[]) => setSelectedSeries(value ?? [])}
                         />
