@@ -19,7 +19,6 @@ export const GlobalWrapper = styled.div<GlobalWrapperProps>`
     background-color: var(--ant-color-bg-container);
     border-radius: 8px;
     border: 1px solid var(--ant-color-border-secondary);
-    box-shadow: var(--ant-box-shadow-card);
     gap: var(--ant-margin-xs);
 `;
 
