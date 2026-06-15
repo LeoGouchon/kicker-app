@@ -8,7 +8,6 @@ import { MATCH_PER_SEASON_MIN_NUMBER } from '../../../../constants.tsx';
 import {
     getBackgroundColor,
     getBorderColor,
-    getEloAnchorAnnotation,
     getEloAxisRange,
     GLOBAL_CHART_DATASETS_OPTIONS,
     roundTickToStep,
@@ -16,21 +15,39 @@ import {
 import { getQuarterChanges, getQuarterLabel } from '../../../../utils/quarterChanges.ts';
 import type { AllTimeStats, EloHistory } from './SeasonedElo.tsx';
 
-const getOverallData = (eloHistory: EloHistory[]) => {
-    const lastEloPerDay = new Map<string, number>();
+type OverallPoint = {
+    x: string;
+    y: number;
+    min?: number;
+    max?: number;
+    firstQuartile?: number;
+    thirdQuartile?: number;
+};
+
+const getOverallData = (eloHistory: EloHistory[]): OverallPoint[] => {
+    const lastEloPerDay = new Map<string, EloHistory>();
 
     const sorted = [...eloHistory].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     for (const elo of sorted) {
         const day = new Intl.DateTimeFormat('fr-FR').format(new Date(elo.date));
-        lastEloPerDay.set(day, elo.elo);
+        lastEloPerDay.set(day, elo);
     }
 
     return Array.from(lastEloPerDay.entries()).map(([date, elo]) => ({
         x: date,
-        y: elo,
+        y: elo.elo,
+        min: elo.min,
+        max: elo.max,
+        firstQuartile: elo.firstQuartile,
+        thirdQuartile: elo.thirdQuartile,
     }));
 };
+
+const hasDistributionValue = (
+    points: OverallPoint[],
+    key: keyof Pick<OverallPoint, 'min' | 'max' | 'firstQuartile' | 'thirdQuartile'>
+) => points.some((point) => typeof point[key] === 'number');
 
 export const GlobalElo = React.memo(
     ({ data, chartOptions }: { data: AllTimeStats; chartOptions: ChartOptions<'line'> }) => {
@@ -39,7 +56,11 @@ export const GlobalElo = React.memo(
         const pointsHistoryOverTime = getOverallData(data.eloHistory);
         const anchorElo = 1500;
         const axisRange = getEloAxisRange({
-            values: pointsHistoryOverTime.map((point) => point.y),
+            values: pointsHistoryOverTime.flatMap((point) =>
+                [point.y, point.min, point.max, point.firstQuartile, point.thirdQuartile].filter(
+                    (value): value is number => typeof value === 'number'
+                )
+            ),
             targetRange: 500,
             anchorElo,
         });
@@ -66,13 +87,82 @@ export const GlobalElo = React.memo(
             {} as Record<string, AnnotationOptions>
         );
 
-        annotations.anchor1500 = getEloAnchorAnnotation({
-            anchorElo,
-            color: token.colorBorderSecondary,
-        });
+        const showQuartileArea =
+            hasDistributionValue(pointsHistoryOverTime, 'firstQuartile') &&
+            hasDistributionValue(pointsHistoryOverTime, 'thirdQuartile');
+        const showMinLine = hasDistributionValue(pointsHistoryOverTime, 'min');
+        const showMaxLine = hasDistributionValue(pointsHistoryOverTime, 'max');
 
         const chartData = {
             datasets: [
+                ...(showQuartileArea
+                    ? [
+                          {
+                              label: '1er quartile',
+                              data: pointsHistoryOverTime.map((point) => ({
+                                  x: point.x,
+                                  y: point.firstQuartile ?? null,
+                              })),
+                              borderColor: 'transparent',
+                              backgroundColor: 'transparent',
+                              pointRadius: 0,
+                              pointHoverRadius: 0,
+                              tension: 0.3,
+                              fill: false,
+                          },
+                          {
+                              label: 'top 25-75%',
+                              data: pointsHistoryOverTime.map((point) => ({
+                                  x: point.x,
+                                  y: point.thirdQuartile ?? null,
+                              })),
+                              borderColor: 'transparent',
+                              backgroundColor: token.colorFillSecondary,
+                              pointRadius: 0,
+                              pointHoverRadius: 0,
+                              tension: 0.3,
+                              fill: '-1',
+                          },
+                      ]
+                    : []),
+                ...(showMinLine
+                    ? [
+                          {
+                              label: 'Minimum',
+                              data: pointsHistoryOverTime.map((point) => ({
+                                  x: point.x,
+                                  y: point.min ?? null,
+                              })),
+                              borderColor: token.colorTextTertiary,
+                              borderDash: [2, 5],
+                              borderWidth: 1,
+                              backgroundColor: 'transparent',
+                              pointRadius: 0,
+                              pointHoverRadius: 0,
+                              tension: 0.3,
+                              fill: false,
+                          },
+                      ]
+                    : []),
+                ...(showMaxLine
+                    ? [
+                          {
+                              label: 'Maximum',
+                              data: pointsHistoryOverTime.map((point) => ({
+                                  x: point.x,
+                                  y: point.max ?? null,
+                              })),
+                              borderColor: token.colorTextTertiary,
+                              borderDash: [2, 5],
+                              borderWidth: 1,
+                              backgroundColor: 'transparent',
+                              pointRadius: 0,
+                              pointHoverRadius: 0,
+                              tension: 0.3,
+                              fill: false,
+                          },
+                      ]
+                    : []),
                 {
                     label: 'Général',
                     dataLabels: data.eloHistory.map((item: EloHistory) =>
@@ -103,6 +193,10 @@ export const GlobalElo = React.memo(
             },
             plugins: {
                 ...chartOptions.plugins,
+                legend: {
+                    ...chartOptions.plugins?.legend,
+                    display: false,
+                },
                 annotation: {
                     annotations: annotations,
                 },
@@ -117,7 +211,7 @@ export const GlobalElo = React.memo(
                         description={`Nombre de matchs necessaires pour calculer l'Élo : ${MATCH_PER_SEASON_MIN_NUMBER}`}
                     />
                 ) : (
-                    <div style={{ height: 320 }}>
+                    <div style={{ height: 420 }}>
                         <Line data={chartData} options={options} />
                     </div>
                 )}

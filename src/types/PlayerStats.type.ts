@@ -1,3 +1,12 @@
+export type EloHistory = {
+    date: string;
+    elo: number;
+    max: number;
+    min: number;
+    firstQuartile: number;
+    thirdQuartile: number;
+};
+
 export type PlayerStats = {
     id: string;
     firstname: string;
@@ -22,18 +31,12 @@ export type PlayerStats = {
         rank: number;
         wins: number;
         losses: number;
-        eloHistory: {
-            date: string;
-            elo: number;
-        }[];
+        eloHistory: EloHistory[];
     }[];
     allTimeStats: {
         wins: number;
         losses: number;
         rank: number;
-        eloHistory: {
-            date: string;
-            elo: number;
-        }[];
+        eloHistory: EloHistory[];
     };
 };

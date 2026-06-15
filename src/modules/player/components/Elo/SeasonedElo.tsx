@@ -7,7 +7,6 @@ import { MATCH_PER_SEASON_MIN_NUMBER } from '../../../../constants.tsx';
 import {
     getBackgroundColor,
     getBorderColor,
-    getEloAnchorAnnotation,
     getEloAxisRange,
     GLOBAL_CHART_DATASETS_OPTIONS,
     roundTickToStep,
@@ -16,6 +15,10 @@ import {
 export type EloHistory = {
     date: string;
     elo: number;
+    max?: number;
+    min?: number;
+    firstQuartile?: number;
+    thirdQuartile?: number;
 };
 
 export type SeasonalStats = {
@@ -92,13 +95,6 @@ export const SeasonedElo = React.memo(
             }),
         };
 
-        const annotations = {
-            anchor1500: getEloAnchorAnnotation({
-                anchorElo,
-                color: token.colorBorderSecondary,
-            }),
-        };
-
         const options = {
             ...chartOptions,
             scales: {
@@ -124,9 +120,6 @@ export const SeasonedElo = React.memo(
             },
             plugins: {
                 ...chartOptions.plugins,
-                annotation: {
-                    annotations: annotations,
-                },
             },
         } as ChartOptions<'line'>;
 

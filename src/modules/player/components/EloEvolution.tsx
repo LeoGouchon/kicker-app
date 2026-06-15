@@ -1,4 +1,4 @@
-import { Card, Segmented, theme } from 'antd';
+import { Card, Flex, Segmented, theme } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useState } from 'react';
 
@@ -53,19 +53,21 @@ export const EloEvolution = ({
 
     return (
         <Card size={isMobile ? 'small' : 'default'}>
-            <Segmented
-                options={Object.values(SEGMENTED_VALUE)}
-                value={segmentedValue}
-                onChange={setSegmentedValue}
-                block
-                size={isMobile ? 'small' : 'middle'}
-            />
-            {segmentedValue === SEGMENTED_VALUE['season'].value && (
-                <EloEvolution.Seasons data={seasonalStats} chartOptions={globalOptions} />
-            )}
-            {segmentedValue === SEGMENTED_VALUE['overall'].value && (
-                <EloEvolution.Overall data={allTimeStats} chartOptions={globalOptions} />
-            )}
+            <Flex vertical gap={'medium'}>
+                <Segmented
+                    options={Object.values(SEGMENTED_VALUE)}
+                    value={segmentedValue}
+                    onChange={setSegmentedValue}
+                    block
+                    size={'middle'}
+                />
+                {segmentedValue === SEGMENTED_VALUE['season'].value && (
+                    <EloEvolution.Seasons data={seasonalStats} chartOptions={globalOptions} />
+                )}
+                {segmentedValue === SEGMENTED_VALUE['overall'].value && (
+                    <EloEvolution.Overall data={allTimeStats} chartOptions={globalOptions} />
+                )}
+            </Flex>
         </Card>
     );
 };

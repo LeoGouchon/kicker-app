@@ -1,5 +1,4 @@
 import type { ScriptableContext } from 'chart.js';
-import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 
 export const getHue = (index: number) => {
     return (index * 30 - 140) % 360;
@@ -56,19 +55,3 @@ export const roundTickToStep = ({ value, step = 10 }: { value: number | string; 
     if (Number.isNaN(numeric)) return value;
     return Math.round(numeric / step) * step;
 };
-
-export const getEloAnchorAnnotation = ({
-    anchorElo,
-    color,
-}: {
-    anchorElo: number;
-    color: string;
-}): AnnotationOptions => ({
-    type: 'line' as const,
-    yMin: anchorElo,
-    yMax: anchorElo,
-    borderWidth: 4,
-    borderColor: color,
-    drawTime: 'beforeDatasetsDraw' as const,
-    z: -1,
-});
