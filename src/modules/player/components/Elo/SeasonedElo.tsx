@@ -1,4 +1,5 @@
-import { Empty, theme, TreeSelect } from 'antd';
+import type { CustomTagProps } from '@rc-component/select/es/BaseSelect';
+import { Empty, Tag, theme, TreeSelect } from 'antd';
 import type { ChartOptions, ScriptableContext } from 'chart.js';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Line } from 'react-chartjs-2';
@@ -76,6 +77,8 @@ const SEASONED_ELO_SELECTED_SERIES_STORAGE_KEY = 'seasonedElo.selectedSeries';
 
 const getSeasonKey = (season: SeasonalStats) => `${season.year}-${season.quarter}`;
 const getSeriesValue = (season: SeasonalStats, kind: SeriesKind) => `${getSeasonKey(season)}:${kind}`;
+const getParentValueFromSeriesValue = (value: CustomTagProps['value']) =>
+    typeof value === 'string' ? value.split(':')[0] : undefined;
 
 const getAvailableSeriesValues = (season: SeasonalStats) => [
     getSeriesValue(season, 'performance'),
@@ -87,6 +90,17 @@ const getAvailableSeriesValues = (season: SeasonalStats) => [
         : []),
 ];
 const getSeasonMatchCount = (season: SeasonalStats) => season.wins + season.losses;
+
+const renderSelectedSeriesTag = ({ label, value, closable, onClose }: CustomTagProps) => {
+    const parentValue = getParentValueFromSeriesValue(value);
+
+    return (
+        <Tag closable={closable} style={{ marginInlineEnd: 4 }} onClose={onClose}>
+            {parentValue ? `${parentValue} - ` : ''}
+            {label}
+        </Tag>
+    );
+};
 
 export const SeasonedElo = memo(
     ({ data: seasonalStats, chartOptions }: { data: SeasonalStats[]; chartOptions: ChartOptions<'line'> }) => {
@@ -356,6 +370,7 @@ export const SeasonedElo = memo(
                             placeholder="Choisir les courbes"
                             showCheckedStrategy={TreeSelect.SHOW_CHILD}
                             style={{ width: '100%', marginBottom: 16 }}
+                            tagRender={renderSelectedSeriesTag}
                             treeCheckable
                             treeData={treeData}
                             value={selectedSeries}
