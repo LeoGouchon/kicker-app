@@ -38,9 +38,9 @@ export const MatchCard = ({ match, fullWidth = false, highlightPlayerId }: props
 
     const isTeamAWin = match.scoreA > match.scoreB;
     const isHighlightedPlayerInTeamA =
-        highlightPlayerId === match.player1A.id || highlightPlayerId === match.player2A?.id;
+        highlightPlayerId === match.player1A.id || (match.player2A && highlightPlayerId === match.player2A?.id);
     const isHighlightedPlayerInTeamB =
-        highlightPlayerId === match.player1B.id || highlightPlayerId === match.player2B?.id;
+        highlightPlayerId === match.player1B.id || (match.player2B && highlightPlayerId === match.player2B?.id);
     const highlightedResultType =
         (isHighlightedPlayerInTeamA && isTeamAWin) || (isHighlightedPlayerInTeamB && !isTeamAWin)
             ? 'success'
