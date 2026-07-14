@@ -1,5 +1,6 @@
 import { Divider, Flex, Table, Tag, Typography } from 'antd';
 
+import { TitleWithoutMargin } from '../../components/typography/Typography.style.tsx';
 import { useGetMatrixScore } from '../../hooks/useApiEndPoint/useMatrixScore.ts';
 import { RealResults } from './components/realResults/RealResults.tsx';
 import {
@@ -41,9 +42,7 @@ export const StatHelper = () => {
 
     return (
         <Flex vertical gap={'large'}>
-            <Typography.Title level={2} style={{ margin: 0 }}>
-                Principe du classement
-            </Typography.Title>
+            <TitleWithoutMargin>Principe du classement</TitleWithoutMargin>
             <ExplanationSection vertical gap={'middle'}>
                 <Flex vertical gap={'small'}>
                     <Typography.Title level={3} style={{ margin: 0 }}>
@@ -280,9 +279,7 @@ export const StatHelper = () => {
                 />
             </Flex>
             <Divider />
-            <Typography.Title level={2} style={{ margin: 0 }}>
-                Statistiques appliquées
-            </Typography.Title>
+            <TitleWithoutMargin>Statistiques appliquées</TitleWithoutMargin>
             <RealResults />
         </Flex>
     );

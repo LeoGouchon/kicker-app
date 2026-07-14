@@ -2,6 +2,7 @@ import { Flex, Spin, Typography } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { Navigate, useParams } from 'react-router-dom';
 
+import { TitleWithoutMargin } from '../../components/typography/Typography.style.tsx';
 import { useGetPlayerStats } from '../../hooks/useApiEndPoint/useStats.ts';
 import { uuidRegex } from '../../routes';
 import { ROUTES } from '../../routes/constant.ts';
@@ -33,9 +34,9 @@ export const Player = () => {
             <Flex vertical gap={'large'} style={{ flex: isMobile ? 1 : 3, minWidth: isMobile ? 0 : 'none' }}>
                 <Flex gap={'small'} align={isMobile ? 'start' : 'center'} wrap>
                     <SmallCardStatNoBorder variant={'borderless'}>
-                        <Title level={2} style={{ margin: 0 }}>
+                        <TitleWithoutMargin>
                             {data.firstname} {data.lastname}
-                        </Title>
+                        </TitleWithoutMargin>
                     </SmallCardStatNoBorder>
                     <SmallCardStat>
                         <Title level={4} style={{ margin: 0 }}>
@@ -43,24 +44,24 @@ export const Player = () => {
                         </Title>
                         <Flex gap={'middle'}>
                             <Flex vertical style={{ flex: 1 }}>
-                                <Title level={2} style={{ margin: 0 }}>
+                                <TitleWithoutMargin>
                                     {(
                                         (data.allTimeStats.wins / (data.allTimeStats.wins + data.allTimeStats.losses)) *
                                         100
                                     ).toFixed(0)}
                                     %
-                                </Title>
+                                </TitleWithoutMargin>
                                 <Text type="secondary">Général</Text>
                             </Flex>
                             <Flex vertical style={{ flex: 1 }}>
-                                <Title level={2} style={{ margin: 0 }}>
+                                <TitleWithoutMargin>
                                     {(
                                         (data.seasonalStats[0].wins /
                                             (data.seasonalStats[0].wins + data.seasonalStats[0].losses)) *
                                         100
                                     ).toFixed(0)}
                                     %
-                                </Title>
+                                </TitleWithoutMargin>
                                 <Text type="secondary">Saison</Text>
                             </Flex>
                         </Flex>
@@ -71,15 +72,15 @@ export const Player = () => {
                         </Title>
                         <Flex gap={'middle'}>
                             <Flex vertical style={{ flex: 1 }}>
-                                <Title level={2} style={{ margin: 0 }}>
+                                <TitleWithoutMargin>
                                     {data.allTimeStats.eloHistory.at(-1)?.elo || '???'}
-                                </Title>
+                                </TitleWithoutMargin>
                                 <Text type="secondary">Général</Text>
                             </Flex>
                             <Flex vertical style={{ flex: 1 }}>
-                                <Title level={2} style={{ margin: 0 }}>
+                                <TitleWithoutMargin>
                                     {data.seasonalStats[0].eloHistory.at(-1)?.elo || '???'}
-                                </Title>
+                                </TitleWithoutMargin>
                                 <Text type="secondary">Saison</Text>
                             </Flex>
                         </Flex>

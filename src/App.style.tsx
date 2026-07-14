@@ -18,6 +18,10 @@ export const StyledMainContent = styled.div<{ ismobile: boolean }>`
     min-height: 360px;
     background-color: var(--ant-color-bg-container);
     border-radius: var(--ant-border-radius-lg);
+
+    display: flex;
+    flex-direction: column;
+    gap: ${({ ismobile }) => (ismobile ? '8px' : '16px')};
 `;
 
 export const FlexFullWidth = styled(Flex)<FlexProps>`

@@ -1,5 +1,6 @@
 import { Button, Empty, Flex, Spin } from 'antd';
 
+import { TitleWithoutMargin } from '../../components/typography/Typography.style.tsx';
 import { useGetInfiniteMatches } from '../../hooks/useApiEndPoint/useMatch.ts';
 import type { Match } from '../../types/Match.type.ts';
 import { MatchCard } from './components/MatchCard.tsx';
@@ -15,6 +16,7 @@ export const History = () => {
 
     return (
         <>
+            <TitleWithoutMargin>Historique des matchs</TitleWithoutMargin>
             <Spin spinning={isLoading}>
                 <Flex vertical gap={'small'} flex={1} align={'center'}>
                     {matches.length === 0 && !isLoading ? (
