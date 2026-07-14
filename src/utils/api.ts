@@ -3,6 +3,12 @@ import axios from 'axios';
 import { ROUTES } from '../routes/constant.ts';
 import { mockApi } from './mockApi.ts';
 
+declare module 'axios' {
+    export interface AxiosRequestConfig {
+        skipAuthRefresh?: boolean;
+    }
+}
+
 const AUTHENTICATE_PATH = '/authenticate/';
 
 const realApi = axios.create({
@@ -55,7 +61,13 @@ realApi.interceptors.response.use(
         const originalRequest = error.config;
         const isAuthenticateRequest = originalRequest?.url?.includes(AUTHENTICATE_PATH);
 
-        if (error.response?.status === 401 && originalRequest && !originalRequest._retry && !isAuthenticateRequest) {
+        if (
+            error.response?.status === 401 &&
+            originalRequest &&
+            !originalRequest._retry &&
+            !isAuthenticateRequest &&
+            !originalRequest.skipAuthRefresh
+        ) {
             originalRequest._retry = true;
 
             try {

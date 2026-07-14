@@ -15,4 +15,8 @@ export const StyledSider = styled(Layout.Sider)<SiderProps>`
         border-bottom-left-radius: 12px;
         border-bottom-right-radius: 12px;
     }
+
+    & > * .ant-menu-item-selected {
+        border-radius: 12px;
+    }
 `;

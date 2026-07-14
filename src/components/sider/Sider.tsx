@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { type MenuItem, useGetMenuItemElements } from '../../hooks/useMenuItems.tsx';
+import { ROUTES } from '../../routes/constant.ts';
 import { StyledSider } from './Sider.style.tsx';
 
 const IS_NAV_LEFT_BAR_OPEN_STORAGE_KEY = 'isNavLeftBarOpen';
@@ -17,7 +18,13 @@ export const Sider = () => {
 
     const location = useLocation();
 
-    const selectedKey = menuItems.find((item) => location.pathname.startsWith(item?.key as string))?.key;
+    const selectedKey =
+        location.pathname === ROUTES.HOME
+            ? ROUTES.HOME
+            : location.pathname.startsWith(ROUTES.PUBLIC_NEW_MATCH)
+              ? ROUTES.NEW_MATCH
+              : menuItems.find((item) => item?.key !== ROUTES.HOME && location.pathname.startsWith(item?.key as string))
+                    ?.key;
 
     const handleToggleNavLeftBar = () => {
         const newIsNavLeftBarOpen = !isNavLeftBarOpen;

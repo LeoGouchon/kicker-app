@@ -7,24 +7,42 @@ import type { PlayerFilter } from '../../types/PlayerFilter.type.ts';
 import { api } from '../../utils/api.ts';
 import { constructComplexPlayerFilter } from '../../utils/apiConstruct/constructComplexPlayerFilter.ts';
 
+type CreateMatchPayload = {
+    scoreA: number;
+    scoreB: number;
+    player1AId: string;
+    player2AId?: string;
+    player1BId: string;
+    player2BId?: string;
+};
+
 type UseGetMatchesParams = {
     page: number;
     size: number;
     dateOrder?: SortOrder;
+    date?: number;
     playerFilter?: PlayerFilter;
     playerIds?: string[];
 };
 
-export const useGetMatches = ({ page, size, dateOrder = 'descend', playerIds, playerFilter }: UseGetMatchesParams) => {
+export const useGetMatches = ({
+    page,
+    size,
+    dateOrder = 'descend',
+    date,
+    playerIds,
+    playerFilter,
+}: UseGetMatchesParams) => {
     const formattedPlayerIds = playerIds?.map((playerId) => `&playerIds=${playerId}`).join('') ?? '';
     const formattedDateOrder = dateOrder ? '&dateOrder=' + dateOrder : '';
     const formattedPlayerFilter = constructComplexPlayerFilter(playerFilter);
+    const formattedDate = date ? `&date=${date}` : '';
 
     return useQuery<Pagination<Match>>({
-        queryKey: ['matches', page, size, dateOrder, playerIds, playerFilter],
+        queryKey: ['matches', page, size, dateOrder, date, playerIds, playerFilter],
         queryFn: async () => {
             const res = await api.get(
-                `/kicker/matches?page=${page}&size=${size}${formattedDateOrder}${formattedPlayerIds}${formattedPlayerFilter}`
+                `/kicker/matches?page=${page}&size=${size}${formattedDate}${formattedDateOrder}${formattedPlayerIds}${formattedPlayerFilter}`
             );
             return res.data;
         },
@@ -69,18 +87,31 @@ export const useCreateMatch = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: async (match: {
-            scoreA: number;
-            scoreB: number;
-            player1AId: string;
-            player2AId?: string;
-            player1BId: string;
-            player2BId?: string;
-        }): Promise<Match> => {
+        mutationFn: async (match: CreateMatchPayload): Promise<Match> => {
             try {
                 return await api.post('/kicker/matches', match).then((res) => res.data);
             } catch (error) {
                 console.error('Erreur lors de la création du match', error);
+                throw error;
+            }
+        },
+        onSuccess: () => {
+            return queryClient.invalidateQueries({ queryKey: ['matches'], exact: false });
+        },
+    });
+};
+
+export const useCreatePublicMatch = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ code, match }: { code: string; match: CreateMatchPayload }): Promise<Match> => {
+            try {
+                return await api
+                    .post('/kicker/matches/public', { code, match }, { skipAuthRefresh: true })
+                    .then((res) => res.data);
+            } catch (error) {
+                console.error('Erreur lors de la création du match public', error);
                 throw error;
             }
         },
