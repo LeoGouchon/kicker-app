@@ -3,6 +3,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useLocation, useRoutes } from 'react-router-dom';
 
 import { StyledContent, StyledLayout, StyledMainContent } from './App.style';
+import { AppBreadcrumb } from './components/breadcrumb/AppBreadcrumb.tsx';
 import { Footer } from './components/footer/Footer.tsx';
 import { Header } from './components/header/Header';
 import { Sider } from './components/sider/Sider';
@@ -30,7 +31,10 @@ export const AppContent = () => {
             <Layout style={{ overflowX: 'hidden', maxWidth: '1440px' }}>
                 <Header />
                 <StyledContent ismobile={isMobile}>
-                    <StyledMainContent ismobile={isMobile}>{routing}</StyledMainContent>
+                    <StyledMainContent ismobile={isMobile}>
+                        <AppBreadcrumb />
+                        {routing}
+                    </StyledMainContent>
                 </StyledContent>
                 <Footer />
             </Layout>

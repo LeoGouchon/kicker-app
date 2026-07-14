@@ -4,6 +4,7 @@ import { useForm, useWatch } from 'antd/es/form/Form';
 import type { ReactNode } from 'react';
 
 import { FlexFullWidth } from '../../../../App.style.tsx';
+import { TitleWithoutMargin } from '../../../../components/typography/Typography.style.tsx';
 import { useGetPlayers } from '../../../../hooks/useApiEndPoint/usePlayer.ts';
 import { FlexScoreWrapper, RadioGroupStyled, WrapperTeamSelection } from '../../NewMatch.style.tsx';
 
@@ -34,6 +35,8 @@ type MatchFormProps = {
     bottomFields?: ReactNode;
     onSubmit: (...args: [MatchPayload, MatchFormValues, FormInstance<MatchFormValues>]) => void;
 };
+
+const { Title } = Typography;
 
 export const MatchForm = ({
     title,
@@ -104,10 +107,10 @@ export const MatchForm = ({
     return (
         <Form form={form} size={'middle'} layout="vertical" onFinish={handleFinish}>
             <FlexFullWidth vertical gap={'middle'}>
-                <Typography.Title level={3}>{title}</Typography.Title>
+                <TitleWithoutMargin>{title}</TitleWithoutMargin>
                 <FlexScoreWrapper>
                     <WrapperTeamSelection vertical>
-                        <Typography.Title level={4}>Equipe 1</Typography.Title>
+                        <Title level={4}>Equipe 1</Title>
                         <Form.Item
                             name="joueurA1"
                             label="Joueur 01"
@@ -188,7 +191,7 @@ export const MatchForm = ({
                         </Form.Item>
                     </WrapperTeamSelection>
                     <WrapperTeamSelection vertical>
-                        <Typography.Title level={4}>Equipe 2</Typography.Title>
+                        <Title level={4}>Equipe 2</Title>
                         <Form.Item
                             name="joueurB1"
                             label="Joueur 01"

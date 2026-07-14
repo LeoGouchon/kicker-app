@@ -1,6 +1,13 @@
 import styled from '@emotion/styled';
 import { Typography } from 'antd';
 import type { TextProps } from 'antd/es/typography/Text';
+import type { TitleProps } from 'antd/es/typography/Title';
+
+export const TitleWithoutMargin = styled((props: TitleProps) => <Typography.Title {...props} level={2} />)`
+    && {
+        margin: 0;
+    }
+`;
 
 export const LinkTypographyStyled = styled(Typography.Text)<TextProps>`
     // Override the default antd styles thanks to the &&

@@ -19,17 +19,28 @@ import { ROUTES } from './constant.ts';
 
 export const uuidRegex = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
 
-export const routes: RouteObject[] = [
-    { path: ROUTES.HOME, element: <Dashboard /> },
+export type BreadcrumbConfig = {
+    label: string;
+    parents?: { label: string; path?: string }[];
+};
+
+type AppRouteObject = RouteObject & {
+    breadcrumb?: BreadcrumbConfig;
+};
+
+export const routes: AppRouteObject[] = [
+    { path: ROUTES.HOME, element: <Dashboard />, breadcrumb: { label: 'Accueil' } },
     { path: ROUTES.LOGIN, element: <Login /> },
-    { path: ROUTES.HISTORY, element: <History /> },
+    { path: ROUTES.HISTORY, element: <History />, breadcrumb: { label: 'Historique' } },
     {
         path: `${ROUTES.RANKING}/*`,
         element: <MainStats />,
+        breadcrumb: { label: 'Classement' },
     },
     {
         path: `${ROUTES.PLAYER}/:uuid`,
         element: <Player />,
+        breadcrumb: { label: 'Joueur' },
     },
     {
         path: ROUTES.NEW_MATCH,
@@ -38,8 +49,9 @@ export const routes: RouteObject[] = [
                 <NewMatch />
             </WithProtectionRoute>
         ),
+        breadcrumb: { label: 'Nouveau match' },
     },
-    { path: ROUTES.PUBLIC_NEW_MATCH, element: <PublicNewMatch /> },
+    { path: ROUTES.PUBLIC_NEW_MATCH, element: <PublicNewMatch />, breadcrumb: { label: 'Nouveau match' } },
     {
         path: ROUTES.KICKER_MATCH_CODES,
         element: (
@@ -47,6 +59,7 @@ export const routes: RouteObject[] = [
                 <KickerMatchCodes />
             </WithProtectionRoute>
         ),
+        breadcrumb: { label: 'Codes matchs', parents: [{ label: 'Admin' }] },
     },
     {
         path: ROUTES.CREATE_PLAYER,
@@ -55,6 +68,7 @@ export const routes: RouteObject[] = [
                 <CreatePlayerPage />
             </WithProtectionRoute>
         ),
+        breadcrumb: { label: 'Créer joueur', parents: [{ label: 'Admin' }] },
     },
     {
         path: ROUTES.INVITE,
@@ -64,11 +78,23 @@ export const routes: RouteObject[] = [
             </WithProtectionRoute>
         ),
     },
-    { path: ROUTES.STATS_HELPER, element: <StatHelper /> },
+    { path: ROUTES.STATS_HELPER, element: <StatHelper />, breadcrumb: { label: 'Mathématiques' } },
     { path: ROUTES.REGISTER, element: <Register /> },
     { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     {
         path: ROUTES.DUO,
         element: <DuoStatTables />,
+        breadcrumb: { label: 'Duo' },
     },
 ];
+
+export const breadcrumbRoutes = routes.flatMap(({ path, breadcrumb }) =>
+    path && breadcrumb
+        ? [
+              {
+                  path,
+                  ...breadcrumb,
+              },
+          ]
+        : []
+);

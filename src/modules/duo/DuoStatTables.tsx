@@ -1,10 +1,9 @@
-import { Flex, Typography } from 'antd';
+import { Flex } from 'antd';
 
+import { TitleWithoutMargin } from '../../components/typography/Typography.style.tsx';
 import { useGetDuoStats } from '../../hooks/useApiEndPoint/useStats.ts';
 import { EnhancedTable } from './components/enhancedTable/EnhancedTable.tsx';
 import type { RankedMetric, TableData } from './types/TableData.type.ts';
-
-const { Title } = Typography;
 
 export const DuoStatTables = () => {
     const { data: duoStats } = useGetDuoStats();
@@ -126,7 +125,7 @@ export const DuoStatTables = () => {
 
     return (
         <Flex vertical gap={'large'}>
-            <Title level={2}>Statistiques des duos</Title>
+            <TitleWithoutMargin>Statistiques des duos</TitleWithoutMargin>
             <EnhancedTable data={tableData} />
         </Flex>
     );
