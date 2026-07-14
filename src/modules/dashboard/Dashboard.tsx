@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { FlexFullWidth } from '../../App.style.tsx';
+import { TitleWithoutMargin } from '../../components/typography/Typography.style.tsx';
 import { UserContext } from '../../context/UserContext.tsx';
 import { type Route, ROUTES } from '../../routes/constant.ts';
 import { HistorySummaryCard } from './components/HistorySummaryCard.tsx';
@@ -25,9 +26,7 @@ export const Dashboard = () => {
 
     return (
         <FlexFullWidth vertical gap="large">
-            <Typography.Title level={3}>
-                {user ? `Bonjour ${user.player?.firstname}` : 'Tableau de bord'}
-            </Typography.Title>
+            <TitleWithoutMargin>{user ? `Bonjour ${user.player?.firstname}` : 'Tableau de bord'}</TitleWithoutMargin>
             <FlexFullWidth vertical gap={'medium'}>
                 <FlexFullWidth gap={'medium'} vertical={isMobile} wrap={!isMobile}>
                     <HoverableDashboardCard
