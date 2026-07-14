@@ -72,13 +72,13 @@ export const Player = () => {
                         <Flex gap={'middle'}>
                             <Flex vertical style={{ flex: 1 }}>
                                 <Title level={2} style={{ margin: 0 }}>
-                                    {data.allTimeStats.eloHistory.at(-1)?.elo}
+                                    {data.allTimeStats.eloHistory.at(-1)?.elo || '???'}
                                 </Title>
                                 <Text type="secondary">Général</Text>
                             </Flex>
                             <Flex vertical style={{ flex: 1 }}>
                                 <Title level={2} style={{ margin: 0 }}>
-                                    {data.seasonalStats[0].eloHistory.at(-1)?.elo}
+                                    {data.seasonalStats[0].eloHistory.at(-1)?.elo || '???'}
                                 </Title>
                                 <Text type="secondary">Saison</Text>
                             </Flex>

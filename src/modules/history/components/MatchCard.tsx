@@ -54,7 +54,7 @@ export const MatchCard = ({ match, fullWidth = false, highlightPlayerId }: props
         const highlightType = highlightPlayerId === player.id ? highlightedResultType : undefined;
         const elo = (
             <PlayerEloText type={highlightType ?? 'secondary'}>
-                ({player.globalEloBeforeMatch}/{player.seasonalEloBeforeMatch})
+                ({player.globalEloBeforeMatch || '???'}/{player.seasonalEloBeforeMatch || '???'})
             </PlayerEloText>
         );
         const playerName = <LinkPlayer highlightType={highlightType} player={player} />;
