@@ -14,14 +14,14 @@ export const StyledContent = styled(Layout.Content)<{ ismobile: boolean }>`
 `;
 
 export const StyledMainContent = styled.div<{ ismobile: boolean }>`
-    padding: ${({ ismobile }) => (ismobile ? '8px' : '24px')};
+    padding: ${({ ismobile }) => (ismobile ? '12px 8px' : '24px')};
     min-height: 360px;
     background-color: var(--ant-color-bg-container);
     border-radius: var(--ant-border-radius-lg);
 
     display: flex;
     flex-direction: column;
-    gap: ${({ ismobile }) => (ismobile ? '8px' : '16px')};
+    gap: ${({ ismobile }) => (ismobile ? '2px' : '16px')};
 `;
 
 export const FlexFullWidth = styled(Flex)<FlexProps>`
