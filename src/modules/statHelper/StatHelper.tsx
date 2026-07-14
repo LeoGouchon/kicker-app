@@ -2,7 +2,15 @@ import { Divider, Flex, Table, Tag, Typography } from 'antd';
 
 import { useGetMatrixScore } from '../../hooks/useApiEndPoint/useMatrixScore.ts';
 import { RealResults } from './components/realResults/RealResults.tsx';
-import { ValueCell } from './StatHelper.style.tsx';
+import {
+    ExplanationBlock,
+    ExplanationColumns,
+    ExplanationList,
+    ExplanationListItem,
+    ExplanationSection,
+    InlineFormula,
+    ValueCell,
+} from './StatHelper.style.tsx';
 
 export const StatHelper = () => {
     const { isLoading, data: rawData = [] } = useGetMatrixScore();
@@ -34,8 +42,124 @@ export const StatHelper = () => {
     return (
         <Flex vertical gap={'large'}>
             <Typography.Title level={2} style={{ margin: 0 }}>
-                Statistiques théoriques
+                Principe du classement
             </Typography.Title>
+            <ExplanationSection vertical gap={'middle'}>
+                <Flex vertical gap={'small'}>
+                    <Typography.Title level={3} style={{ margin: 0 }}>
+                        Comment fonctionne le classement ELO ?
+                    </Typography.Title>
+                    <Typography.Text>
+                        L'ELO mesure la performance d'un joueur au baby-foot. Après chaque match, les joueurs gagnent ou
+                        perdent quelques points selon le niveau des deux équipes et le score final.
+                    </Typography.Text>
+                </Flex>
+
+                <ExplanationColumns>
+                    <ExplanationBlock vertical gap={'small'}>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                            Niveau des équipes
+                        </Typography.Title>
+                        <ExplanationList>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    En 2v2, le niveau d'une équipe est la moyenne de l'ELO des deux joueurs.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                            <ExplanationListItem>
+                                <Typography.Text>En 1v1, c'est simplement l'ELO du joueur.</Typography.Text>
+                            </ExplanationListItem>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    Battre une équipe mieux classée rapporte plus de points que battre une équipe moins
+                                    bien classée.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                        </ExplanationList>
+                    </ExplanationBlock>
+
+                    <ExplanationBlock vertical gap={'small'}>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                            Score réel du match
+                        </Typography.Title>
+                        <ExplanationList>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    Une victoire large rapporte plus qu'une victoire serrée.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    Une défaite serrée fait perdre moins de points qu'une défaite nette.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    Le score final sert donc à ajuster l'ampleur du gain ou de la perte.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                        </ExplanationList>
+                    </ExplanationBlock>
+                </ExplanationColumns>
+
+                <ExplanationColumns>
+                    <ExplanationBlock vertical gap={'small'}>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                            Variation ELO
+                        </Typography.Title>
+                        <ExplanationList>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    Si le résultat est meilleur que prévu, l'ELO augmente.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    Si le résultat est moins bon que prévu, l'ELO diminue.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    En duo, les deux joueurs de la même équipe reçoivent la même variation.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                        </ExplanationList>
+                    </ExplanationBlock>
+
+                    <ExplanationBlock vertical gap={'small'}>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                            Global et saisonnier
+                        </Typography.Title>
+                        <ExplanationList>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    <strong>ELO global :</strong> classement historique qui prend en compte tous les
+                                    matchs du joueur.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    <strong>ELO saisonnier :</strong> classement limité au trimestre du match. Q1 va de
+                                    janvier à mars, Q2 d'avril à juin, Q3 de juillet à septembre, Q4 d'octobre à
+                                    décembre.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                            <ExplanationListItem>
+                                <Typography.Text>
+                                    Si aucun ELO n'existe encore pour l'historique concerné, la valeur initiale est{' '}
+                                    <InlineFormula>1500</InlineFormula>.
+                                </Typography.Text>
+                            </ExplanationListItem>
+                        </ExplanationList>
+                    </ExplanationBlock>
+                </ExplanationColumns>
+
+                <Typography.Text strong>
+                    À retenir : l'ELO augmente quand un joueur ou un duo fait mieux que prévu, diminue quand il fait
+                    moins bien que prévu, et l'amplitude dépend à la fois de l'écart de niveau entre les équipes et de
+                    l'écart au score final.
+                </Typography.Text>
+            </ExplanationSection>
             <Flex vertical>
                 <Flex align="center" gap={'small'} style={{ height: '100%' }}>
                     <Typography.Title level={3} style={{ margin: 0 }}>
