@@ -1,67 +1,76 @@
-import { createContext, type Dispatch, type ReactNode, type SetStateAction, useEffect, useMemo, useState } from 'react';
+import { createContext, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useLazyMe } from '../hooks/useApiEndPoint/useMe.ts';
-import { useRefreshToken } from '../hooks/useApiEndPoint/useRefreshToken.ts';
+import { getCurrentUser, getUserInfo, logout, oauthClient, refreshSession } from '../auth/client.ts';
+import type { AuthState } from '../auth/types.ts';
 import type { UserType } from '../types/User.type.ts';
+import { api } from '../utils/api.ts';
 
 interface UserContextType {
     user?: UserType;
-    setUser: Dispatch<SetStateAction<UserType | undefined>>;
+    authState: AuthState;
+    setUser: (user: UserType | undefined) => void;
+    clearSession: () => void;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const UserContext = createContext<UserContextType>({
-    user: undefined,
-    setUser: () => {},
+    authState: 'initializing',
+    setUser: () => undefined,
+    clearSession: () => undefined,
 });
 
-const getStoredUser = (): UserType | undefined => {
-    const rawUser = localStorage.getItem('user');
-    if (!rawUser) {
-        return undefined;
-    }
-
-    try {
-        return JSON.parse(rawUser) as UserType;
-    } catch {
-        localStorage.removeItem('user');
-        return undefined;
-    }
-};
-
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<UserType | undefined>(() => getStoredUser());
-    const [isInitializing, setIsInitializing] = useState(true);
+    const [user, setUser] = useState<UserType | undefined>();
+    const [authState, setAuthState] = useState<AuthState>('initializing');
 
-    const { mutate: refreshAccessToken } = useRefreshToken();
-    const [fetchMe, { data: userData }] = useLazyMe();
-
-    useEffect(() => {
-        refreshAccessToken(undefined, {
-            onSuccess: (response) => {
-                localStorage.setItem('token', response.token);
-                fetchMe().finally(() => setIsInitializing(false));
-            },
-            onError: () => {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                setUser(undefined);
-                setIsInitializing(false);
-            },
-        });
-    }, [fetchMe, refreshAccessToken]);
+    const clearSession = useCallback(() => {
+        setUser(undefined);
+        setAuthState('anonymous');
+    }, []);
 
     useEffect(() => {
-        if (userData) {
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
-        } else if (!isInitializing) {
-            setUser(undefined);
-            localStorage.removeItem('user');
-        }
-    }, [userData, isInitializing]);
+        const handleAccessTokenExpired = () => {
+            clearSession();
+            void logout();
+        };
 
-    const value: UserContextType = useMemo(() => ({ user, setUser }), [user]);
+        oauthClient.events.addAccessTokenExpired(handleAccessTokenExpired);
+        return () => oauthClient.events.removeAccessTokenExpired(handleAccessTokenExpired);
+    }, [clearSession]);
 
+    useEffect(() => {
+        let active = true;
+        void (async () => {
+            try {
+                let oauthUser = await getCurrentUser();
+                if (!oauthUser) {
+                    if (active) setAuthState('anonymous');
+                    return;
+                }
+
+                if (oauthUser.expired) {
+                    oauthUser = await refreshSession();
+                }
+
+                await getUserInfo(oauthUser.access_token);
+                const response = await api.get('/me');
+                if (active) {
+                    setUser(response.data as UserType);
+                    setAuthState('authenticated');
+                }
+            } catch {
+                if (active) {
+                    setUser(undefined);
+                    setAuthState('anonymous');
+                }
+            }
+        })();
+
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    const value = useMemo(() => ({ user, authState, setUser, clearSession }), [user, authState, clearSession]);
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

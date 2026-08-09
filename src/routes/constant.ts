@@ -1,5 +1,5 @@
 export const ROUTES = {
-    LOGIN: '/login',
+    AUTH_CALLBACK: '/auth/callback',
     HISTORY: '/history',
     NEW_MATCH: '/new-match',
     PUBLIC_NEW_MATCH: '/public-new-match',
@@ -9,7 +9,6 @@ export const ROUTES = {
     HOME: '/',
     NOT_FOUND: '*',
     INVITE: '/invite',
-    REGISTER: '/register',
     STATS_HELPER: '/stats-helper',
     PLAYER: '/player',
     DUO: '/duo',

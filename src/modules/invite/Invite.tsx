@@ -4,10 +4,10 @@ import { Button, Flex, Form, message, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useState } from 'react';
 
+import { identityConfig } from '../../auth/config.ts';
 import { FullscreenPage } from '../../components/fullscreenPage/FullscreenPage.tsx';
 import { useInvite } from '../../hooks/useApiEndPoint/useInvite.ts';
 import { useGetUnlinkedPlayers } from '../../hooks/useApiEndPoint/usePlayer.ts';
-import { ROUTES } from '../../routes/constant.ts';
 
 export const Invite = () => {
     const [form] = useForm();
@@ -67,9 +67,10 @@ export const Invite = () => {
                             type="dashed"
                             icon={<FontAwesomeIcon icon={faClipboard} />}
                             onClick={() => {
-                                navigator.clipboard.writeText(
-                                    window.location.origin + ROUTES.REGISTER + '?invitation-token=' + token
-                                );
+                                const invitationUrl = new URL('/signup', identityConfig.issuer);
+                                invitationUrl.searchParams.set('invitationToken', token);
+
+                                void navigator.clipboard.writeText(invitationUrl.toString());
                                 messageApi.open({
                                     type: 'success',
                                     content: 'Lien copié dans le presse-papiers',

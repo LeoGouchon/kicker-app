@@ -1,19 +1,18 @@
 import type { RouteObject } from 'react-router-dom';
 
 import { WithProtectionRoute } from '../components/withProtectionRoute/WithProtectionRoute.tsx';
+import { AuthCallbackPage } from '../modules/auth/AuthCallbackPage.tsx';
 import { CreatePlayerPage } from '../modules/createPlayer/CreatePlayerPage.tsx';
 import { Dashboard } from '../modules/dashboard/Dashboard.tsx';
 import { DuoStatTables } from '../modules/duo/DuoStatTables.tsx';
 import { History } from '../modules/history/History.tsx';
 import { Invite } from '../modules/invite/Invite.tsx';
 import { KickerMatchCodes } from '../modules/kickerMatchCodes/KickerMatchCodes.tsx';
-import { Login } from '../modules/login/Login.tsx';
 import { MainStats } from '../modules/mainStats/MainStats.tsx';
 import { NewMatch } from '../modules/newMatch/NewMatch.tsx';
 import { NotFound } from '../modules/notFound/NotFound.tsx';
 import { Player } from '../modules/player/Player.tsx';
 import { PublicNewMatch } from '../modules/publicNewMatch/PublicNewMatch.tsx';
-import { Register } from '../modules/register/Register.tsx';
 import { StatHelper } from '../modules/statHelper/StatHelper.tsx';
 import { ROUTES } from './constant.ts';
 
@@ -30,7 +29,7 @@ type AppRouteObject = RouteObject & {
 
 export const routes: AppRouteObject[] = [
     { path: ROUTES.HOME, element: <Dashboard />, breadcrumb: { label: 'Accueil' } },
-    { path: ROUTES.LOGIN, element: <Login /> },
+    { path: ROUTES.AUTH_CALLBACK, element: <AuthCallbackPage /> },
     { path: ROUTES.HISTORY, element: <History />, breadcrumb: { label: 'Historique' } },
     {
         path: `${ROUTES.RANKING}/*`,
@@ -79,7 +78,6 @@ export const routes: AppRouteObject[] = [
         ),
     },
     { path: ROUTES.STATS_HELPER, element: <StatHelper />, breadcrumb: { label: 'Mathématiques' } },
-    { path: ROUTES.REGISTER, element: <Register /> },
     { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     {
         path: ROUTES.DUO,

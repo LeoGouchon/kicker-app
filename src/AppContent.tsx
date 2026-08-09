@@ -17,11 +17,10 @@ export const AppContent = () => {
     const screens = useBreakpoint();
     const isMobile = !screens.md;
 
-    const isLoginPage = pathname === ROUTES.LOGIN;
+    const isAuthCallbackPage = pathname === ROUTES.AUTH_CALLBACK;
     const isInvitePage = pathname === ROUTES.INVITE;
-    const isRegisterPage = pathname === ROUTES.REGISTER;
 
-    if (isLoginPage || isInvitePage || isRegisterPage) {
+    if (isAuthCallbackPage || isInvitePage) {
         return <StyledLayout>{routing}</StyledLayout>;
     }
 

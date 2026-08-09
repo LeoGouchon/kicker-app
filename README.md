@@ -1,69 +1,64 @@
-# React + TypeScript + Vite
+# Kicker-App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SPA React + TypeScript + Vite. L’authentification est déléguée à l’identity server via `oidc-client-ts` et Authorization
+Code + PKCE (S256).
 
-Currently, two official plugins are available:
+## Configuration
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Vite n’expose au navigateur que les variables préfixées `VITE_`. Les variables applicatives correspondent donc aux noms
+demandés avec ce préfixe :
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```dotenv
+VITE_API_URL=http://localhost:8080/api/v1
+VITE_IDENTITY_ISSUER=http://localhost:8081
+VITE_IDENTITY_CLIENT_ID=default-web
+VITE_IDENTITY_REDIRECT_URI=http://localhost:4200/auth/callback
+VITE_IDENTITY_RESOURCE=default-api
+VITE_IDENTITY_SCOPE=openid profile email
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Les tokens sont gérés par `oidc-client-ts` en `sessionStorage` : aucun token n’est écrit dans `localStorage`, l’
+`id_token` n’est jamais envoyé à Hubscore et seul l’`access_token` est utilisé dans `Authorization: Bearer`. Le
+renouvellement silencieux est automatique 60 secondes avant expiration via le refresh token ; sa rotation est gérée par
+la librairie. En cas d’échec, la session est révoquée/nettoyée et l’utilisateur est redirigé vers le logout de
+l’identity server.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Identity server
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+La configuration OAuth doit autoriser exactement `http://localhost:4200/auth/callback` pour `default-web` (et l’URL
+équivalente de chaque environnement). L’identity server doit aussi autoriser l’origine de l’application dans sa
+configuration CORS et accepter `post_logout_redirect_uri=http://localhost:4200/`.
+
+Le backend fourni expose bien la découverte, les endpoints d’autorisation/token/userinfo/logout et les clés JWKS. Son
+endpoint de révocation n’étant pas dans le document de découverte, l’adaptateur `src/auth/client.ts` appelle
+explicitement `/oauth2/revoke`.
+
+Le fichier backend `config/application-dev.example.yml` contient actuellement `web-client` et non `default-web`. Il faut
+aligner cette valeur avec `VITE_IDENTITY_CLIENT_ID`, ou définir `VITE_IDENTITY_CLIENT_ID=web-client`.
+
+`oidc-client-ts` génère state et PKCE S256. Comme le provider impose aussi `nonce` alors que le flux code seul de la
+librairie ne l’ajoute pas automatiquement, l’adaptateur génère un nonce aléatoire avec Web Crypto et le fournit à la
+librairie.
+
+## Commandes
+
+```bash
+npm install
+npm run dev -- --host 0.0.0.0 --port 4200
+npm test
+npm run lint
+npm run build
 ```
+
+L’identity server et l’API Hubscore doivent être démarrés séparément selon leurs README backend, avec leurs ports locaux
+(`8081` et `8080`).
+
+## Organisation OAuth
+
+- `src/auth/client.ts` : adaptateur `oidc-client-ts`, découverte, userinfo, révocation et logout.
+- `src/auth/http.ts` : bearer sur les appels API, refresh coordonné, un seul retry après 401.
+- `src/auth/config.ts` : configuration par environnement.
+- `src/modules/auth/AuthCallbackPage.tsx` : callback et restauration d’URL interne.
+
+Les permissions d’administration affichées par le frontend restent indicatives ; l’autorisation réelle est vérifiée par
+l’API.
