@@ -2,6 +2,7 @@ import type { RouteObject } from 'react-router-dom';
 
 import { WithProtectionRoute } from '../components/withProtectionRoute/WithProtectionRoute.tsx';
 import { AuthCallbackPage } from '../modules/auth/AuthCallbackPage.tsx';
+import { LogoutCallbackPage } from '../modules/auth/LogoutCallbackPage.tsx';
 import { CreatePlayerPage } from '../modules/createPlayer/CreatePlayerPage.tsx';
 import { Dashboard } from '../modules/dashboard/Dashboard.tsx';
 import { DuoStatTables } from '../modules/duo/DuoStatTables.tsx';
@@ -30,6 +31,7 @@ type AppRouteObject = RouteObject & {
 export const routes: AppRouteObject[] = [
     { path: ROUTES.HOME, element: <Dashboard />, breadcrumb: { label: 'Accueil' } },
     { path: ROUTES.AUTH_CALLBACK, element: <AuthCallbackPage /> },
+    { path: ROUTES.AUTH_LOGOUT_CALLBACK, element: <LogoutCallbackPage /> },
     { path: ROUTES.HISTORY, element: <History />, breadcrumb: { label: 'Historique' } },
     {
         path: `${ROUTES.RANKING}/*`,

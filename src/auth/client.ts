@@ -1,12 +1,12 @@
 import { type User, UserManager, WebStorageStateStore } from 'oidc-client-ts';
 
-import { frontendLogoutUri, identityConfig } from './config.ts';
+import { identityConfig } from './config.ts';
 
 export const oauthClient = new UserManager({
     authority: identityConfig.issuer,
     client_id: identityConfig.clientId,
     redirect_uri: identityConfig.redirectUri,
-    post_logout_redirect_uri: frontendLogoutUri,
+    post_logout_redirect_uri: identityConfig.postLogoutRedirectUri,
     response_type: 'code',
     scope: identityConfig.scope,
     resource: identityConfig.resource,
@@ -19,6 +19,7 @@ export const oauthClient = new UserManager({
 // React StrictMode may mount the callback page twice in development. The
 // authorization code is single-use, so both mounts must share one exchange.
 let callbackPromise: Promise<User> | undefined;
+let logoutCallbackPromise: Promise<void> | undefined;
 
 const safeReturnTo = (value: string): string => {
     try {
@@ -89,23 +90,40 @@ export const revokeRefreshToken = async (refreshToken: string): Promise<void> =>
 
 export const logout = async (): Promise<void> => {
     const user = await getCurrentUser();
-    const idTokenHint = user?.id_token;
     try {
         if (user?.refresh_token) {
             await revokeRefreshToken(user.refresh_token);
         }
     } catch {
-        // La session locale et la session du provider doivent tout de même être nettoyées.
-    } finally {
-        await oauthClient.removeUser();
+        void 0;
     }
-    const metadata = await oauthClient.metadataService.getMetadata();
-    const endpoint = metadata.end_session_endpoint ?? `${identityConfig.issuer}/connect/logout`;
-    const logoutParams = new URLSearchParams({ post_logout_redirect_uri: frontendLogoutUri });
-    if (idTokenHint) {
-        logoutParams.set('id_token_hint', idTokenHint);
-    }
-    globalThis.location.assign(`${endpoint}?${logoutParams}`);
+
+    // oidc-client-ts generates and persists a cryptographically random state,
+    // then removes the local user as part of signoutRedirect. The callback
+    // validates that state before the session is considered fully closed.
+    await oauthClient.signoutRedirect({
+        post_logout_redirect_uri: identityConfig.postLogoutRedirectUri,
+        state: randomNonce(),
+        extraQueryParams: { client_id: oauthClient.settings.client_id },
+    });
+};
+
+export const handleLogoutCallback = (): Promise<void> => {
+    logoutCallbackPromise ??= oauthClient
+        .signoutRedirectCallback()
+        .then(async (response) => {
+            if (!response.state) {
+                throw new Error('Callback de logout sans state');
+            }
+
+            await oauthClient.removeUser();
+        })
+        .catch((error) => {
+            logoutCallbackPromise = undefined;
+            throw error;
+        });
+
+    return logoutCallbackPromise;
 };
 
 export const getAccessToken = async (): Promise<string | undefined> => {

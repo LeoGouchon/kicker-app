@@ -1,5 +1,6 @@
 export const ROUTES = {
     AUTH_CALLBACK: '/auth/callback',
+    AUTH_LOGOUT_CALLBACK: '/auth/logout-callback',
     HISTORY: '/history',
     NEW_MATCH: '/new-match',
     PUBLIC_NEW_MATCH: '/public-new-match',

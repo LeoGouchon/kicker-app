@@ -18,9 +18,10 @@ export const AppContent = () => {
     const isMobile = !screens.md;
 
     const isAuthCallbackPage = pathname === ROUTES.AUTH_CALLBACK;
+    const isLogoutCallbackPage = pathname === ROUTES.AUTH_LOGOUT_CALLBACK;
     const isInvitePage = pathname === ROUTES.INVITE;
 
-    if (isAuthCallbackPage || isInvitePage) {
+    if (isAuthCallbackPage || isLogoutCallbackPage || isInvitePage) {
         return <StyledLayout>{routing}</StyledLayout>;
     }
 

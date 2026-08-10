@@ -2,6 +2,7 @@ export type IdentityConfig = {
     issuer: string;
     clientId: string;
     redirectUri: string;
+    postLogoutRedirectUri: string;
     resource: string;
     scope: string;
 };
@@ -18,8 +19,10 @@ export const identityConfig: IdentityConfig = {
     issuer: required(import.meta.env.VITE_IDENTITY_ISSUER, 'IDENTITY_ISSUER').replace(/\/$/, ''),
     clientId: required(import.meta.env.VITE_IDENTITY_CLIENT_ID, 'IDENTITY_CLIENT_ID'),
     redirectUri: required(import.meta.env.VITE_IDENTITY_REDIRECT_URI, 'IDENTITY_REDIRECT_URI'),
+    postLogoutRedirectUri: required(
+        import.meta.env.VITE_IDENTITY_POST_LOGOUT_REDIRECT_URI,
+        'IDENTITY_POST_LOGOUT_REDIRECT_URI'
+    ),
     resource: required(import.meta.env.VITE_IDENTITY_RESOURCE, 'IDENTITY_RESOURCE'),
     scope: required(import.meta.env.VITE_IDENTITY_SCOPE, 'IDENTITY_SCOPE'),
 };
-
-export const frontendLogoutUri = `${globalThis.location.origin}/`;

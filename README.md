@@ -11,8 +11,9 @@ demandés avec ce préfixe :
 ```dotenv
 VITE_API_URL=http://localhost:8080/api/v1
 VITE_IDENTITY_ISSUER=http://localhost:8081
-VITE_IDENTITY_CLIENT_ID=default-web
-VITE_IDENTITY_REDIRECT_URI=http://localhost:4200/auth/callback
+VITE_IDENTITY_CLIENT_ID=kicker-client
+VITE_IDENTITY_REDIRECT_URI=http://localhost:5173/auth/callback
+VITE_IDENTITY_POST_LOGOUT_REDIRECT_URI=http://localhost:5173/auth/logout-callback
 VITE_IDENTITY_RESOURCE=default-api
 VITE_IDENTITY_SCOPE=openid profile email
 ```
@@ -25,16 +26,16 @@ l’identity server.
 
 ## Identity server
 
-La configuration OAuth doit autoriser exactement `http://localhost:4200/auth/callback` pour `default-web` (et l’URL
+La configuration OAuth doit autoriser exactement `http://localhost:5173/auth/callback` et
+`http://localhost:5173/auth/logout-callback` pour `kicker-client` (et les URL
 équivalente de chaque environnement). L’identity server doit aussi autoriser l’origine de l’application dans sa
-configuration CORS et accepter `post_logout_redirect_uri=http://localhost:4200/`.
+configuration CORS.
 
 Le backend fourni expose bien la découverte, les endpoints d’autorisation/token/logout et les clés JWKS. Son
 endpoint de révocation n’étant pas dans le document de découverte, l’adaptateur `src/auth/client.ts` appelle
 explicitement `/oauth2/revoke`.
 
-Le fichier backend `config/application-dev.example.yml` contient actuellement `web-client` et non `default-web`. Il faut
-aligner cette valeur avec `VITE_IDENTITY_CLIENT_ID`, ou définir `VITE_IDENTITY_CLIENT_ID=web-client`.
+La configuration backend doit déclarer le client `kicker-client`, en cohérence avec `VITE_IDENTITY_CLIENT_ID`.
 
 `oidc-client-ts` génère state et PKCE S256. Comme le provider impose aussi `nonce` alors que le flux code seul de la
 librairie ne l’ajoute pas automatiquement, l’adaptateur génère un nonce aléatoire avec Web Crypto et le fournit à la
@@ -44,7 +45,7 @@ librairie.
 
 ```bash
 npm install
-npm run dev -- --host 0.0.0.0 --port 4200
+npm run dev -- --host 0.0.0.0 --port 5173
 npm test
 npm run lint
 npm run build
