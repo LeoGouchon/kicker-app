@@ -16,6 +16,10 @@ export const oauthClient = new UserManager({
     userStore: new WebStorageStateStore({ store: globalThis.sessionStorage }),
 });
 
+// React StrictMode may mount the callback page twice in development. The
+// authorization code is single-use, so both mounts must share one exchange.
+let callbackPromise: Promise<User> | undefined;
+
 const safeReturnTo = (value: string): string => {
     try {
         const url = new URL(value, globalThis.location.origin);
@@ -35,15 +39,29 @@ const randomNonce = (): string => {
 };
 
 export const login = async (returnTo = `${globalThis.location.pathname}${globalThis.location.search}`) =>
-    oauthClient.signinRedirect({ state: { returnTo: safeReturnTo(returnTo) }, nonce: randomNonce() });
+    oauthClient.signinRedirect({
+        state: { returnTo: safeReturnTo(returnTo) },
+        nonce: randomNonce(),
+        prompt: 'login',
+    });
 
-export const handleCallback = async (): Promise<User> => {
-    const user = await oauthClient.signinCallback();
-    if (!user) {
-        throw new Error('Callback OAuth sans utilisateur');
-    }
+export const handleCallback = (): Promise<User> => {
+    callbackPromise ??= oauthClient
+        .signinCallback()
+        .then((user) => {
+            if (!user) {
+                throw new Error('Callback OAuth sans utilisateur');
+            }
 
-    return user;
+            return user;
+        })
+        .catch((error) => {
+            // Allow a fresh login attempt after a failed callback.
+            callbackPromise = undefined;
+            throw error;
+        });
+
+    return callbackPromise;
 };
 
 export const getCurrentUser = () => oauthClient.getUser();
@@ -55,23 +73,6 @@ export const refreshSession = async (): Promise<User> => {
     }
 
     return user;
-};
-
-export const getUserInfo = async (accessToken: string): Promise<Record<string, unknown>> => {
-    const metadata = await oauthClient.metadataService.getMetadata();
-    const endpoint = metadata.userinfo_endpoint;
-    if (!endpoint) {
-        throw new Error('userinfo_endpoint absent de la découverte OpenID');
-    }
-
-    const response = await fetch(endpoint, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    if (!response.ok) {
-        throw new Error(`userinfo a répondu HTTP ${response.status}`);
-    }
-
-    return (await response.json()) as Promise<Record<string, unknown>>;
 };
 
 export const revokeRefreshToken = async (refreshToken: string): Promise<void> => {
@@ -88,6 +89,7 @@ export const revokeRefreshToken = async (refreshToken: string): Promise<void> =>
 
 export const logout = async (): Promise<void> => {
     const user = await getCurrentUser();
+    const idTokenHint = user?.id_token;
     try {
         if (user?.refresh_token) {
             await revokeRefreshToken(user.refresh_token);
@@ -99,7 +101,11 @@ export const logout = async (): Promise<void> => {
     }
     const metadata = await oauthClient.metadataService.getMetadata();
     const endpoint = metadata.end_session_endpoint ?? `${identityConfig.issuer}/connect/logout`;
-    globalThis.location.assign(`${endpoint}?${new URLSearchParams({ post_logout_redirect_uri: frontendLogoutUri })}`);
+    const logoutParams = new URLSearchParams({ post_logout_redirect_uri: frontendLogoutUri });
+    if (idTokenHint) {
+        logoutParams.set('id_token_hint', idTokenHint);
+    }
+    globalThis.location.assign(`${endpoint}?${logoutParams}`);
 };
 
 export const getAccessToken = async (): Promise<string | undefined> => {

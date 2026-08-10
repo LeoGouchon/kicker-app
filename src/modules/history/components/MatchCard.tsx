@@ -7,6 +7,7 @@ import { SeasonTag } from '../../../components/seasonTag/SeasonTag.tsx';
 import { UserContext } from '../../../context/UserContext.tsx';
 import { useDeleteMatch } from '../../../hooks/useApiEndPoint/useMatch.ts';
 import type { Match } from '../../../types/Match.type.ts';
+import { isAdmin } from '../../../utils/roles.ts';
 import {
     ContentWrapper,
     GlobalWrapper,
@@ -148,7 +149,7 @@ export const MatchCard = ({ match, fullWidth = false, highlightPlayerId }: props
                     {match.player2B && renderPlayerWithElo(match.player2B, 'after')}
                 </TeamPlayerWrapper>
             </ContentWrapper>
-            {user && user.admin && (
+            {isAdmin(user) && (
                 <>
                     <Divider style={{ margin: 0 }} />
                     <Flex justify={'end'}>

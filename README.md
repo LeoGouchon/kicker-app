@@ -29,7 +29,7 @@ La configuration OAuth doit autoriser exactement `http://localhost:4200/auth/cal
 équivalente de chaque environnement). L’identity server doit aussi autoriser l’origine de l’application dans sa
 configuration CORS et accepter `post_logout_redirect_uri=http://localhost:4200/`.
 
-Le backend fourni expose bien la découverte, les endpoints d’autorisation/token/userinfo/logout et les clés JWKS. Son
+Le backend fourni expose bien la découverte, les endpoints d’autorisation/token/logout et les clés JWKS. Son
 endpoint de révocation n’étant pas dans le document de découverte, l’adaptateur `src/auth/client.ts` appelle
 explicitement `/oauth2/revoke`.
 
@@ -55,7 +55,7 @@ L’identity server et l’API Hubscore doivent être démarrés séparément se
 
 ## Organisation OAuth
 
-- `src/auth/client.ts` : adaptateur `oidc-client-ts`, découverte, userinfo, révocation et logout.
+- `src/auth/client.ts` : adaptateur `oidc-client-ts`, découverte, révocation et logout.
 - `src/auth/http.ts` : bearer sur les appels API, refresh coordonné, un seul retry après 401.
 - `src/auth/config.ts` : configuration par environnement.
 - `src/modules/auth/AuthCallbackPage.tsx` : callback et restauration d’URL interne.

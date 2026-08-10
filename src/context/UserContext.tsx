@@ -1,6 +1,6 @@
 import { createContext, type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { getCurrentUser, getUserInfo, logout, oauthClient, refreshSession } from '../auth/client.ts';
+import { getCurrentUser, logout, oauthClient, refreshSession } from '../auth/client.ts';
 import type { AuthState } from '../auth/types.ts';
 import type { UserType } from '../types/User.type.ts';
 import { api } from '../utils/api.ts';
@@ -28,6 +28,27 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setAuthState('anonymous');
     }, []);
 
+    const loadCurrentProfile = useCallback(async () => {
+        try {
+            let oauthUser = await getCurrentUser();
+            if (!oauthUser) {
+                setAuthState('anonymous');
+                return;
+            }
+
+            if (oauthUser.expired) {
+                oauthUser = await refreshSession();
+            }
+
+            const response = await api.get('/me');
+            setUser(response.data as UserType);
+            setAuthState('authenticated');
+        } catch {
+            setUser(undefined);
+            setAuthState('anonymous');
+        }
+    }, []);
+
     useEffect(() => {
         const handleAccessTokenExpired = () => {
             clearSession();
@@ -39,37 +60,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }, [clearSession]);
 
     useEffect(() => {
-        let active = true;
-        void (async () => {
-            try {
-                let oauthUser = await getCurrentUser();
-                if (!oauthUser) {
-                    if (active) setAuthState('anonymous');
-                    return;
-                }
+        // signinCallback emits userLoaded after the code/token exchange. This
+        // also handles the first login without requiring a page refresh.
+        const handleUserLoaded = () => void loadCurrentProfile();
+        oauthClient.events.addUserLoaded(handleUserLoaded);
+        void loadCurrentProfile();
 
-                if (oauthUser.expired) {
-                    oauthUser = await refreshSession();
-                }
-
-                await getUserInfo(oauthUser.access_token);
-                const response = await api.get('/me');
-                if (active) {
-                    setUser(response.data as UserType);
-                    setAuthState('authenticated');
-                }
-            } catch {
-                if (active) {
-                    setUser(undefined);
-                    setAuthState('anonymous');
-                }
-            }
-        })();
-
-        return () => {
-            active = false;
-        };
-    }, []);
+        return () => oauthClient.events.removeUserLoaded(handleUserLoaded);
+    }, [loadCurrentProfile]);
 
     const value = useMemo(() => ({ user, authState, setUser, clearSession }), [user, authState, clearSession]);
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

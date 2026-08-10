@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { login } from '../../auth/client.ts';
 import { UserContext } from '../../context/UserContext.tsx';
+import { isModeratorOrAdmin } from '../../utils/roles.ts';
 
 export const WithProtectionRoute = ({
     isAdminRestricted = false,
@@ -22,10 +23,10 @@ export const WithProtectionRoute = ({
     }, [authState, location.hash, location.pathname, location.search]);
 
     if (authState !== 'authenticated' || !user) {
-        return <Spin tip="Redirection vers le service d’identité…" />;
+        return <Spin description="Redirection vers le service d’identité…" />;
     }
 
-    if (isAdminRestricted && !user.admin) {
+    if (isAdminRestricted && !isModeratorOrAdmin(user)) {
         return (
             <Result
                 status="403"
