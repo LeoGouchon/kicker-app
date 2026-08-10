@@ -12,8 +12,8 @@ demandés avec ce préfixe :
 VITE_API_URL=http://localhost:8080/api/v1
 VITE_IDENTITY_ISSUER=http://localhost:8081
 VITE_IDENTITY_CLIENT_ID=kicker-client
-VITE_IDENTITY_REDIRECT_URI=http://localhost:5173/auth/callback
-VITE_IDENTITY_POST_LOGOUT_REDIRECT_URI=http://localhost:5173/auth/logout-callback
+VITE_IDENTITY_REDIRECT_URI=http://localhost:5173/
+VITE_IDENTITY_POST_LOGOUT_REDIRECT_URI=http://localhost:5173/
 VITE_IDENTITY_RESOURCE=default-api
 VITE_IDENTITY_SCOPE=openid profile email
 ```
@@ -26,14 +26,13 @@ l’identity server.
 
 ## Identity server
 
-La configuration OAuth doit autoriser exactement `http://localhost:5173/auth/callback` et
-`http://localhost:5173/auth/logout-callback` pour `kicker-client` (et les URL
-équivalente de chaque environnement). L’identity server doit aussi autoriser l’origine de l’application dans sa
-configuration CORS.
+La configuration OAuth doit autoriser exactement `http://localhost:5173/` pour les redirections de connexion et de
+déconnexion de `kicker-client` (et les URL équivalente de chaque environnement). L’identity server doit aussi autoriser
+l’origine de l’application dans sa configuration CORS.
 
-Le backend fourni expose bien la découverte, les endpoints d’autorisation/token/logout et les clés JWKS. Son
-endpoint de révocation n’étant pas dans le document de découverte, l’adaptateur `src/auth/client.ts` appelle
-explicitement `/oauth2/revoke`.
+Le backend fourni expose bien la découverte, les endpoints d’autorisation/token/logout et les clés JWKS. Son endpoint de
+révocation n’étant pas dans le document de découverte, l’adaptateur `src/auth/client.ts` appelle explicitement
+`/oauth2/revoke`.
 
 La configuration backend doit déclarer le client `kicker-client`, en cohérence avec `VITE_IDENTITY_CLIENT_ID`.
 

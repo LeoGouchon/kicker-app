@@ -3,13 +3,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { handleCallback, login } from '../../auth/client.ts';
+import { getReturnTo } from '../../auth/returnTo.ts';
 import { FullscreenPage } from '../../components/fullscreenPage/FullscreenPage.tsx';
-
-const getReturnTo = (state: unknown): string => {
-    if (typeof state !== 'object' || state === null || !('returnTo' in state)) return '/';
-    const returnTo = (state as { returnTo?: unknown }).returnTo;
-    return typeof returnTo === 'string' && returnTo.startsWith('/') && !returnTo.startsWith('//') ? returnTo : '/';
-};
 
 export const AuthCallbackPage = () => {
     const navigate = useNavigate();
