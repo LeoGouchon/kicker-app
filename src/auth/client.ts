@@ -13,7 +13,10 @@ export const oauthClient = new UserManager({
     loadUserInfo: false,
     automaticSilentRenew: true,
     accessTokenExpiringNotificationTimeInSeconds: 60,
-    userStore: new WebStorageStateStore({ store: globalThis.sessionStorage }),
+    // Keep the authenticated OIDC user available across tabs and browser
+    // restarts. The authorize/signout state is managed separately by the
+    // library and is not part of the persisted user profile.
+    userStore: new WebStorageStateStore({ store: globalThis.localStorage }),
 });
 
 // React StrictMode may mount the callback page twice in development. The

@@ -18,7 +18,8 @@ VITE_IDENTITY_RESOURCE=default-api
 VITE_IDENTITY_SCOPE=openid profile email
 ```
 
-Les tokens sont gérés par `oidc-client-ts` en `sessionStorage` : aucun token n’est écrit dans `localStorage`, l’
+Les tokens sont gérés par `oidc-client-ts` en `localStorage` afin de conserver la session entre les onglets et après
+la réouverture du navigateur, l’
 `id_token` n’est jamais envoyé à Hubscore et seul l’`access_token` est utilisé dans `Authorization: Bearer`. Le
 renouvellement silencieux est automatique 60 secondes avant expiration via le refresh token ; sa rotation est gérée par
 la librairie. En cas d’échec, la session est révoquée/nettoyée et l’utilisateur est redirigé vers le logout de

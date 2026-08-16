@@ -71,10 +71,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         // signinCallback emits userLoaded after the code/token exchange. This
         // also handles the first login without requiring a page refresh.
         const handleUserLoaded = () => void loadCurrentProfile();
+        const handleStorage = (event: StorageEvent) => {
+            const isOidcUserChange = event.key === null || event.key.startsWith('oidc.user:');
+            if (event.storageArea === globalThis.localStorage && isOidcUserChange) {
+                void loadCurrentProfile();
+            }
+        };
+
         oauthClient.events.addUserLoaded(handleUserLoaded);
+        globalThis.addEventListener('storage', handleStorage);
         void loadCurrentProfile();
 
-        return () => oauthClient.events.removeUserLoaded(handleUserLoaded);
+        return () => {
+            oauthClient.events.removeUserLoaded(handleUserLoaded);
+            globalThis.removeEventListener('storage', handleStorage);
+        };
     }, [loadCurrentProfile]);
 
     const value = useMemo(() => ({ user, authState, setUser, clearSession }), [user, authState, clearSession]);
