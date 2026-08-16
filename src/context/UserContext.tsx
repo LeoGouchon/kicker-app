@@ -19,6 +19,8 @@ export const UserContext = createContext<UserContextType>({
     clearSession: () => undefined,
 });
 
+let currentProfilePromise: Promise<void> | undefined;
+
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<UserType | undefined>();
     const [authState, setAuthState] = useState<AuthState>('initializing');
@@ -28,25 +30,31 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setAuthState('anonymous');
     }, []);
 
-    const loadCurrentProfile = useCallback(async () => {
-        try {
-            let oauthUser = await getCurrentUser();
-            if (!oauthUser) {
+    const loadCurrentProfile = useCallback(() => {
+        currentProfilePromise ??= (async () => {
+            try {
+                let oauthUser = await getCurrentUser();
+                if (!oauthUser) {
+                    setAuthState('anonymous');
+                    return;
+                }
+
+                if (oauthUser.expired) {
+                    oauthUser = await refreshSession();
+                }
+
+                const response = await api.get('/me');
+                setUser(response.data as UserType);
+                setAuthState('authenticated');
+            } catch {
+                setUser(undefined);
                 setAuthState('anonymous');
-                return;
+            } finally {
+                currentProfilePromise = undefined;
             }
+        })();
 
-            if (oauthUser.expired) {
-                oauthUser = await refreshSession();
-            }
-
-            const response = await api.get('/me');
-            setUser(response.data as UserType);
-            setAuthState('authenticated');
-        } catch {
-            setUser(undefined);
-            setAuthState('anonymous');
-        }
+        return currentProfilePromise;
     }, []);
 
     useEffect(() => {
