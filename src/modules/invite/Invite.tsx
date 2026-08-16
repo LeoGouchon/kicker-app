@@ -4,7 +4,6 @@ import { Button, Flex, Form, message, Select } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useState } from 'react';
 
-import { identityConfig } from '../../auth/config.ts';
 import { FullscreenPage } from '../../components/fullscreenPage/FullscreenPage.tsx';
 import { useInvite } from '../../hooks/useApiEndPoint/useInvite.ts';
 import { useGetUnlinkedPlayers } from '../../hooks/useApiEndPoint/usePlayer.ts';
@@ -13,7 +12,7 @@ export const Invite = () => {
     const [form] = useForm();
     const { isLoading: isPlayersLoading, data: playersResponse } = useGetUnlinkedPlayers();
     const invitePlayerMutation = useInvite();
-    const [token, setToken] = useState<string | null>(null);
+    const [invitationUrl, setInvitationUrl] = useState<string | null>(null);
     const [messageApi, contextHolder] = message.useMessage();
 
     const handleFinish = () => {
@@ -21,7 +20,7 @@ export const Invite = () => {
             .then((values: { playerId: string }) => {
                 invitePlayerMutation.mutate(values.playerId, {
                     onSuccess: (response) => {
-                        setToken(response.token);
+                        setInvitationUrl(response.invitationUrl);
                     },
                     onError: (error) => {
                         console.error(error);
@@ -61,16 +60,13 @@ export const Invite = () => {
                             </Button>
                         </Flex>
                     </Form>
-                    {token && (
+                    {invitationUrl && (
                         <Button
-                            disabled={!token}
+                            disabled={!invitationUrl}
                             type="dashed"
                             icon={<FontAwesomeIcon icon={faClipboard} />}
                             onClick={() => {
-                                const invitationUrl = new URL('/signup', identityConfig.issuer);
-                                invitationUrl.searchParams.set('invitationToken', token);
-
-                                void navigator.clipboard.writeText(invitationUrl.toString());
+                                void navigator.clipboard.writeText(invitationUrl);
                                 messageApi.open({
                                     type: 'success',
                                     content: 'Lien copié dans le presse-papiers',
