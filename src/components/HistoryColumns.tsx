@@ -7,6 +7,7 @@ import { useContext, useMemo } from 'react';
 import { UserContext } from '../context/UserContext.tsx';
 import { useDeleteMatch } from '../hooks/useApiEndPoint/useMatch.ts';
 import type { Match } from '../types/Match.type.ts';
+import { isModeratorOrAdmin } from '../utils/roles.ts';
 import { LinkPlayer } from './linkPlayer/LinkPlayer.tsx';
 import { SeasonTag } from './seasonTag/SeasonTag.tsx';
 
@@ -195,7 +196,7 @@ export const useHistoryColumns = ({
                             icon: <FontAwesomeIcon icon={faTrash} />,
                             danger: true,
                             disabled:
-                                !user?.admin ||
+                                !isModeratorOrAdmin(user) ||
                                 new Date(Date.now() - DELETE_MATCH_DAYS * 24 * 60 * 60 * 1000) >
                                     new Date(record.createdAt),
                             onClick: () => handleDelete(record.id),

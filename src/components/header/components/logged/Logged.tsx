@@ -7,6 +7,7 @@ import { useLogout } from '../../../../hooks/useApiEndPoint/useLogout.ts';
 import { useResetElo } from '../../../../hooks/useApiEndPoint/useStats.ts';
 import { ROUTES } from '../../../../routes/constant.ts';
 import type { UserType } from '../../../../types/User.type.ts';
+import { isAdmin } from '../../../../utils/roles.ts';
 import { ClickyAvatar } from './Logged.style.tsx';
 
 export const Logged = () => {
@@ -39,7 +40,7 @@ export const Logged = () => {
     const popoverContent: ReactElement = (
         <Flex vertical gap={'small'}>
             {user?.email}
-            {user?.admin && (
+            {isAdmin(user) && (
                 <>
                     <Button loading={resetEloMutation.isPending} onClick={handleResetELO}>
                         Recalculer les ELOs

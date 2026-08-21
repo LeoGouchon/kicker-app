@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../context/UserContext.tsx';
 import { ROUTES } from '../routes/constant.ts';
+import { hasRole, isModeratorOrAdmin } from '../utils/roles.ts';
 
 export type MenuItem = Required<MenuProps>['items'][number];
 
@@ -76,7 +77,7 @@ export const useGetMenuItemElements: () => MenuItem[] = () => {
             () => navigate(ROUTES.STATS_HELPER),
             false
         ),
-        ...(user?.admin
+        ...(hasRole(user, 'ADMIN')
             ? [
                   getDivider(),
                   getItem(
@@ -86,6 +87,10 @@ export const useGetMenuItemElements: () => MenuItem[] = () => {
                       () => navigate(ROUTES.KICKER_MATCH_CODES),
                       false
                   ),
+              ]
+            : []),
+        ...(isModeratorOrAdmin(user)
+            ? [
                   getItem(
                       'Créer joueur',
                       ROUTES.CREATE_PLAYER,

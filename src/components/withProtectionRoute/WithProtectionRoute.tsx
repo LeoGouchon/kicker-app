@@ -1,23 +1,44 @@
-import {Button, Result} from 'antd';
-import {type JSX, useContext} from 'react';
-import {useNavigate} from 'react-router-dom';
+import { Button, Result, Spin } from 'antd';
+import { type JSX, useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-import {UserContext} from '../../context/UserContext.tsx';
-import {ROUTES} from '../../routes/constant.ts';
+import { login } from '../../auth/client.ts';
+import { UserContext } from '../../context/UserContext.tsx';
+import { isModeratorOrAdmin } from '../../utils/roles.ts';
 
-export const WithProtectionRoute = ({isAdminRestricted = false, children}: { isAdminRestricted?: boolean, children: JSX.Element }) => {
-    const token = localStorage.getItem('token');
-    const user = useContext(UserContext).user;
+export const WithProtectionRoute = ({
+    isAdminRestricted = false,
+    children,
+}: {
+    isAdminRestricted?: boolean;
+    children: JSX.Element;
+}) => {
+    const { user, authState } = useContext(UserContext);
+    const location = useLocation();
 
-    const navigate = useNavigate();
+    useEffect(() => {
+        if (authState !== 'initializing' && authState !== 'authenticated') {
+            void login(`${location.pathname}${location.search}${location.hash}`);
+        }
+    }, [authState, location.hash, location.pathname, location.search]);
 
-    if (!token || !user || (isAdminRestricted && !user.admin)) {
-        return <Result
-            status="403"
-            title="403"
-            subTitle="Oops, vous n'êtes pas autorisé à accéder à cette page."
-            extra={<Button type="primary" onClick={() => navigate(ROUTES.HOME)}>Retourner au menu</Button>}
-        />;
+    if (authState !== 'authenticated' || !user) {
+        return <Spin description="Redirection vers le service d’identité…" />;
+    }
+
+    if (isAdminRestricted && !isModeratorOrAdmin(user)) {
+        return (
+            <Result
+                status="403"
+                title="403"
+                subTitle="Vous n’êtes pas autorisé à accéder à cette page."
+                extra={
+                    <Button type="primary" onClick={() => globalThis.history.back()}>
+                        Retourner au menu
+                    </Button>
+                }
+            />
+        );
     }
 
     return children;

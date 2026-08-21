@@ -3,18 +3,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Drawer, Flex, Tag } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
+import { login } from '../../auth/client.ts';
 import { UserContext } from '../../context/UserContext.tsx';
 import { type MenuItem, useGetMenuItemElements } from '../../hooks/useMenuItems.tsx';
-import { ROUTES } from '../../routes/constant.ts';
 import { isDev } from '../../utils/envChoice.ts';
 import { Logged } from './components/logged/Logged.tsx';
 import { ThemeSwitcher } from './components/themeSwitcher/ThemeSwitcher.tsx';
 import { StyledHeader, StyledMenu } from './Header.style.tsx';
 
 export const Header = () => {
-    const navigate = useNavigate();
     const screens = useBreakpoint();
     const isMobile = !screens.md;
 
@@ -34,7 +32,7 @@ export const Header = () => {
                     {user ? (
                         <Logged />
                     ) : (
-                        <Button type="link" size={'small'} onClick={() => navigate(ROUTES.LOGIN)}>
+                        <Button type="link" size={'small'} onClick={() => void login()}>
                             Se connecter
                         </Button>
                     )}

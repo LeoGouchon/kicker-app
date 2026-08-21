@@ -1,4 +1,3 @@
-import { mockLoginResponse } from './mockApiResponse/mockedLogin.ts';
 import { mockMatchGetResponse, mockMatchPostResponse } from './mockApiResponse/mockedMatch.ts';
 import { mockMeResponse } from './mockApiResponse/mockedMe.ts';
 import { mockPlayerGetResponse } from './mockApiResponse/mockedPlayer.ts';
@@ -45,11 +44,7 @@ export const mockApi = {
     },
     post: async (url: string, data?: unknown, config?: unknown) => {
         let responseData;
-        if (url === '/authenticate/login') responseData = mockLoginResponse;
-        else if (url.startsWith('/authenticate/signup')) responseData = mockLoginResponse;
-        else if (url === '/authenticate/refresh-token') responseData = { token: 'mock-access-token' };
-        else if (url === '/authenticate/logout') responseData = {};
-        else if (url === '/admin/kicker-match-codes') {
+        if (url === '/admin/kicker-match-codes') {
             responseData = {
                 id: Math.random().toString(),
                 code: 'SUMMER2026',

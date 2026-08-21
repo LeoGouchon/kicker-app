@@ -7,13 +7,12 @@ import { useState } from 'react';
 import { FullscreenPage } from '../../components/fullscreenPage/FullscreenPage.tsx';
 import { useInvite } from '../../hooks/useApiEndPoint/useInvite.ts';
 import { useGetUnlinkedPlayers } from '../../hooks/useApiEndPoint/usePlayer.ts';
-import { ROUTES } from '../../routes/constant.ts';
 
 export const Invite = () => {
     const [form] = useForm();
     const { isLoading: isPlayersLoading, data: playersResponse } = useGetUnlinkedPlayers();
     const invitePlayerMutation = useInvite();
-    const [token, setToken] = useState<string | null>(null);
+    const [invitationUrl, setInvitationUrl] = useState<string | null>(null);
     const [messageApi, contextHolder] = message.useMessage();
 
     const handleFinish = () => {
@@ -21,7 +20,7 @@ export const Invite = () => {
             .then((values: { playerId: string }) => {
                 invitePlayerMutation.mutate(values.playerId, {
                     onSuccess: (response) => {
-                        setToken(response.token);
+                        setInvitationUrl(response.invitationUrl);
                     },
                     onError: (error) => {
                         console.error(error);
@@ -61,15 +60,13 @@ export const Invite = () => {
                             </Button>
                         </Flex>
                     </Form>
-                    {token && (
+                    {invitationUrl && (
                         <Button
-                            disabled={!token}
+                            disabled={!invitationUrl}
                             type="dashed"
                             icon={<FontAwesomeIcon icon={faClipboard} />}
                             onClick={() => {
-                                navigator.clipboard.writeText(
-                                    window.location.origin + ROUTES.REGISTER + '?invitation-token=' + token
-                                );
+                                void navigator.clipboard.writeText(invitationUrl);
                                 messageApi.open({
                                     type: 'success',
                                     content: 'Lien copié dans le presse-papiers',
