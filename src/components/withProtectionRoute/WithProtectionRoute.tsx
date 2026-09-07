@@ -1,5 +1,5 @@
 import { Button, Result, Spin } from 'antd';
-import { type JSX, useContext, useEffect } from 'react';
+import { type JSX, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { login } from '../../auth/client.ts';
@@ -16,14 +16,26 @@ export const WithProtectionRoute = ({
     const { user, authState } = useContext(UserContext);
     const location = useLocation();
 
-    useEffect(() => {
-        if (authState !== 'initializing' && authState !== 'authenticated') {
-            void login(`${location.pathname}${location.search}${location.hash}`);
-        }
-    }, [authState, location.hash, location.pathname, location.search]);
+    if (authState === 'initializing') {
+        return <Spin description="Vérification de la connexion…" />;
+    }
 
     if (authState !== 'authenticated' || !user) {
-        return <Spin description="Redirection vers le service d’identité…" />;
+        return (
+            <Result
+                status="info"
+                title="Connexion requise"
+                subTitle="Connectez-vous pour accéder à cette page."
+                extra={
+                    <Button
+                        type="primary"
+                        onClick={() => void login(`${location.pathname}${location.search}${location.hash}`)}
+                    >
+                        Se connecter
+                    </Button>
+                }
+            />
+        );
     }
 
     if (isAdminRestricted && !isModeratorOrAdmin(user)) {
