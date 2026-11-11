@@ -51,6 +51,14 @@ npm run lint
 npm run build
 ```
 
+### Worktrees (Orca)
+
+```bash
+make install  # à la création du worktree : copie le .env du checkout principal (ou .env.example) + npm ci
+make clean    # à la clôture du worktree : supprime node_modules, dist et .env (le .env du checkout principal est préservé)
+make dev      # serveur de dev sur 5173, échoue si le port est déjà pris (redirect URI OIDC)
+```
+
 L’identity server et l’API Hubscore doivent être démarrés séparément selon leurs README backend, avec leurs ports locaux
 (`8081` et `8080`).
 
