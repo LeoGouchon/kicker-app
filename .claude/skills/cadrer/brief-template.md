@@ -28,7 +28,8 @@ Ce que la feature fait, vu par l'utilisateur. Écran concerné (nouvelle URL ou 
 
 ## Données et API
 
-- Endpoints utilisés, avec leur état : existant / à créer côté backend / à confirmer.
+- Endpoints utilisés, avec leur état : existant / à créer côté backend (avec le contrat convenu). Aucun endpoint ne
+  reste « à confirmer » dans un brief validé.
 - Données affichées ou envoyées, et d'où elles viennent.
 
 ## Règles métier et cas limites

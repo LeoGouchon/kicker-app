@@ -14,7 +14,9 @@ que le plan contient.
 
 - `specs/<feature>/1-brief.md` existe avec le statut `validé`. Sinon, arrête-toi et renvoie vers la skill `cadrer`.
 - Lis le brief en entier. **Le brief fait autorité** : le plan argumente à partir de lui et ne le contredit jamais. Si
-  tu découvres un trou dans le brief, pose la question à l'utilisateur et complète le brief avant de continuer.
+  tu découvres un trou dans le brief, pose la question à l'utilisateur et complète le brief avant de continuer. Le
+  brief reste `validé` : ajoute la réponse à sa section **Décisions** avec la mention « ajouté à la planification ».
+  Il sera commité avec le plan. Si la réponse change le besoin lui-même, arrête-toi : il faut recadrer.
 - Lis les conventions qui s'appliquent (`docs/conventions/README.md`, puis les fichiers utiles) et, selon la feature,
   `docs/process/add-a-page.md` et `docs/process/add-an-endpoint.md`.
 
@@ -31,14 +33,16 @@ fixent les choix de découpage :
 
 ## 3. Le découpage en tâches
 
-Suis l'ordre de `docs/process/new-feature.md` : types → hooks API → page → sous-composants → permissions → états UI →
-documentation.
+Suis l'ordre de `docs/process/new-feature.md` : types → hooks API → page → sous-composants → permissions → états UI.
 
 - **Une tâche** = la plus petite unité qui se vérifie seule et qu'un relecteur pourrait refuser sans refuser sa voisine.
   Elle se termine par un résultat vérifiable.
-- Range la configuration, l'échafaudage et la doc dans la tâche qui en a besoin, pas dans une tâche à part.
+- Range la configuration, l'échafaudage et la doc (glossaire, variable d'environnement, convention, sommaire) dans la
+  tâche qui en a besoin, pas dans une tâche à part. La phase de vérification contrôle ensuite que rien ne manque.
 - Chaque tâche finit par un commit au format Conventional Commits.
-- **Au-delà de ~8 tâches**, ou ~400 lignes de diff prévues : propose de découper la feature (voir `pull-request.md`).
+- **Plus de ~400 lignes de diff prévues**, ou plusieurs écrans indépendants : propose de découper la feature (voir
+  `pull-request.md`). Le nombre de tâches seul ne justifie pas un découpage : il choisit le mode d'exécution
+  (section 7).
 
 ## 4. Ce que contient une étape
 
@@ -79,7 +83,8 @@ Corrige directement ce que tu trouves.
 
 1. Indique le mode d'exécution recommandé : **dans la conversation** par défaut ; **un sous-agent par tâche** si le plan
    dépasse 8 tâches. Note-le dans l'en-tête du plan.
-2. Rends la main à la skill `feature` (ou, si tu as été appelé seul, demande la validation du plan).
+2. Rends la main à la skill `feature`. Si tu as été appelé seul, demande la validation du plan, puis applique toi-même
+   l'étape « À la validation » de la skill `feature` (section 3) : statut, commit, fin de session.
 
 ---
 

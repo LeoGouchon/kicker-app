@@ -24,7 +24,21 @@ Fonctionnement détaillé : [specs/README.md](../../specs/README.md). Pourquoi :
 
 Les sections suivantes restent la checklist de référence, avec ou sans l'agent.
 
-## 1. Cadrer
+## 1. Créer la branche
+
+La branche vient en premier : le cadrage y commite déjà le brief, le glossaire et les ADR.
+
+```bash
+git fetch origin
+git switch -c feat/<description-kebab> origin/dev
+```
+
+Dans un worktree Orca, la branche créée s'appelle `<utilisateur>/<nom>` : renomme-la avant de commencer
+(`git branch -m feat/<description-kebab>`). Avec Claude Code, `/feature` crée ou renomme la branche lui-même.
+
+Convention : [../conventions/git-workflow.md](../conventions/git-workflow.md).
+
+## 2. Cadrer
 
 - [ ] Reformuler le besoin en une ou deux phrases : quel écran, pour quel rôle (anonyme, user, modérateur, admin).
 - [ ] Lister les endpoints API nécessaires et vérifier qu'ils existent côté backend (contrat, droits).
@@ -33,18 +47,6 @@ Les sections suivantes restent la checklist de référence, avec ou sans l'agent
       dans [../decisions/](../decisions/README.md) **avant** de coder.
 - [ ] Employer les termes de [../glossary.md](../glossary.md). Un nouveau terme métier y est ajouté.
 - [ ] Avec Claude Code : lancer `/feature` (voir plus haut). Valider le brief, puis le plan, avant l'implémentation.
-
-## 2. Créer la branche
-
-```bash
-git fetch origin
-git switch -c feat/<description-kebab> origin/dev
-```
-
-Dans un worktree Orca, la branche créée s'appelle `<utilisateur>/<nom>` : renomme-la avant de commencer
-(`git branch -m feat/<description-kebab>`). `/feature` le propose de lui-même.
-
-Convention : [../conventions/git-workflow.md](../conventions/git-workflow.md).
 
 ## 3. Implémenter, dans cet ordre
 
@@ -98,4 +100,5 @@ Pendant l'implémentation, respecter :
 
 - [ ] Commits au format Conventional Commits.
 - [ ] PR vers `dev` avec le template rempli. Suivre [pull-request.md](pull-request.md).
-- [ ] Avec Claude Code : lancer `/code-review` sur la branche avant de demander une relecture humaine.
+- [ ] Avec Claude Code : faire relire la branche avant de demander une relecture humaine. Avec `/feature`, la revue de
+      la phase Vérifier en tient lieu ; sans `/feature`, ou si du code a changé depuis, lancer `/code-review`.

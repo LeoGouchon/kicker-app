@@ -9,7 +9,8 @@ argument-hint: '[description de la feature]'
 Tu interroges l'utilisateur jusqu'à une compréhension partagée **complète** du besoin, puis tu l'écris dans
 `specs/<feature>/1-brief.md`. Tu n'écris ni plan ni code dans cette phase.
 
-Le dossier `specs/<feature>/` est déterminé par la skill `feature` (partie kebab du nom de branche).
+Le dossier `specs/<feature>/` est déterminé par la skill `feature` (partie kebab du nom de branche). Si tu as été
+appelé seul, applique d'abord sa section 1 « Trouver la feature » (création ou renommage de la branche).
 
 ## 1. Préparer
 
@@ -58,8 +59,13 @@ Format d'un tour :
 - L'utilisateur peut répondre en bloc (« 1 oui, 2 non parce que… ») : accepte ce format.
 
 **Les faits sont ton travail, les décisions sont les siennes.** Ne demande jamais à l'utilisateur ce que tu peux
-trouver dans le code, la doc ou l'API : lance un sous-agent (type `Explore`) pour le chercher. Ne bloque pas dessus :
-seules les questions qui dépendent de ce fait attendent son retour, pose les autres.
+trouver dans le code ou la doc : lance un sous-agent (type `Explore`) pour le chercher. Ne bloque pas dessus : seules
+les questions qui dépendent de ce fait attendent son retour, pose les autres.
+
+**Les endpoints** : le backend n'est pas dans ce dépôt. Un endpoint déjà appelé dans `src/` existe, et son contrat se
+lit dans le hook et le type qui l'utilisent. Pour tout autre endpoint, demande à l'utilisateur s'il existe, son
+contrat et ses droits. Un endpoint encore « à confirmer » bloque la validation du brief : avant de conclure,
+l'utilisateur le confirme, ou il est noté « à créer côté backend » avec le contrat convenu.
 
 ## 4. Le vocabulaire métier
 
@@ -92,7 +98,8 @@ Le cadrage est fini quand la frontière est vide : chaque branche de l'arbre est
 1. Annonce que tu n'as plus de question et résume les décisions en quelques lignes.
 2. Attends que l'utilisateur confirme qu'il n'a rien à ajouter.
 3. Écris `specs/<feature>/1-brief.md` à partir de [brief-template.md](brief-template.md), statut `brouillon`.
-4. Rends la main à la skill `feature` (ou, si tu as été appelé seul, demande la validation du brief).
+4. Rends la main à la skill `feature`. Si tu as été appelé seul, demande la validation du brief, puis applique toi-même
+   l'étape « À la validation » de la skill `feature` (section 3) : statut, commit, fin de session.
 
 Le brief décrit le besoin et les décisions, **pas l'implémentation** : pas de chemin de fichier ni de code, sauf si une
 décision ne s'exprime pas autrement (forme d'un type imposé par l'API par exemple).

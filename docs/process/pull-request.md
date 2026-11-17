@@ -14,7 +14,8 @@ Préparer, ouvrir, relire et merger une PR vers `dev`. Les règles de branches e
     - [ ] pas de nouveau `React.*`, `style={{}}`, couleur en dur ou `any`.
 - [ ] Doc mise à jour si une convention, un process ou l'architecture change. Chaque fichier reste sous 200 lignes,
       sauf exception assumée dans `.claude/hooks/doc-length-ignore.txt`.
-- [ ] Avec Claude Code : `/code-review` lancé et ses retours traités.
+- [ ] Avec Claude Code : revue faite et ses retours traités. Avec `/feature`, c'est la revue de la phase Vérifier
+      (`specs/<feature>/4-verification.md`) ; sans `/feature`, ou si du code a changé depuis, `/code-review`.
 
 ## Ouvrir
 

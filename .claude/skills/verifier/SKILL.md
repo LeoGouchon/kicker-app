@@ -56,7 +56,17 @@ Ne crois pas son verdict sur parole : relis chaque constat dans le code avant de
 Lance `make dev` en arrière-plan (port 5173 imposé par l'OIDC), puis ouvre l'app :
 
 - dans **Orca**, avec le navigateur intégré (skill `orca-cli`) ;
-- sinon avec **Claude in Chrome** (skill `claude-in-chrome`).
+- sinon avec **Claude in Chrome** (outils `mcp__claude-in-chrome__*` ; charge sa skill si elle est listée, par exemple
+  `anthropic-skills:chrome-browser`).
+
+Si `make dev` échoue parce que le port 5173 est pris (serveur d'un autre worktree), ne change pas de port : l'OIDC
+refuse toute autre origine. Demande à l'utilisateur d'arrêter l'autre serveur, sinon note le parcours comme non vérifié.
+Sans aucun navigateur pilotable, même chose : le parcours passe dans la checklist de l'utilisateur.
+
+**Connexion** : les écrans publics se vérifient sans compte. Pour un écran qui demande d'être connecté, utilise la
+session déjà ouverte dans le navigateur s'il y en a une (Claude in Chrome reprend celle de l'utilisateur). Sinon,
+demande à l'utilisateur de se connecter dans le navigateur ouvert. **Ne saisis jamais toi-même d'identifiants.** S'il
+ne le peut pas, note ces écrans « non vérifié : connexion requise » et ajoute-les à sa checklist.
 
 Vérifie, sur chaque écran touché par la feature :
 
@@ -82,17 +92,18 @@ pour tout ce que tu n'as pas pu vérifier toi-même.
 
 ## 7. Documentation
 
-Reprends l'étape « Documenter » de `docs/process/new-feature.md` : conventions, architecture, variables
-d'environnement, glossaire, sommaires des dossiers de `docs/`. Fais les mises à jour nécessaires et note-les dans le
-rapport.
+Les mises à jour de doc ont normalement été faites avec les tâches du plan. Ici, tu **contrôles** l'étape « Documenter »
+de `docs/process/new-feature.md` contre le diff : conventions, architecture, variables d'environnement, glossaire,
+sommaires des dossiers de `docs/`. Complète ce qui manque et note-le dans le rapport.
 
 ## 8. Conclure
 
 1. Complète le rapport : verdict, ce qui reste à l'utilisateur (checklist des rôles, points non vérifiés, constats non
    traités).
-2. Rends la main à la skill `feature`. Quand l'utilisateur a fait sa checklist et valide, la feature est prête pour la
-   PR (`docs/process/pull-request.md`) : le brief et ce rapport fournissent le résumé et le plan de test de la
-   description.
+2. Rends la main à la skill `feature` (si tu as été appelé seul, demande la validation puis applique toi-même son
+   étape « À la validation », section 3). Quand l'utilisateur a fait sa checklist et valide, la feature est prête pour
+   la PR (`docs/process/pull-request.md`) : le brief et ce rapport fournissent le résumé et le plan de test de la
+   description. La revue de l'étape 4 tient lieu de `/code-review`, sauf si du code a changé après la vérification.
 3. **Si quelque chose bloque** (critère d'acceptation en échec, retour négatif de la checklist des rôles, correction
    trop large pour l'étape 4) et que l'utilisateur confirme qu'il faut corriger :
     - ajoute à la fin de `2-plan.md` une section **Corrections après vérification**, avec une tâche par problème

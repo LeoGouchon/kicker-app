@@ -19,7 +19,8 @@ trace qui survit à la compaction du contexte et au changement de machine.
 - Journal rouvert après une vérification bloquée : les tâches de correction sont à la fin du plan, reprends à la
   première d'entre elles.
 - Sinon, crée-le à partir de [execution-template.md](execution-template.md), statut `en cours`.
-- Crée une tâche de suivi (TodoWrite) par tâche du plan.
+- Crée une tâche de suivi par tâche du plan, avec l'outil de liste de tâches de Claude Code (son nom dépend de la
+  version : `TodoWrite`, `TaskCreate`…). S'il n'y en a pas, le journal suffit.
 
 ## 2. Mode d'exécution
 
@@ -85,14 +86,16 @@ Tranche toi-même les ambiguïtés et note-les comme décisions. Seules ces situ
 - une action sensible pour la sécurité ou les droits ;
 - un effet hors de la branche (push, merge, PR, appel à une API réelle qui modifie des données) ;
 - un plan si faux que toute suite serait une supposition ;
-- un endpoint du brief qui n'existe pas ou ne répond pas comme prévu.
+- un endpoint noté « existant » dans le brief qui n'est pas là, ou dont le contrat diffère (hook, type, réponse).
+  Un endpoint « à créer côté backend » se code d'après le contrat du brief : ce n'est pas un motif d'arrêt.
 
 ## 6. Conclure
 
 1. Toutes les tâches sont faites : passe le journal en `à valider` (jamais `terminé` : seule la validation de
    l'utilisateur donne ce statut) et complète sa section **Bilan**. Commite le journal.
-2. Rends la main à la skill `feature` (ou, si tu as été appelé seul, propose `/verifier`). La revue complète se fait
-   dans la phase de vérification, pas ici.
+2. Rends la main à la skill `feature`. Si tu as été appelé seul, demande la validation du journal, puis applique
+   toi-même l'étape « À la validation » de la skill `feature` (section 3) : statut, commit, fin de session. La revue
+   complète se fait dans la phase de vérification, pas ici.
 
 ---
 
