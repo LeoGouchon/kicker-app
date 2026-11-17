@@ -40,9 +40,9 @@ Suis l'ordre de `docs/process/new-feature.md` : types → hooks API → page →
 - Range la configuration, l'échafaudage et la doc (glossaire, variable d'environnement, convention, sommaire) dans la
   tâche qui en a besoin, pas dans une tâche à part. La phase de vérification contrôle ensuite que rien ne manque.
 - Chaque tâche finit par un commit au format Conventional Commits.
-- **Plus de ~400 lignes de diff prévues**, ou plusieurs écrans indépendants : propose de découper la feature (voir
-  `pull-request.md`). Le nombre de tâches seul ne justifie pas un découpage : il choisit le mode d'exécution
-  (section 7).
+- **Plus de ~400 lignes de diff prévues** (hors `specs/`), ou plusieurs écrans indépendants : propose de découper la
+  feature (voir `pull-request.md`). Le nombre de tâches seul ne justifie pas un découpage : il choisit le mode
+  d'exécution (section 7).
 
 ## 4. Ce que contient une étape
 

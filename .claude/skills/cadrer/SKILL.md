@@ -89,16 +89,17 @@ Propose un ADR seulement si les trois conditions sont réunies :
 3. **issu d'un vrai compromis** : il y avait d'autres options sérieuses.
 
 Si l'utilisateur accepte, rédige-le dans `docs/decisions/` en suivant `docs/decisions/README.md` (gabarit, numéro
-suivant, statut `Proposé`, ligne au sommaire).
+suivant, statut `Proposé`, ligne au sommaire). Le numéro suivant se compte sur `origin/dev` à jour : une autre branche
+peut prendre le même entre-temps, ce qui se règle au rebase avant la PR (`docs/process/pull-request.md`).
 
 ## 6. Conclure
 
 Le cadrage est fini quand la frontière est vide : chaque branche de l'arbre est visitée, rien n'est présumé en silence.
 
-1. Annonce que tu n'as plus de question et résume les décisions en quelques lignes.
-2. Attends que l'utilisateur confirme qu'il n'a rien à ajouter.
-3. Écris `specs/<feature>/1-brief.md` à partir de [brief-template.md](brief-template.md), statut `brouillon`.
-4. Rends la main à la skill `feature`. Si tu as été appelé seul, demande la validation du brief, puis applique toi-même
+1. Écris `specs/<feature>/1-brief.md` à partir de [brief-template.md](brief-template.md), statut `brouillon`.
+2. Annonce que tu n'as plus de question et résume les décisions en quelques lignes. La demande de validation qui suit
+   (étape 3) vaut aussi pour « rien à ajouter » : ne demande pas deux confirmations.
+3. Rends la main à la skill `feature`. Si tu as été appelé seul, demande la validation du brief, puis applique toi-même
    l'étape « À la validation » de la skill `feature` (section 3) : statut, commit, fin de session.
 
 Le brief décrit le besoin et les décisions, **pas l'implémentation** : pas de chemin de fichier ni de code, sauf si une

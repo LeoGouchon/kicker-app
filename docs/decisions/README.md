@@ -20,7 +20,9 @@ Pas d'ADR pour un choix local à une feature ni pour un détail de style : ceux-
 
 **Comment** :
 
-1. Copier [0000-template.md](0000-template.md) en `NNNN-titre-en-kebab.md`, avec le numéro suivant.
+1. Copier [0000-template.md](0000-template.md) en `NNNN-titre-en-kebab.md`, avec le numéro suivant dans `origin/dev`
+   à jour. Si une autre PR prend ce numéro avant la tienne, renuméroter au rebase (voir
+   [../process/pull-request.md](../process/pull-request.md)).
 2. Statut `Proposé` dans la PR, puis `Accepté` au merge.
 3. Ajouter la ligne au sommaire ci-dessous.
 

@@ -1,6 +1,6 @@
 # Plan : <titre de la feature>
 
-- **Statut** : brouillon | validé
+- **Statut** : brouillon (cycle des statuts : `specs/README.md`)
 - **Brief** : [1-brief.md](1-brief.md)
 - **Exécution** : dans la conversation | un sous-agent par tâche
 

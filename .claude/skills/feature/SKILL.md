@@ -100,8 +100,8 @@ refait la vérification. Si le problème remet en cause le brief, arrête-toi : 
   brief en quelques lignes. On garde quand même les quatre fichiers : ils sont courts.
 - **Correctif de bug** : le brief décrit le symptôme, la cause trouvée et le comportement attendu. Le plan commence par
   reproduire le bug.
-- **Feature trop grosse** (plusieurs écrans indépendants, plus de ~400 lignes de diff prévues) : propose de la découper
-  en plusieurs features, chacune avec sa branche et son dossier `specs/`.
+- **Feature trop grosse** (plusieurs écrans indépendants, plus de ~400 lignes de diff prévues hors `specs/`) :
+  propose de la découper en plusieurs features, chacune avec sa branche et son dossier `specs/`.
 
 ## 5. Règles transverses
 

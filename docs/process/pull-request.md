@@ -5,7 +5,10 @@ Préparer, ouvrir, relire et merger une PR vers `dev`. Les règles de branches e
 
 ## Avant d'ouvrir
 
-- [ ] Branche à jour avec `dev` (`git fetch && git rebase origin/dev`).
+- [ ] Branche à jour avec `dev` (`git fetch && git rebase origin/dev`). Conflits fréquents entre branches parallèles :
+    - `docs/glossary.md`, sommaire des ADR, `docs/tech-debt.md` : garder les entrées des deux côtés ;
+    - un ADR de la branche porte un numéro déjà pris dans `dev` : le renuméroter (nom du fichier, titre, sommaire,
+      liens qui y pointent, y compris dans `specs/`).
 - [ ] `npm run lint` et `npm run build` passent.
 - [ ] Test manuel fait : desktop/mobile, clair/sombre, rôles, états chargement/vide/erreur (voir
       [new-feature.md](new-feature.md#4-vérifier)).
@@ -23,8 +26,8 @@ Préparer, ouvrir, relire et merger une PR vers `dev`. Les règles de branches e
 - **Titre** : au format Conventional Commits, en anglais, car il deviendra le message du commit squashé.
   Exemple : `feat(history): add filters by player`.
 - **Description** : remplir `.github/pull_request_template.md` (résumé, plan de test, captures si l'UI change).
-- **Taille** : viser une PR relisible en une fois. Au-delà de ~400 lignes de diff hors fichiers générés, découper si
-  possible (refactor préalable dans une PR à part, puis la feature).
+- **Taille** : viser une PR relisible en une fois. Au-delà de ~400 lignes de diff, sans compter les fichiers générés
+  ni `specs/`, découper si possible (refactor préalable dans une PR à part, puis la feature).
 
 ```bash
 gh pr create --base dev --title "feat(history): add filters by player" --body-file <fichier>

@@ -1,6 +1,6 @@
 # Brief : <titre de la feature>
 
-- **Statut** : brouillon | validé
+- **Statut** : brouillon (cycle des statuts : `specs/README.md`)
 - **Branche** : `<type>/<kebab>`
 - **Date** : AAAA-MM-JJ
 

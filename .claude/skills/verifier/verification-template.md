@@ -1,6 +1,6 @@
 # Rapport de vérification : <titre de la feature>
 
-- **Statut** : brouillon | bloqué | validé
+- **Statut** : brouillon (cycle des statuts : `specs/README.md`)
 - **Brief** : [1-brief.md](1-brief.md) · **Plan** : [2-plan.md](2-plan.md) · **Journal** : [3-execution.md](3-execution.md)
 - **Commits vérifiés** : `origin/dev...<sha fin>`
 
