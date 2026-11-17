@@ -1,3 +1,0 @@
-- Do not use React directly, import lib instead (eg: useEffect instead of React.useEffect)
-- Use hooks instead of class components
-- if needed, extract logic to a separate file
