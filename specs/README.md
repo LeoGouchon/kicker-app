@@ -26,6 +26,10 @@ Un dossier par feature, nommé comme la partie kebab de sa branche (`feat/match-
 Chaque phase s'appuie sur le fichier précédent, et chaque fichier porte une ligne **Statut**. La skill `feature` lit
 ces statuts pour reprendre là où on s'était arrêté.
 
+Chaque phase se mène dans **sa propre session** : une fois la phase validée et commitée, on ferme la session et on
+relance `/feature` dans une nouvelle. La phase suivante ne connaît donc que les fichiers, ce qui garantit qu'ils
+suffisent à eux seuls.
+
 ## Reprendre depuis une autre machine
 
 Chaque fichier est commité dans la branche à la fin de sa phase. Il suffit de pousser la branche, de la récupérer

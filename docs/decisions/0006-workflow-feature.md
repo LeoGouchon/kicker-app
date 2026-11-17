@@ -42,6 +42,9 @@ Nous retenons l'option 5. Quatre skills projet, lancées par `/feature`, chacune
   écartée : un fichier se relit dans le diff de la PR et l'agent le modifie facilement. Un dossier local non versionné
   a aussi été écarté : il ne suit pas d'une machine à l'autre.
 - **Hors de `docs/`** : une spec date d'un moment donné, alors que `docs/` décrit l'état actuel.
+- **Une session par phase** : chaque phase démarre dans une session neuve. Le contexte reste léger, et la phase
+  suivante ne peut s'appuyer que sur les fichiers produits. Un worktree par phase a été écarté : les phases sont
+  séquentielles sur la même branche, une nouvelle session suffit.
 - **Glossaire** : `docs/glossary.md` fait le pont entre le vocabulaire de l'interface (français) et celui du code
   (anglais). Le cadrage le lit et le complète.
 - **Vérification de l'interface** : l'agent parcourt l'app dans le navigateur (Orca ou Chrome). Les tests par rôle

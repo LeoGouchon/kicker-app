@@ -16,7 +16,10 @@ valides avant la phase suivante :
 4. **Vérifier** (`/verifier`) : lint, build, tests, critères d'acceptation, revue indépendante, parcours dans le
    navigateur, dette reportée → `4-verification.md`, avec la checklist des rôles à faire toi-même.
 
-Relancer `/feature` reprend à la première phase non validée, y compris depuis une autre machine après un `git push`.
+**Une session par phase** : quand une phase est validée et commitée, ferme la session (ou `/clear`) et relance
+`/feature` dans une nouvelle. Le contexte reste léger et chaque phase part des fichiers produits, pas de la
+conversation. Relancer `/feature` reprend à la première phase non validée, y compris depuis une autre machine après un
+`git push`.
 Fonctionnement détaillé : [specs/README.md](../../specs/README.md). Pourquoi : [ADR 0006](../decisions/0006-workflow-feature.md).
 
 Les sections suivantes restent la checklist de référence, avec ou sans l'agent.

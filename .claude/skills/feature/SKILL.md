@@ -10,6 +10,10 @@ Tu orchestres quatre phases. Chacune produit **un fichier** dans `specs/<feature
 phase suivante travaille **à partir de ce fichier**, pas de la conversation. C'est ce qui permet de reprendre une
 feature après une coupure de session ou depuis une autre machine.
 
+**Une session par phase.** Une session ne mène qu'une phase. La suivante démarre dans une session neuve, avec
+`/feature`. Le contexte reste léger, et on est sûr que chaque phase part des fichiers produits, pas de la mémoire de
+la conversation.
+
 | Phase          | Skill         | Lit                                     | Produit                    |
 | -------------- | ------------- | --------------------------------------- | -------------------------- |
 | 1. Cadrer      | `cadrer`      | la demande, le code, `docs/glossary.md` | `1-brief.md`               |
@@ -42,11 +46,13 @@ Regarde quels fichiers existent dans `specs/<kebab>/` et lis la ligne **Statut**
 Annonce en une ligne où tu reprends et pourquoi (« Brief et plan validés, 3 tâches sur 7 faites : je reprends à la
 tâche 4 »).
 
-## 3. Enchaîner les phases
+## 3. Mener la phase courante
 
-Pour chaque phase, appelle sa skill avec l'outil Skill (`cadrer`, `planifier`, `implementer`, `verifier`) et suis-la.
+Appelle la skill de la phase trouvée à l'étape 2 avec l'outil Skill (`cadrer`, `planifier`, `implementer`,
+`verifier`) et suis-la. Elle lit ses entrées dans les fichiers de `specs/<kebab>/`, même si la conversation contient
+déjà ces informations.
 
-**Entre deux phases, tu t'arrêtes toujours.** Montre le fichier produit (lien et résumé de quelques lignes), puis
+**À la fin de la phase, tu t'arrêtes toujours.** Montre le fichier produit (lien et résumé de quelques lignes), puis
 demande la validation explicite. Tant que l'utilisateur n'a pas validé :
 
 - tu ne passes pas à la phase suivante ;
@@ -57,7 +63,16 @@ demande la validation explicite. Tant que l'utilisateur n'a pas validé :
 1. passe la ligne **Statut** du fichier à `validé` (ou `terminé` pour `3-execution.md`) ;
 2. commite le fichier seul : `docs(specs): add <phase> for <kebab>` (`brief`, `plan`, `execution report`,
    `verification report`) ;
-3. rappelle que `git push` permet de reprendre depuis une autre machine. Ne pousse pas toi-même.
+3. rappelle que `git push` permet de reprendre depuis une autre machine. Ne pousse pas toi-même ;
+4. **préviens l'utilisateur que la phase est finie et qu'il peut fermer cette session.** Indique la suite, par
+   exemple : « Phase Planifier terminée et commitée. Tu peux fermer cette session (ou `/clear`), puis lancer
+   `/feature` dans une nouvelle : elle reprendra à la phase Implémenter. »
+
+N'enchaîne pas la phase suivante dans la même session. Si l'utilisateur demande explicitement de continuer ici,
+rappelle-lui une fois l'intérêt d'une session neuve, puis fais ce qu'il décide.
+
+Quand la phase **Vérifier** est validée, il n'y a plus de phase : indique que la feature est prête pour la PR
+(`docs/process/pull-request.md`).
 
 ## 4. Adapter la taille
 
