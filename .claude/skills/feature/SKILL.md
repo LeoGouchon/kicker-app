@@ -25,13 +25,20 @@ Le rôle de `specs/` est décrit dans `specs/README.md`.
 
 ## 1. Trouver la feature
 
-1. Lis la branche courante (`git branch --show-current`).
-2. **Sur `dev` ou `main`** : c'est une nouvelle feature.
-    - Propose un nom de branche `<type>/<kebab>` (voir `docs/conventions/git-workflow.md`) et fais-le valider.
-    - Crée-la depuis `dev` à jour : `git switch dev && git pull && git switch -c <type>/<kebab>`.
-    - Si l'utilisateur travaille dans un worktree Orca déjà créé sur la bonne branche, ne crée rien.
-3. **Sur une branche de travail** : le dossier de la feature est `specs/<kebab>/`, où `<kebab>` est la partie après le
-   `/` du nom de branche (`feat/match-filters` → `specs/match-filters/`).
+1. Lis la branche courante (`git branch --show-current`) et lance `git fetch origin`.
+2. **Branche au format `<type>/<kebab>`** (`type` parmi ceux de `docs/conventions/git-workflow.md`) : le dossier de
+   la feature est `specs/<kebab>/` (`feat/match-filters` → `specs/match-filters/`). Passe à l'étape 2.
+3. **Sur `dev` ou `main`** : c'est une nouvelle feature. Propose un nom `<type>/<kebab>`, fais-le valider, puis crée la
+   branche depuis `origin/dev` : `git switch -c <type>/<kebab> origin/dev`. N'utilise pas `git switch dev` : il échoue
+   quand `dev` est déjà extrait dans un autre worktree.
+4. **Autre nom** (par exemple un worktree Orca, dont la branche s'appelle `<utilisateur>/<nom>`) : propose un nom
+   `<type>/<kebab>`, fais-le valider, puis renomme la branche **avant tout fichier `specs/`** :
+   `git branch -m <type>/<kebab>`. Si l'ancienne branche existe sur `origin`, ne touche pas au distant : signale-le,
+   l'utilisateur décide.
+5. Vérifie que la branche part de `dev` : `git merge-base --is-ancestor origin/dev HEAD`. Sinon (worktree créé depuis
+   `main`, par exemple), propose `git rebase origin/dev` et ne le lance qu'avec l'accord de l'utilisateur.
+
+Le nom de branche ne change plus ensuite : le dossier `specs/` en dépend.
 
 ## 2. Reprendre là où on en est
 
@@ -39,7 +46,9 @@ Regarde quels fichiers existent dans `specs/<kebab>/` et lis la ligne **Statut**
 
 - aucun fichier, ou `1-brief.md` pas `validé` → phase **Cadrer** ;
 - `2-plan.md` absent ou pas `validé` → phase **Planifier** ;
-- `3-execution.md` absent ou pas `terminé` → phase **Implémenter** (elle reprend à la première tâche non faite) ;
+- `3-execution.md` absent ou `en cours` → phase **Implémenter** (elle reprend à la première tâche non faite) ;
+- `3-execution.md` `à valider` → toutes les tâches sont faites : montre le **Bilan** du journal et demande la
+  validation (étape 3) ;
 - `4-verification.md` absent ou pas `validé` → phase **Vérifier** ;
 - tout est validé → la feature est prête pour la PR : suis `docs/process/pull-request.md`.
 
@@ -60,9 +69,14 @@ demande la validation explicite. Tant que l'utilisateur n'a pas validé :
 
 À la validation :
 
-1. passe la ligne **Statut** du fichier à `validé` (ou `terminé` pour `3-execution.md`) ;
-2. commite le fichier seul : `docs(specs): add <phase> for <kebab>` (`brief`, `plan`, `execution report`,
-   `verification report`) ;
+1. passe la ligne **Statut** du fichier à `validé` (ou `terminé` pour `3-execution.md`). Seule cette étape donne ce
+   statut : une phase finit toujours en `brouillon` (ou `à valider`) ;
+2. lance `git status` et commite le fichier de la phase **avec les autres fichiers qu'elle a modifiés** :
+   `docs(specs): add <phase> for <kebab>` (`brief`, `plan`, `execution report`, `verification report`).
+    - Cadrer : `docs/glossary.md`, les ADR créés et `docs/decisions/README.md`.
+    - Planifier : `1-brief.md` s'il a été complété.
+    - Vérifier : `docs/tech-debt.md` et la doc mise à jour. Les corrections de code ont déjà leurs propres commits.
+    - Un changement qui n'appartient pas à la phase n'est pas commité : signale-le à l'utilisateur ;
 3. rappelle que `git push` permet de reprendre depuis une autre machine. Ne pousse pas toi-même ;
 4. **préviens l'utilisateur que la phase est finie et qu'il peut fermer cette session.** Indique la suite, par
    exemple : « Phase Planifier terminée et commitée. Tu peux fermer cette session (ou `/clear`), puis lancer
@@ -73,6 +87,12 @@ rappelle-lui une fois l'intérêt d'une session neuve, puis fais ce qu'il décid
 
 Quand la phase **Vérifier** est validée, il n'y a plus de phase : indique que la feature est prête pour la PR
 (`docs/process/pull-request.md`).
+
+**Si la vérification bloque** (critère d'acceptation en échec, rôle mal géré dans la checklist de l'utilisateur,
+correction trop large pour la phase Vérifier), la skill `verifier` rouvre l'implémentation (sa section 8) : tâches de
+correction ajoutées au plan, journal repassé `en cours`, rapport en `bloqué`. Commite ces trois fichiers
+(`docs(specs): reopen implementation for <kebab>`). Le prochain `/feature` reprend alors à la phase Implémenter, puis
+refait la vérification. Si le problème remet en cause le brief, arrête-toi : l'utilisateur décide s'il faut recadrer.
 
 ## 4. Adapter la taille
 

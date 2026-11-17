@@ -1,8 +1,8 @@
 # Rapport de vérification : <titre de la feature>
 
-- **Statut** : brouillon | validé
+- **Statut** : brouillon | bloqué | validé
 - **Brief** : [1-brief.md](1-brief.md) · **Plan** : [2-plan.md](2-plan.md) · **Journal** : [3-execution.md](3-execution.md)
-- **Commits vérifiés** : `<sha départ>..<sha fin>`
+- **Commits vérifiés** : `origin/dev...<sha fin>`
 
 ## Verdict
 

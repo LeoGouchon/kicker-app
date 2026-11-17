@@ -32,8 +32,18 @@ suffisent à eux seuls.
 
 ## Reprendre depuis une autre machine
 
-Chaque fichier est commité dans la branche à la fin de sa phase. Il suffit de pousser la branche, de la récupérer
-ailleurs, puis de relancer `/feature` : elle repart de la première phase non validée.
+Chaque fichier est commité dans la branche à la fin de sa phase, avec les fichiers de `docs/` que la phase a modifiés
+(glossaire, ADR, dette). Il suffit de pousser la branche, de la récupérer ailleurs, puis de relancer `/feature` : elle
+repart de la première phase non validée.
+
+## Statuts
+
+- **Brief, plan** : `brouillon` → `validé`.
+- **Journal** : `en cours` → `à valider` (toutes les tâches faites) → `terminé`.
+- **Rapport** : `brouillon` → `validé`, ou `bloqué` si la vérification rouvre l'implémentation : des tâches de
+  correction sont ajoutées au plan et le journal repasse `en cours`.
+
+Seule la validation de l'utilisateur, dans la skill `feature`, donne `validé` ou `terminé`.
 
 ## Après le merge
 

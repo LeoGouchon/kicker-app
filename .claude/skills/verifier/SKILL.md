@@ -14,7 +14,8 @@ sous-agent a dit que c'était bon » ne sont pas des preuves.
 - `1-brief.md`, `2-plan.md` et `3-execution.md` existent dans `specs/<feature>/`, le journal avec le statut `terminé`.
   Sinon, arrête-toi et renvoie vers la phase manquante.
 - Lis les trois. Crée `4-verification.md` à partir de [verification-template.md](verification-template.md), statut
-  `brouillon`, et remplis-le au fil des étapes.
+  `brouillon`, et remplis-le au fil des étapes. S'il existe déjà (vérification précédente `bloqué`), repasse-le en
+  `brouillon` et refais toutes les étapes : les preuves précédentes ne sont plus fraîches.
 
 ## 2. Preuves automatiques
 
@@ -38,14 +39,16 @@ Lance un sous-agent `general-purpose` avec un contexte neuf : l'auteur du code a
 Donne-lui :
 
 - le prompt de [reviewer-prompt.md](reviewer-prompt.md) ;
-- la plage à relire : `git diff <commit de départ du journal>...HEAD` ;
+- la plage à relire : `git diff origin/dev...HEAD` (après `git fetch origin`) ;
 - les chemins du brief, du plan et du journal (ses **Décisions** et **Raccourcis**) ;
 - la section **Points de vigilance** du plan, à vérifier un par un.
 
 Ne crois pas son verdict sur parole : relis chaque constat dans le code avant de l'accepter. Puis trie :
 
 - **À corriger** (bug, faille, perte de données, convention violée) : corrige-les en une passe, chaque correction
-  prouvée par la commande qui le montre, puis relance les preuves de l'étape 2.
+  prouvée par la commande qui le montre, puis relance les preuves de l'étape 2. Commite chaque correction
+  (`fix(<scope>): …`) et note son commit dans le rapport. Une correction qui dépasse quelques lignes ou touche
+  plusieurs fichiers ne se fait pas ici : rouvre l'implémentation (section 8).
 - **À améliorer** et **Optionnel** : ne les corrige pas toi-même. Liste-les dans le rapport, l'utilisateur décide.
 
 ## 5. Parcours dans le navigateur
@@ -70,7 +73,7 @@ pour tout ce que tu n'as pas pu vérifier toi-même.
 
 ## 6. Dette technique
 
-1. Liste les raccourcis de la branche : `git diff <commit de départ>...HEAD | grep -nE "^\+.*// ?shortcut:"`, en plus de
+1. Liste les raccourcis de la branche : `git diff origin/dev...HEAD | grep -nE "^\+.*// ?shortcut:"`, en plus de
    la section **Raccourcis** du journal.
 2. Ajoute chacun à `docs/tech-debt.md`, dans la bonne priorité (P1 bug ou risque, P2 écart qui se propage, P3
    nettoyage), au format du tableau existant. Un raccourci sans « quand y revenir » est signalé à l'utilisateur.
@@ -90,6 +93,17 @@ rapport.
 2. Rends la main à la skill `feature`. Quand l'utilisateur a fait sa checklist et valide, la feature est prête pour la
    PR (`docs/process/pull-request.md`) : le brief et ce rapport fournissent le résumé et le plan de test de la
    description.
+3. **Si quelque chose bloque** (critère d'acceptation en échec, retour négatif de la checklist des rôles, correction
+   trop large pour l'étape 4) et que l'utilisateur confirme qu'il faut corriger :
+    - ajoute à la fin de `2-plan.md` une section **Corrections après vérification**, avec une tâche par problème
+      (numérotée à la suite, au format des autres tâches) ;
+    - repasse `3-execution.md` en `en cours` ;
+    - passe ce rapport en `bloqué`, verdict `Bloqué : <raison>`, en listant les problèmes et les tâches créées ;
+    - rends la main à la skill `feature`, qui commite et renvoie vers la phase Implémenter. La vérification suivante
+      reprend ce rapport et le met à jour.
+
+    Si le problème vient du brief lui-même (règle manquante ou fausse), ne crée pas de tâche : l'utilisateur décide
+    s'il faut recadrer.
 
 ---
 

@@ -1,8 +1,10 @@
 # Journal d'exécution : <titre de la feature>
 
-- **Statut** : en cours | terminé
+- **Statut** : en cours | à valider | terminé
 - **Plan** : [2-plan.md](2-plan.md)
-- **Commit de départ** : `<sha court>` (dernier commit avant la tâche 1)
+
+Le diff de la feature se calcule par `git diff origin/dev...HEAD` (depuis la base commune avec `dev`) : il reste
+juste après un rebase, contrairement à un SHA noté ici.
 
 ## Tâches
 

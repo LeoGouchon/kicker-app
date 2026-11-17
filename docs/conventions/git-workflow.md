@@ -24,9 +24,13 @@ feature branch ──PR (squash)──► dev ──PR « release » (merge comm
     - Exemples : `feat/match-public-code`, `fix/remove-auto-redirection`, `docs/project-conventions`.
 - **Création** :
     ```bash
-    git switch dev && git pull
-    git switch -c feat/ma-feature
+    git fetch origin
+    git switch -c feat/ma-feature origin/dev
     ```
+    Partir de `origin/dev` évite `git switch dev`, qui échoue quand `dev` est extrait dans un autre worktree.
+- **Worktree Orca** : Orca nomme la branche `<utilisateur>/<nom>`. La renommer au format ci-dessus avant le premier
+  commit (`git branch -m feat/ma-feature`), et vérifier qu'elle part de `dev`
+  (`git merge-base --is-ancestor origin/dev HEAD`).
 - **Une branche = un sujet.** Si la branche prend du retard, rebaser sur `dev` (`git rebase origin/dev`) plutôt que
   merger `dev` dedans.
 

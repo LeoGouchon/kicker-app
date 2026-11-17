@@ -37,9 +37,12 @@ Les sections suivantes restent la checklist de référence, avec ou sans l'agent
 ## 2. Créer la branche
 
 ```bash
-git switch dev && git pull
-git switch -c feat/<description-kebab>
+git fetch origin
+git switch -c feat/<description-kebab> origin/dev
 ```
+
+Dans un worktree Orca, la branche créée s'appelle `<utilisateur>/<nom>` : renomme-la avant de commencer
+(`git branch -m feat/<description-kebab>`). `/feature` le propose de lui-même.
 
 Convention : [../conventions/git-workflow.md](../conventions/git-workflow.md).
 

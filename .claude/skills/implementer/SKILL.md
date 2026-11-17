@@ -14,7 +14,10 @@ trace qui survit à la compaction du contexte et au changement de machine.
   renvoie vers la phase manquante.
 - Lis le brief puis le plan. **Le brief fait autorité**, le plan argumente à partir de lui.
 - Si `3-execution.md` existe, c'est le journal : les tâches marquées `faite` **sont faites**, leurs commits existent.
-  Fais confiance au journal et à `git log` plutôt qu'à ta mémoire, et reprends à la première tâche non faite.
+  Fais confiance au journal et à `git log` plutôt qu'à ta mémoire, et reprends à la première tâche non faite. Après un
+  rebase, les SHA du journal ne correspondent plus : retrouve les commits par leur message.
+- Journal rouvert après une vérification bloquée : les tâches de correction sont à la fin du plan, reprends à la
+  première d'entre elles.
 - Sinon, crée-le à partir de [execution-template.md](execution-template.md), statut `en cours`.
 - Crée une tâche de suivi (TodoWrite) par tâche du plan.
 
@@ -86,7 +89,8 @@ Tranche toi-même les ambiguïtés et note-les comme décisions. Seules ces situ
 
 ## 6. Conclure
 
-1. Toutes les tâches sont faites : passe le journal en `terminé` et complète sa section **Bilan**.
+1. Toutes les tâches sont faites : passe le journal en `à valider` (jamais `terminé` : seule la validation de
+   l'utilisateur donne ce statut) et complète sa section **Bilan**. Commite le journal.
 2. Rends la main à la skill `feature` (ou, si tu as été appelé seul, propose `/verifier`). La revue complète se fait
    dans la phase de vérification, pas ici.
 
