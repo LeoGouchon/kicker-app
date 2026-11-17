@@ -3,6 +3,24 @@
 Le parcours complet, du besoin au merge dans `dev`. Chaque étape renvoie vers la doc qui détaille les règles.
 Coche mentalement chaque case : une case sautée finit en dette.
 
+## Avec Claude Code : `/feature`
+
+La skill `/feature` déroule ce parcours en quatre phases. Chacune produit un fichier dans `specs/<feature>/`, que tu
+valides avant la phase suivante :
+
+1. **Cadrer** (`/cadrer`) : tours de questions jusqu'à ce que le besoin soit tranché ; glossaire et ADR mis à jour au
+   passage → `1-brief.md`.
+2. **Planifier** (`/planifier`) : tâches vérifiables tirées du brief → `2-plan.md`.
+3. **Implémenter** (`/implementer`) : exécution tâche par tâche, changement minimal, une preuve par tâche →
+   `3-execution.md`.
+4. **Vérifier** (`/verifier`) : lint, build, tests, critères d'acceptation, revue indépendante, parcours dans le
+   navigateur, dette reportée → `4-verification.md`, avec la checklist des rôles à faire toi-même.
+
+Relancer `/feature` reprend à la première phase non validée, y compris depuis une autre machine après un `git push`.
+Fonctionnement détaillé : [specs/README.md](../../specs/README.md). Pourquoi : [ADR 0006](../decisions/0006-workflow-feature.md).
+
+Les sections suivantes restent la checklist de référence, avec ou sans l'agent.
+
 ## 1. Cadrer
 
 - [ ] Reformuler le besoin en une ou deux phrases : quel écran, pour quel rôle (anonyme, user, modérateur, admin).
@@ -10,8 +28,8 @@ Coche mentalement chaque case : une case sautée finit en dette.
 - [ ] Repérer l'existant réutilisable : `src/components/`, `src/hooks/`, `src/utils/`, types de `src/types/`.
 - [ ] Une décision structurante (nouvelle librairie, nouveau pattern, changement d'architecture) ? → rédiger un ADR
       dans [../decisions/](../decisions/README.md) **avant** de coder.
-- [ ] Avec Claude Code : travailler en **mode plan** pour les features de plus de quelques fichiers. Valider le plan
-      avant l'implémentation.
+- [ ] Employer les termes de [../glossary.md](../glossary.md). Un nouveau terme métier y est ajouté.
+- [ ] Avec Claude Code : lancer `/feature` (voir plus haut). Valider le brief, puis le plan, avant l'implémentation.
 
 ## 2. Créer la branche
 
@@ -63,7 +81,9 @@ Pendant l'implémentation, respecter :
 - [ ] Nouveau mécanisme transverse → mettre à jour ou créer un fichier dans `docs/architecture/`.
 - [ ] Nouvelle variable d'environnement → `.env.example`, `src/vite-env.d.ts`,
       [../getting-started.md](../getting-started.md).
-- [ ] Dette repérée mais non traitée → l'ajouter à [../tech-debt.md](../tech-debt.md).
+- [ ] Nouveau terme métier ou sens précisé → [../glossary.md](../glossary.md).
+- [ ] Dette repérée mais non traitée (dont les `// shortcut:` laissés dans le code) → l'ajouter à
+      [../tech-debt.md](../tech-debt.md).
 - [ ] Dette traitée au passage → la retirer de [../tech-debt.md](../tech-debt.md).
 - [ ] Chaque fichier touché reste sous 200 lignes (ou l'exception est assumée dans
       `.claude/hooks/doc-length-ignore.txt`), et chaque nouveau fichier est ajouté au sommaire de son dossier.

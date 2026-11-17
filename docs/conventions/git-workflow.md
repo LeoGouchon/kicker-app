@@ -53,7 +53,7 @@ Format : [Conventional Commits 1.0.0](https://www.conventionalcommits.org/fr/v1.
 | `refactor` | Restructuration sans changement de comportement                                                                         |
 | `style`    | Changement **visuel / UI** sans logique (marges, titres, couleurs). Diffère de la spec, où `style` désigne le formatage |
 | `perf`     | Amélioration de performance                                                                                             |
-| `docs`     | Documentation (`docs/`, `README.md`, `CLAUDE.md`)                                                                       |
+| `docs`     | Documentation (`docs/`, `specs/`, `README.md`, `CLAUDE.md`)                                                             |
 | `test`     | Ajout ou correction de tests                                                                                            |
 | `chore`    | Maintenance : dépendances, configuration, petits ajustements sans impact fonctionnel                                    |
 | `ci`       | Outillage de build, scripts, Makefile, hooks                                                                            |

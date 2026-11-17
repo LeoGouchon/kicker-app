@@ -33,6 +33,7 @@ Pas d'ADR pour un choix local à une feature ni pour un détail de style : ceux-
 | [0003](0003-react-query-etat-serveur.md) | TanStack Query comme unique source d'état serveur, pas de store global                                                        | Accepté                     |
 | [0004](0004-antd-emotion-style.md)       | antd pour les composants et les tokens, emotion pour le style, FontAwesome pour les icônes                                    | Accepté                     |
 | [0005](0005-organisation-des-pages.md)   | Pages dans `src/pages/<kebab>/`, dossiers en kebab-case, satellites `.style` / `.utils` / `.reducer`                          | Accepté (migration à faire) |
+| [0006](0006-workflow-feature.md)         | Workflow feature en quatre phases (`/feature`), specs versionnées dans `specs/`, glossaire métier                             | Proposé                     |
 
 _À lire si_ :
 
@@ -40,4 +41,5 @@ _À lire si_ :
 - **0002** : tu touches à la connexion ou à la session ;
 - **0003** : tu envisages un store global ou un autre client de données ;
 - **0004** : tu envisages une autre librairie UI ou de style ;
-- **0005** : tu crées ou déplaces des fichiers.
+- **0005** : tu crées ou déplaces des fichiers ;
+- **0006** : tu modifies le workflow `/feature`, ses skills ou le dossier `specs/`.

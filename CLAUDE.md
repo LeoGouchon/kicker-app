@@ -11,7 +11,9 @@ La documentation du projet est dans `docs/`. Son sommaire est importé ci-dessou
 
 1. Lis le sommaire ci-dessus, puis ouvre **uniquement** le `README.md` du ou des dossiers utiles à ta tâche.
 2. Dans ce dossier, charge seulement les fichiers dont la ligne « À lire si » correspond à ce que tu fais.
-3. Pour une nouvelle feature, suis `docs/process/new-feature.md` de bout en bout.
+3. Pour une nouvelle feature ou une évolution significative, utilise la skill `feature` (`/feature`) : cadrer,
+   planifier, implémenter, vérifier, avec un fichier par phase dans `specs/<feature>/` (voir `specs/README.md`).
+   La checklist de référence reste `docs/process/new-feature.md`.
 4. Si le code existant contredit une convention, **la convention l'emporte** pour le nouveau code. L'écart est
    probablement déjà listé dans `docs/tech-debt.md` ; ajoute-le s'il n'y est pas.
 

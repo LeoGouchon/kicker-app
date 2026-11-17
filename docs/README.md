@@ -19,6 +19,9 @@ puis uniquement les fichiers dont la ligne « À lire si » correspond à ta tâ
   _À lire si_ : tu démarres une tâche et veux la checklist complète.
 - [decisions/](decisions/README.md) : décisions d'architecture (ADR), c'est-à-dire _pourquoi_ le projet est construit ainsi.
   _À lire si_ : tu remets en cause un choix structurant ou tu en prends un nouveau.
+- [glossary.md](glossary.md) : vocabulaire métier (joueur, match, ELO, saison…), terme de l'interface et nom dans le
+  code.
+  _À lire si_ : tu cadres une feature, tu nommes un concept métier ou un terme te semble ambigu.
 - [tech-debt.md](tech-debt.md) : écarts connus entre le code actuel et les conventions, bugs repérés, code mort.
   _À lire si_ : le code existant contredit une convention, ou tu cherches quoi nettoyer.
 
