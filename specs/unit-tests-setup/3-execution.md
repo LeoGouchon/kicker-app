@@ -13,6 +13,9 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
 - **Tâche 1** : faite. Commit `test: set up vitest and testing library`. Vérification : `npm test` → 1 fichier,
   21 tests, 0 échec ; `npm run lint` → 0 erreur (18 warnings existants, aucun dans les nouveaux fichiers) ;
   `npm run build` → exit 0 ; `npm run test:watch` → `RERUN src/utils/roles.test.ts` après modification (annulée).
+- **Tâche 2** : faite. Commit `test: add tests for return path and player filter`. Vérification : `npm test` → 3
+  fichiers, 35 réussis, 1 en attente ; lint 0 erreur ; build exit 0. Bug révélé (point de vigilance 2) : sonde sans
+  `skip` → `Expected "/", Received "/\evil.com"` ; test en `it.skip`, ligne P1 ajoutée à `docs/tech-debt.md`.
 
 ## Décisions
 
