@@ -1,0 +1,25 @@
+name: CI
+
+on:
+    pull_request:
+        branches: [dev, main]
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    checks:
+        name: Lint, build and test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions/setup-node@v7
+              with:
+                  # Same Node version as Vercel, from the engines field
+                  node-version-file: package.json
+                  cache: npm
+            - run: npm ci
+            - run: npm run lint
+            - run: npm run build
+            - run: npm test

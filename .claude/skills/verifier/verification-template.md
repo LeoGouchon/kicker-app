@@ -10,11 +10,11 @@ Prêt pour la PR | Prêt après la checklist ci-dessous | Bloqué : <raison>
 
 ## Preuves automatiques
 
-| Commande        | Résultat              |
-| --------------- | --------------------- |
-| `npm run lint`  |                       |
-| `npm run build` |                       |
-| `npm test`      | (pas encore de tests) |
+| Commande        | Résultat |
+| --------------- | -------- |
+| `npm run lint`  |          |
+| `npm run build` |          |
+| `npm test`      |          |
 
 ## Critères d'acceptation
 

@@ -24,9 +24,9 @@ npm ci                 # ou `make install` dans un worktree Orca
 make dev               # serveur Vite sur 5173 (port imposé par l'OIDC)
 npm run lint           # ESLint
 npm run build          # tsc -b + vite build : à lancer avant toute PR
+npm test               # Vitest, toute la suite une fois
+npm run test:watch     # Vitest en continu
 ```
-
-Il n'y a pas de tests automatisés pour l'instant. La vérification est manuelle (voir `docs/process/pull-request.md`).
 
 ## Règles non négociables
 
@@ -48,6 +48,8 @@ Il n'y a pas de tests automatisés pour l'instant. La vérification est manuelle
   par ressource.
 - **Feedback UI** : `App.useApp()` d'antd (`message`, `modal`, `notification`). Gérer les états chargement, vide et
   erreur de chaque requête.
+- **Tests** : toute logique pure créée ou modifiée (`.utils`, `.reducer`, `src/utils/`) a un test colocalisé
+  (`x.ts` → `x.test.ts`), imports explicites depuis `vitest`. Détail dans `docs/conventions/testing.md`.
 - **Langue** : code, commentaires et commits en anglais ; textes d'interface et documentation en français.
 - **Git** : branche `<type>/<kebab>` depuis `dev`, Conventional Commits, PR vers `dev`. Ne jamais pousser sur `main`.
 
