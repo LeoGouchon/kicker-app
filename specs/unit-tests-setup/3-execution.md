@@ -21,6 +21,9 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
   Contre-preuve : sans `env: { TZ: 'UTC' }` et sous Tokyo, 3 tests de bord échouent (config restaurée ensuite). Bug
   révélé (point de vigilance 1) : sonde sans `skip` → `Expected [2026-02-10T12:00:00.000Z], Received []` ; test en
   `it.skip`, ligne P1 ajoutée. Lint 0 erreur, build exit 0.
+- **Tâche 4** : faite. Commit `test: add tests for duo table utils`. Vérification : `npm test` → 5 fichiers,
+  `53 passed | 2 skipped (55)` ; le test « rien de stocké », placé après un test qui écrit, passe (nettoyage du
+  `localStorage` prouvé) ; lint 0 erreur ; build exit 0.
 
 ## Décisions
 
@@ -32,6 +35,10 @@ Chaque écart au plan ou ambiguïté tranchée, au moment où elle est prise :
   24.12. jsdom 29 tourne sur tout Node 24 ; à monter quand le Node local suivra.
 - **Tâche 1** : `server.deps.inline: ['antd']` non ajouté : pas nécessaire à ce stade, à revoir en tâche 5 si antd ne
   se charge pas.
+- **Tâche 4** : test nommé `EnhancedTable.utils.test.tsx` et non `.test.ts` (carte des fichiers) : la source est en
+  `.tsx`, et la contrainte globale dit `X.tsx` → `X.test.tsx`. Coût nul.
+- **Tâche 4** : assertions en `toStrictEqual` (et non `toEqual`) sur les filtres lus : `toEqual` ne distingue pas
+  `{}` de `{ playerIdFilter: undefined, … }`, ce que le plan demande de vérifier.
 
 ## Raccourcis
 
