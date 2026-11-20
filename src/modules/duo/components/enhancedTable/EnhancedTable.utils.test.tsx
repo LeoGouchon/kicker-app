@@ -25,6 +25,13 @@ const buildRow = (value: number): TableData => ({
     performanceVsExpected: { rank: 1, value },
 });
 
+// Each metric gets its own range, so reading the wrong metric gives the wrong boundaries
+const buildRowWithMetricOffsets = (value: number): TableData =>
+    metrics.reduce<TableData>(
+        (row, metric, index) => ({ ...row, [metric.key]: { rank: 1, value: value + index * 100 } }),
+        buildRow(value)
+    );
+
 const getMetric = (key: MetricConfig['key']): MetricConfig => {
     const metric = metrics.find((candidate) => candidate.key === key);
     if (!metric) throw new Error(`Unknown metric ${key}`);
@@ -78,10 +85,10 @@ describe('getTopBottomByMetric', () => {
     });
 
     it('returns the 5th best and 5th worst values for each metric', () => {
-        const boundaries = getTopBottomByMetric([40, 10, 60, 30, 50, 20].map(buildRow));
+        const boundaries = getTopBottomByMetric([40, 10, 60, 30, 50, 20].map(buildRowWithMetricOffsets));
 
-        metrics.forEach((metric) => {
-            expect(boundaries[metric.key]).toStrictEqual({ top: 20, bottom: 50 });
+        metrics.forEach((metric, index) => {
+            expect(boundaries[metric.key]).toStrictEqual({ top: 20 + index * 100, bottom: 50 + index * 100 });
         });
     });
 });
