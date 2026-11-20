@@ -24,9 +24,9 @@ npm ci                 # ou `make install` dans un worktree Orca
 make dev               # serveur Vite sur 5173 (port imposé par l'OIDC)
 npm run lint           # ESLint
 npm run build          # tsc -b + vite build : à lancer avant toute PR
+npm test               # Vitest, toute la suite une fois
+npm run test:watch     # Vitest en continu
 ```
-
-Il n'y a pas de tests automatisés pour l'instant. La vérification est manuelle (voir `docs/process/pull-request.md`).
 
 ## Règles non négociables
 

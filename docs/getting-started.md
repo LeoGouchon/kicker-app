@@ -11,7 +11,8 @@ Installer le projet, le configurer et le lancer en local avec les services backe
 
 ## Prérequis
 
-- Node.js (un `npm ci` doit passer) et Git Bash ou un shell POSIX pour le `Makefile`.
+- Node.js 24 (champ `engines` de `package.json`, aligné sur Vercel et la CI) et Git Bash ou un shell POSIX pour le
+  `Makefile`.
 - Les services backend démarrés séparément, selon leurs propres README :
     - **API Hubscore** : `http://localhost:8080` (`/api/v1`) ;
     - **identity server** : `http://localhost:8081`.
@@ -54,10 +55,10 @@ Les fichiers `.env*` sont ignorés par Git, sauf `.env.example`. Une nouvelle va
 | `npm run dev -- --host 0.0.0.0 --port 5173` | idem, accessible depuis le réseau local                                                                   |
 | `npm run lint`                              | ESLint sur tout le projet                                                                                 |
 | `npm run build`                             | `tsc -b` puis `vite build` : c'est la vérification de types de référence                                  |
+| `npm test`                                  | Vitest : lance toute la suite de tests une fois                                                           |
+| `npm run test:watch`                        | Vitest en continu : relance les tests concernés à chaque modification                                     |
 | `npm run preview`                           | sert le build de production                                                                               |
 | `make clean`                                | supprime `node_modules`, `dist` et `.env` du worktree (le `.env` du checkout principal est conservé)      |
-
-Il n'existe pas de commande de test : aucun test automatisé n'est en place (voir [tech-debt.md](tech-debt.md)).
 
 ## Configuration de l'identity server
 
