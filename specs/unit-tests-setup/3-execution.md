@@ -24,6 +24,10 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
 - **Tâche 4** : faite. Commit `test: add tests for duo table utils`. Vérification : `npm test` → 5 fichiers,
   `53 passed | 2 skipped (55)` ; le test « rien de stocké », placé après un test qui écrit, passe (nettoyage du
   `localStorage` prouvé) ; lint 0 erreur ; build exit 0.
+- **Tâche 5** : faite. Commit `test: add render helper and match line test`. Vérification : `npm test` → 6 fichiers,
+  `59 passed | 2 skipped (61)`, aucune sortie stderr (ni `act`, ni `matchMedia`) ; test 2 contre 2 placé après le
+  1 contre 1 → exactement 4 liens (nettoyage du DOM prouvé). Contre-preuve : sans le stub `matchMedia`, les 6 tests
+  échouent (`window.matchMedia is not a function`), setup restauré. Lint 0 erreur, build exit 0.
 
 ## Décisions
 
@@ -39,6 +43,12 @@ Chaque écart au plan ou ambiguïté tranchée, au moment où elle est prise :
   `.tsx`, et la contrainte globale dit `X.tsx` → `X.test.tsx`. Coût nul.
 - **Tâche 4** : assertions en `toStrictEqual` (et non `toEqual`) sur les filtres lus : `toEqual` ne distingue pas
   `{}` de `{ playerIdFilter: undefined, … }`, ce que le plan demande de vérifier.
+- **Tâche 5** : `server.deps.inline: ['antd']` reste inutile : antd se charge sous Vitest sans réglage.
+- **Tâche 5** : `"Il y a moins d'une minute"` garde ses guillemets doubles, d'où 1 warning `quotes` dans
+  `MatchLine.test.tsx` (lint : 19 warnings au lieu de 18). La règle ESLint `quotes: single` (réactivée après
+  `eslint-config-prettier`) contredit Prettier, qui préfère les doubles pour éviter un échappement ; le pre-commit
+  lance Prettier en dernier, donc sa version gagne. Même warning déjà présent dans `MatchLine.tsx`. Conflit d'outillage
+  à reporter dans la dette en phase Vérifier (piste : `avoidEscape: true` sur la règle `quotes`).
 
 ## Raccourcis
 
