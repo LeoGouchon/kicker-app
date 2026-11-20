@@ -1,6 +1,6 @@
 # Journal d'exécution : mise en place des tests automatisés et de la CI
 
-- **Statut** : en cours (cycle des statuts : `specs/README.md`)
+- **Statut** : à valider (cycle des statuts : `specs/README.md`)
 - **Plan** : [2-plan.md](2-plan.md)
 
 Le diff de la feature se calcule par `git diff origin/dev...HEAD` (depuis la base commune avec `dev`) : il reste
@@ -72,4 +72,17 @@ Aucun pour l'instant.
 
 ## Bilan
 
-À remplir quand toutes les tâches sont faites.
+**Construit** : Vitest 5, Testing Library et jsdom configurés dans `vite.config.ts` (fuseau `UTC`, setup partagé,
+helper `renderWithProviders`) ; 6 fichiers de tests pilotes, 59 réussis et 2 en attente pour deux bugs réels ajoutés
+en P1 à `docs/tech-debt.md` ; workflow CI `Lint, build and test` sur les PR vers `dev` et `main`, Node fixé par
+`engines` ; doc et skills mises à jour. Aucun fichier applicatif modifié. Diff : 730 lignes hors `specs/` et
+`package-lock.json` (550 prévues : la doc de CI et les tests sont plus longs qu'estimé).
+
+**À regarder en priorité en phase Vérifier** :
+
+1. Le check `Lint, build and test` sur la PR réelle, dont un échec provoqué par un test rouge (critère du brief).
+2. Les deux bugs révélés (`getReturnTo` et `/\evil.com`, `getQuarterChanges` qui ignore l'année) : issues GitHub à
+   créer seulement si l'utilisateur valide.
+3. Le conflit ESLint `quotes` / Prettier (décision tâche 5) : à reporter dans la dette.
+4. `jsdom@29` retenu à cause du Node local 24.12 (décision tâche 1).
+5. Tâche 8 (rulesets) : après le merge, avec confirmation explicite de l'utilisateur.
