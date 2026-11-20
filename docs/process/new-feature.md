@@ -64,6 +64,8 @@ Convention : [../conventions/git-workflow.md](../conventions/git-workflow.md).
     - le backend reste l'unique garant.
 6. **États UI** : erreur, chargement et vide sur chaque query ; feedback et confirmation sur chaque mutation. Voir
    [../conventions/ui-feedback.md](../conventions/ui-feedback.md).
+7. **Tests** : un test colocalisé pour toute logique pure créée ou modifiée (`.utils`, `.reducer`, `src/utils/`) ; un
+   test de composant si le rendu dépend d'une règle. Voir [../conventions/testing.md](../conventions/testing.md).
 
 Pendant l'implémentation, respecter :
 
@@ -75,6 +77,7 @@ Pendant l'implémentation, respecter :
 
 - [ ] `npm run lint` passe sans erreur.
 - [ ] `npm run build` passe : c'est la vérification TypeScript de référence.
+- [ ] `npm test` passe (les tests en attente renvoient vers une ligne de `tech-debt.md`).
 - [ ] Test manuel dans `make dev` :
     - [ ] desktop **et** mobile (fenêtre sous le breakpoint `md`) ;
     - [ ] thème clair **et** sombre ;

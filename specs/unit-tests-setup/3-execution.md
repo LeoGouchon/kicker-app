@@ -28,6 +28,9 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
   `59 passed | 2 skipped (61)`, aucune sortie stderr (ni `act`, ni `matchMedia`) ; test 2 contre 2 placé après le
   1 contre 1 → exactement 4 liens (nettoyage du DOM prouvé). Contre-preuve : sans le stub `matchMedia`, les 6 tests
   échouent (`window.matchMedia is not a function`), setup restauré. Lint 0 erreur, build exit 0.
+- **Tâche 6** : faite. Commit `docs: add testing conventions and test requirement`. Vérification : `wc -l` → tous les
+  fichiers touchés sous 200 lignes (`testing.md` 121, `new-feature.md` 107, `CLAUDE.md` 67) ; liens relatifs des
+  fichiers de `docs/` touchés tous résolus ; Prettier appliqué.
 
 ## Décisions
 

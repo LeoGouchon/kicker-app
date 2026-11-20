@@ -48,6 +48,8 @@ npm run test:watch     # Vitest en continu
   par ressource.
 - **Feedback UI** : `App.useApp()` d'antd (`message`, `modal`, `notification`). Gérer les états chargement, vide et
   erreur de chaque requête.
+- **Tests** : toute logique pure créée ou modifiée (`.utils`, `.reducer`, `src/utils/`) a un test colocalisé
+  (`x.ts` → `x.test.ts`), imports explicites depuis `vitest`. Détail dans `docs/conventions/testing.md`.
 - **Langue** : code, commentaires et commits en anglais ; textes d'interface et documentation en français.
 - **Git** : branche `<type>/<kebab>` depuis `dev`, Conventional Commits, PR vers `dev`. Ne jamais pousser sur `main`.
 

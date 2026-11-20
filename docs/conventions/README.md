@@ -35,5 +35,8 @@ règle isolée va dans le fichier existant le plus proche.
   _À lire si_ : tu appelles l'API ou modifies un hook de données.
 - [ui-feedback.md](ui-feedback.md) : `App.useApp()`, états chargement/vide/erreur, confirmations, messages.
   _À lire si_ : tu affiches des données distantes ou déclenches une action utilisateur.
+- [testing.md](testing.md) : quand un test est obligatoire, emplacement, Vitest et Testing Library, rendu avec
+  providers, dates, bug révélé par un test.
+  _À lire si_ : tu écris ou modifies une logique pure ou un test.
 - [git-workflow.md](git-workflow.md) : branches, Conventional Commits, PR vers `dev`, release vers `main`.
   _À lire si_ : tu crées une branche, un commit ou une PR.
