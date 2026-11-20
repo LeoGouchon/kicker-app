@@ -16,6 +16,11 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
 - **Tâche 2** : faite. Commit `test: add tests for return path and player filter`. Vérification : `npm test` → 3
   fichiers, 35 réussis, 1 en attente ; lint 0 erreur ; build exit 0. Bug révélé (point de vigilance 2) : sonde sans
   `skip` → `Expected "/", Received "/\evil.com"` ; test en `it.skip`, ligne P1 ajoutée à `docs/tech-debt.md`.
+- **Tâche 3** : faite. Commit `test: add tests for season changes`. Vérification : `npm test` sous le fuseau de la
+  machine, `TZ=Asia/Tokyo` et `TZ=America/Los_Angeles` → trois fois `4 passed (4)`, `42 passed | 2 skipped (44)`.
+  Contre-preuve : sans `env: { TZ: 'UTC' }` et sous Tokyo, 3 tests de bord échouent (config restaurée ensuite). Bug
+  révélé (point de vigilance 1) : sonde sans `skip` → `Expected [2026-02-10T12:00:00.000Z], Received []` ; test en
+  `it.skip`, ligne P1 ajoutée. Lint 0 erreur, build exit 0.
 
 ## Décisions
 
