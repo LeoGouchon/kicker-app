@@ -1,6 +1,6 @@
 # Journal d'exécution : mise en place des tests automatisés et de la CI
 
-- **Statut** : à valider (cycle des statuts : `specs/README.md`)
+- **Statut** : terminé (cycle des statuts : `specs/README.md`)
 - **Plan** : [2-plan.md](2-plan.md)
 
 Le diff de la feature se calcule par `git diff origin/dev...HEAD` (depuis la base commune avec `dev`) : il reste
@@ -63,6 +63,10 @@ Chaque écart au plan ou ambiguïté tranchée, au moment où elle est prise :
 - **Tâche 7** : la doc de PR donne la règle `required_status_checks` en JSON et la procédure `gh api` générique (lire,
   `PUT` avec toutes les règles, `POST` pour une branche sans ruleset), sans recopier le ruleset actuel : il change hors
   du code. Dans « Merger », « relancer `npm run build` » devient « attendre que la CI repasse au vert ».
+- **Validation** : pas d'issue GitHub pour les deux bugs révélés, décision de l'utilisateur. `docs/tech-debt.md` reste
+  la seule source de suivi (le dépôt n'utilise presque pas les issues), et les tests en attente y renvoient.
+- **Validation** : le mutation testing (StrykerJS, runner Vitest) fera l'objet d'une feature séparée
+  (`test/mutation-testing`), cadrée après celle-ci. Il ne modifie pas ce qui est livré ici.
 
 ## Raccourcis
 
@@ -81,8 +85,8 @@ en P1 à `docs/tech-debt.md` ; workflow CI `Lint, build and test` sur les PR ver
 **À regarder en priorité en phase Vérifier** :
 
 1. Le check `Lint, build and test` sur la PR réelle, dont un échec provoqué par un test rouge (critère du brief).
-2. Les deux bugs révélés (`getReturnTo` et `/\evil.com`, `getQuarterChanges` qui ignore l'année) : issues GitHub à
-   créer seulement si l'utilisateur valide.
+2. Les deux bugs révélés (`getReturnTo` et `/\evil.com`, `getQuarterChanges` qui ignore l'année) : suivis dans
+   `docs/tech-debt.md` seulement, sans issue GitHub (décision de l'utilisateur).
 3. Le conflit ESLint `quotes` / Prettier (décision tâche 5) : à reporter dans la dette.
 4. `jsdom@29` retenu à cause du Node local 24.12 (décision tâche 1).
 5. Tâche 8 (rulesets) : après le merge, avec confirmation explicite de l'utilisateur.
