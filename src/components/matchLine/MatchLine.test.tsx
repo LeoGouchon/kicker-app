@@ -63,11 +63,10 @@ describe('MatchLine', () => {
         });
     });
 
-    it('shows the score of each team', () => {
+    it('shows the score of each team in team order', () => {
         renderWithProviders(<MatchLine match={buildMatch()} />);
 
-        expect(screen.getByText('10')).toBeInTheDocument();
-        expect(screen.getByText('7')).toBeInTheDocument();
+        expect(screen.getByText('vs').parentElement).toHaveTextContent(/^10\s*vs\s*7$/);
     });
 
     it.each([
