@@ -31,6 +31,13 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
 - **Tâche 6** : faite. Commit `docs: add testing conventions and test requirement`. Vérification : `wc -l` → tous les
   fichiers touchés sous 200 lignes (`testing.md` 121, `new-feature.md` 107, `CLAUDE.md` 67) ; liens relatifs des
   fichiers de `docs/` touchés tous résolus ; Prettier appliqué.
+- **Tâche 7** : faite. Commit `ci: add github actions workflow for lint, build and tests`. Vérification : `ci.yml`
+  passe `prettier --check` et se parse (`yaml`) avec le job `Lint, build and test` et les 6 étapes attendues ;
+  séquence locale `npm ci && npm run lint && npm run build && npm test` → exit 0 (`59 passed | 2 skipped`) ;
+  `vercel.json` et le bloc `lint-staged` identiques à `origin/dev`. Exécution réelle sur GitHub et échec sur un test
+  rouge : à prouver en phase Vérifier, PR ouverte.
+- **Tâche 8** : à faire **après le merge** de la PR dans `dev` (point de vigilance 5). État constaté en lecture :
+  seul le ruleset `Protect main` (id `27496840`) existe ; `Protect dev` est à créer.
 
 ## Décisions
 
@@ -52,6 +59,10 @@ Chaque écart au plan ou ambiguïté tranchée, au moment où elle est prise :
   `eslint-config-prettier`) contredit Prettier, qui préfère les doubles pour éviter un échappement ; le pre-commit
   lance Prettier en dernier, donc sa version gagne. Même warning déjà présent dans `MatchLine.tsx`. Conflit d'outillage
   à reporter dans la dette en phase Vérifier (piste : `avoidEscape: true` sur la règle `quotes`).
+- **Tâche 7** : `actions/checkout@v7` et `actions/setup-node@v7`, dernières majeures publiées (`gh api …/releases/latest`).
+- **Tâche 7** : la doc de PR donne la règle `required_status_checks` en JSON et la procédure `gh api` générique (lire,
+  `PUT` avec toutes les règles, `POST` pour une branche sans ruleset), sans recopier le ruleset actuel : il change hors
+  du code. Dans « Merger », « relancer `npm run build` » devient « attendre que la CI repasse au vert ».
 
 ## Raccourcis
 

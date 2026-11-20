@@ -73,11 +73,9 @@
 
 ## Outillage
 
-| Sujet                                                                                  | Action                                                                                            |
-| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| Aucun test automatisé                                                                  | ADR à écrire : Vitest + Testing Library (utilitaires, reducers, hooks), puis un script `npm test` |
-| Mode mock inutilisable (réponses double-enveloppées, endpoints manquants, OIDC requis) | Réparer, ou supprimer `mockApi.ts` et `VITE_MOCK_API`                                             |
-| Pas de CI (lint + build sur chaque PR)                                                 | Workflow GitHub Actions `npm ci && npm run lint && npm run build`                                 |
-| `QueryClient` sans `defaultOptions`, pas de devtools                                   | Définir `staleTime`/`retry` par défaut ; `@tanstack/react-query-devtools` en dev                  |
-| Pas de `@tanstack/eslint-plugin-query`                                                 | L'installer pour vérifier les query keys                                                          |
-| Limite de 200 lignes contrôlée uniquement pour les écritures de Claude Code            | Ajouter le script du hook à `lint-staged` pour `docs/**/*.md`                                     |
+| Sujet                                                                                  | Action                                                                           |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Mode mock inutilisable (réponses double-enveloppées, endpoints manquants, OIDC requis) | Réparer, ou supprimer `mockApi.ts` et `VITE_MOCK_API`                            |
+| `QueryClient` sans `defaultOptions`, pas de devtools                                   | Définir `staleTime`/`retry` par défaut ; `@tanstack/react-query-devtools` en dev |
+| Pas de `@tanstack/eslint-plugin-query`                                                 | L'installer pour vérifier les query keys                                         |
+| Limite de 200 lignes contrôlée uniquement pour les écritures de Claude Code            | Ajouter le script du hook à `lint-staged` pour `docs/**/*.md`                    |

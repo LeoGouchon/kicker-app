@@ -9,7 +9,7 @@ Préparer, ouvrir, relire et merger une PR vers `dev`. Les règles de branches e
     - `docs/glossary.md`, sommaire des ADR, `docs/tech-debt.md` : garder les entrées des deux côtés ;
     - un ADR de la branche porte un numéro déjà pris dans `dev` : le renuméroter (nom du fichier, titre, sommaire,
       liens qui y pointent, y compris dans `specs/`).
-- [ ] `npm run lint` et `npm run build` passent.
+- [ ] `npm run lint`, `npm run build` et `npm test` passent (la CI les relance, voir plus bas).
 - [ ] Test manuel fait : desktop/mobile, clair/sombre, rôles, états chargement/vide/erreur (voir
       [new-feature.md](new-feature.md#4-vérifier)).
 - [ ] Auto-relecture du diff complet (`git diff origin/dev...`) :
@@ -33,6 +33,34 @@ Préparer, ouvrir, relire et merger une PR vers `dev`. Les règles de branches e
 gh pr create --base dev --title "feat(history): add filters by player" --body-file <fichier>
 ```
 
+## CI
+
+Le workflow `.github/workflows/ci.yml` tourne sur chaque PR vers `dev` et `main`, et à chaque nouveau push sur la
+branche : `npm ci`, `npm run lint`, `npm run build`, `npm test`, avec la version de Node du champ `engines` de
+`package.json`. Son check s'appelle **`Lint, build and test`** et il est requis au merge : une PR rouge ne se merge pas.
+Le pre-commit et le build Vercel ne lancent pas les tests.
+
+**Rendre un check obligatoire** (réglage du dépôt, à faire une fois par check et par branche) :
+
+1. Le workflow doit déjà être dans la branche cible et avoir tourné au moins une fois (`gh pr checks <n°>`). Sinon
+   le check reste « en attente » et bloque toutes les PR.
+2. Lire le ruleset de la branche : `gh api repos/LeoGouchon/kicker-app/rulesets` (`Protect main`, `Protect dev`).
+3. Ajouter la règle avec `gh api -X PUT repos/LeoGouchon/kicker-app/rulesets/<id> --input <fichier.json>`, en
+   renvoyant **toutes** les règles existantes plus celle-ci (sinon elles sont supprimées) :
+
+```json
+{
+    "type": "required_status_checks",
+    "parameters": {
+        "strict_required_status_checks_policy": false,
+        "required_status_checks": [{ "context": "Lint, build and test" }]
+    }
+}
+```
+
+Pour une branche sans ruleset, le créer avec `gh api -X POST repos/LeoGouchon/kicker-app/rulesets` (`target: branch`,
+`enforcement: active`, `conditions.ref_name.include: ["refs/heads/<branche>"]`).
+
 ## Relire
 
 Le relecteur vérifie, dans cet ordre :
@@ -54,4 +82,4 @@ Commentaires : distinguer ce qui bloque (bug, faille, convention violée) de la 
 
 - **Mode** : **squash merge** dans `dev`, en gardant le titre de la PR comme message (GitHub ajoute `(#NN)`).
 - **Après le merge** : supprimer la branche distante et locale.
-- **Si `dev` a bougé pendant la relecture** : rebaser, relancer `npm run build`, puis merger.
+- **Si `dev` a bougé pendant la relecture** : rebaser, attendre que la CI repasse au vert, puis merger.

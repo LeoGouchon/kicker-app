@@ -10,7 +10,7 @@
 
 <!-- Ce que tu as vérifié à la main, pour que le relecteur puisse le reproduire. -->
 
-- [ ] `npm run lint` et `npm run build` passent
+- [ ] `npm run lint`, `npm run build` et `npm test` passent
 - [ ] Desktop et mobile (sous le breakpoint `md`)
 - [ ] Thème clair et sombre
 - [ ] Rôles concernés : anonyme / user / modérateur / admin
