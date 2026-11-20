@@ -122,6 +122,9 @@ La phase de vérification les reprend un par un.
   PR `fix`.
 - **Autres tests** que les tests pilotes listés ci-dessus.
 - **Skill `cadrer` en une question à la fois** : à traiter dans une branche à part (`docs/cadrer-one-question`).
+- **Skill `planifier` plus détaillée** (ajouté à la planification) : le plan doit nommer chaque fichier, avec le
+  changement et la logique à y coder, pour que l'implémentation parte de l'architecture presque complète. À traiter
+  dans une branche à part (`docs/planifier-file-detail`).
 
 ## Décisions
 
@@ -137,6 +140,8 @@ La phase de vérification les reprend un par un.
   ajoutés au même job, car ce sont déjà des prérequis de PR.
 - **Pas de tests dans le pre-commit** : le pre-commit doit rester rapide.
 - **Couverture** : décision repoussée, mais tracée dans le suivi de l'ADR 0007.
+- **Version de Node** (ajouté à la planification) : `24.x`, celle du projet Vercel. Elle est fixée par `engines.node`
+  dans `package.json`, que lisent à la fois Vercel et `actions/setup-node` : une seule source de vérité.
 
 ## Glossaire
 
