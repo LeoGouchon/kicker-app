@@ -37,7 +37,8 @@ gh pr create --base dev --title "feat(history): add filters by player" --body-fi
 
 Le workflow `.github/workflows/ci.yml` tourne sur chaque PR vers `dev` et `main`, et à chaque nouveau push sur la
 branche : `npm ci`, `npm run lint`, `npm run build`, `npm test`, avec la version de Node du champ `engines` de
-`package.json`. Son check s'appelle **`Lint, build and test`** et il est requis au merge : une PR rouge ne se merge pas.
+`package.json`. Son check s'appelle **`Lint, build and test`**. Une fois requis par le ruleset de la branche cible (voir
+ci-dessous), une PR rouge ne se merge plus.
 Le pre-commit et le build Vercel ne lancent pas les tests.
 
 **Rendre un check obligatoire** (réglage du dépôt, à faire une fois par check et par branche) :
