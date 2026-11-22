@@ -29,6 +29,12 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
   `source-map-js`, Vite). Après : `found 0 vulnerabilities`. Seul `package-lock.json` a changé ; `npm outdated` ne
   montre aucun `Current` au-delà de `Wanted`. Filet : lint 0 erreur / 19 warnings, build ok, tests 59 ok,
   `npm ls` sans erreur. Aucune vulnérabilité restante à reporter.
+- **Tâche 3** : faite. Commit `chore(deps): update runtime dependencies to latest minor`. Versions installées :
+  `@tanstack/react-query` 5.108.2, antd 6.7.1, axios 1.21.1, `chart.js` 4.6.1, dayjs 1.11.23, react et react-dom
+  19.3.1, `react-chartjs-2` 5.3.1, `react-router-dom` 7.18.6, `@fortawesome/react-fontawesome` 0.2.6, `@types/react`
+  et `@types/react-dom` 19.3.0. Vérification : script de contrôle sans ligne `dependencies` ; `npm outdated` ne
+  liste plus que des `devDependencies` ; lint 0 erreur / 19 warnings, build ok, tests 59 ok sans `Warning` ni
+  `deprecated` (identique à la référence) ; `npm ls` sans erreur ; `npm audit` → 0.
 
 ## Décisions
 
@@ -39,6 +45,11 @@ Chaque écart au plan ou ambiguïté tranchée, au moment où elle est prise :
 - **Tâche 2** : `npm audit fix` lancé deux fois ; le premier passage laissait `brace-expansion` 1.1.18 (sous
   `eslint` → `minimatch` 3), corrigé par le second en 1.1.22, toujours sans `--force` ni version majeure ; aucun
   coût.
+- **Tâche 3** : l'étape 2 (remonter les plages en retard) n'avait rien à faire : `@emotion/*`,
+  `chartjs-plugin-annotation`, `oidc-client-ts` et FontAwesome 6 étaient déjà à leur version installée ; aucun coût.
+- **Tâche 3** : `npm run build` affiche l'avertissement Vite sur la taille des chunks (> 500 kB, bundle unique sans
+  découpage). Non introduit par les montées a priori, mais pas comparé à la référence ; hors périmètre, à regarder
+  en vérification.
 - **Toutes les tâches** : le journal est commité avec la tâche et cite le commit par son message plutôt que par son
   SHA (un commit ne peut pas contenir son propre SHA, et le message survit aux rebases) ; aucun coût.
 
