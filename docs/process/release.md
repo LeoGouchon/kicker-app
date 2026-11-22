@@ -15,7 +15,7 @@ Livrer en production le contenu de `dev`, via une PR `dev` → `main`.
 
 - [ ] `dev` contient uniquement des PR mergées et vérifiées, sans travail en cours.
 - [ ] Sur `dev` à jour : `npm ci && npm run lint && npm run build` passent.
-- [ ] `npm audit` sans vulnérabilité haute.
+- [ ] `npm audit --audit-level=high` sort sans erreur (aucune vulnérabilité haute ou critique).
 - [ ] Test rapide des parcours principaux sur `dev` :
     - connexion / déconnexion ;
     - nouveau match (connecté et public avec code) ;

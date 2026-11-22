@@ -13,8 +13,8 @@ PR Dependabot sans casser l'application.
 ## Quand mettre à jour
 
 - **Chaque semaine** : Dependabot ouvre ses PR vers `dev`. Les traiter dans la semaine (voir plus bas).
-- **Avant une release** : `npm audit` ne doit remonter aucune vulnérabilité haute (case de
-  [release.md](release.md)).
+- **Avant une release** : `npm audit --audit-level=high` doit sortir sans erreur, donc sans vulnérabilité haute ou
+  critique (case de [release.md](release.md)).
 - **À l'annonce d'une faille** touchant une dépendance : auditer tout de suite, sans attendre Dependabot.
 
 ## Auditer
