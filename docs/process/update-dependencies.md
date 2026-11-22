@@ -29,6 +29,8 @@ Dans `npm outdated` :
 - **Current** : la version installée ;
 - **Wanted** : la plus récente que la plage de `package.json` autorise (mineure ou corrective) ;
 - **Latest** : la plus récente publiée. Si elle diffère de `Wanted` par le premier chiffre, c'est une version majeure.
+  Pour un paquet en `0.x`, c'est le deuxième chiffre (0.4 → 0.5 est cassant). Dependabot, lui, y voit une mineure :
+  un tel paquet a sa propre entrée `ignore` (`version-update:semver-minor`) dans `.github/dependabot.yml`.
 
 Pour une vulnérabilité, `npm audit fix` (**sans** `--force`) applique les correctifs compatibles avec les plages.
 Relancer `npm audit` ensuite : un second passage est parfois nécessaire pour une dépendance indirecte. Ce qui reste
