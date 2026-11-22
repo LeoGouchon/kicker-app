@@ -35,6 +35,17 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
   et `@types/react-dom` 19.3.0. Vérification : script de contrôle sans ligne `dependencies` ; `npm outdated` ne
   liste plus que des `devDependencies` ; lint 0 erreur / 19 warnings, build ok, tests 59 ok sans `Warning` ni
   `deprecated` (identique à la référence) ; `npm ls` sans erreur ; `npm audit` → 0.
+- **Tâche 4** : faite. Commit `chore(deps): update tooling to latest minor and typescript 5.9`. Versions installées :
+  eslint et `@eslint/js` 9.39.5, `typescript-eslint` 8.73.0, TypeScript 5.9.3, Vite 8.3.8, `@vitejs/plugin-react`
+  6.3.0, Prettier 3.10.1, globals 16.5.0, lint-staged 16.4.0, `eslint-plugin-react-refresh` 0.4.26,
+  `eslint-plugin-unused-imports` 4.4.1. Vérification : `npx tsc --version` → 5.9.3 ; script de contrôle sans
+  aucune ligne ; `npm outdated` ne liste que des majeures (`Current` = `Wanted`), exactement la liste du brief :
+  `@eslint/js` et eslint 10, les 4 paquets FontAwesome 6.7.2 → 7.3.1, `react-fontawesome` 0.2.6 → 3.5.0,
+  `eslint-plugin-react-hooks` 5.2.0 → 7.1.1, `eslint-plugin-react-refresh` 0.4.26 → 0.5.8,
+  `eslint-plugin-simple-import-sort` 12.1.1 → 14.0.0, globals 16.5.0 → 17.14.0, lint-staged 16.4.0 → 17.6.2,
+  TypeScript 5.9.3 → 7.0.2 (eslint 9.39.5 → 10.15.0, `@eslint/js` → 10.0.1) ; `npx prettier --check .` → les
+  mêmes 16 fichiers qu'en référence ; `npm audit` → 0 ; après `rm -rf node_modules && npm ci` : lint 0 erreur /
+  19 warnings, build ok, tests 59 ok, `npm ls` sans erreur. Aucune correction de `src/` ni d'`eslint.config.js`.
 
 ## Décisions
 
@@ -50,6 +61,9 @@ Chaque écart au plan ou ambiguïté tranchée, au moment où elle est prise :
 - **Tâche 3** : `npm run build` affiche l'avertissement Vite sur la taille des chunks (> 500 kB, bundle unique sans
   découpage). Non introduit par les montées a priori, mais pas comparé à la référence ; hors périmètre, à regarder
   en vérification.
+- **Tâche 4** : l'étape 2 n'avait rien à faire : `vitest`, `jsdom`, `@testing-library/*`, `husky`,
+  `eslint-config-prettier`, `eslint-plugin-react-hooks` et `eslint-plugin-simple-import-sort` étaient déjà à leur
+  version installée (script de contrôle vide) ; aucun coût.
 - **Toutes les tâches** : le journal est commité avec la tâche et cite le commit par son message plutôt que par son
   SHA (un commit ne peut pas contenir son propre SHA, et le message survit aux rebases) ; aucun coût.
 
