@@ -24,6 +24,11 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
 - **Tâche 1** : faite. Commit `chore(deps): remove unused plots and move eslint plugins to dev dependencies`.
   Vérification : lint 0 erreur / 19 warnings, build ok, tests 59 ok, `npm ls --depth=0` sans erreur ;
   `ant-design/plots` ne subsiste que dans l'ADR 0004.
+- **Tâche 2** : faite. Commit `chore(deps): fix npm audit vulnerabilities`. Avant : 14 vulnérabilités (6 hautes,
+  8 modérées : `@humanfs/node`, axios, `brace-expansion`, `follow-redirects`, `js-yaml`, `minimatch`,
+  `source-map-js`, Vite). Après : `found 0 vulnerabilities`. Seul `package-lock.json` a changé ; `npm outdated` ne
+  montre aucun `Current` au-delà de `Wanted`. Filet : lint 0 erreur / 19 warnings, build ok, tests 59 ok,
+  `npm ls` sans erreur. Aucune vulnérabilité restante à reporter.
 
 ## Décisions
 
@@ -31,6 +36,9 @@ Chaque écart au plan ou ambiguïté tranchée, au moment où elle est prise :
 
 - **Tâche 1** : `npm install -D eslint-plugin-unused-imports@^4.1.4` a installé la 4.4.1 ; réinstallé en `@4.1.4`
   pour respecter « sans changer leur version » (la montée se fait en tâche 4) ; aucun coût.
+- **Tâche 2** : `npm audit fix` lancé deux fois ; le premier passage laissait `brace-expansion` 1.1.18 (sous
+  `eslint` → `minimatch` 3), corrigé par le second en 1.1.22, toujours sans `--force` ni version majeure ; aucun
+  coût.
 - **Toutes les tâches** : le journal est commité avec la tâche et cite le commit par son message plutôt que par son
   SHA (un commit ne peut pas contenir son propre SHA, et le message survit aux rebases) ; aucun coût.
 
