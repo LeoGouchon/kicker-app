@@ -46,6 +46,7 @@ exige une version majeure : voir « Version majeure ».
    après : une mise à jour ne doit pas en ajouter.
 4. **Une bibliothèque d'exécution par PR** (antd, React, TanStack Query, React Router, axios, Chart.js…) tant que les
    écrans n'ont pas de tests : en cas de régression, le revert ne touche qu'elle. L'outillage peut être groupé.
+   Exception : `react` et `react-dom` se montent toujours ensemble, à la même version.
 5. Pour une bibliothèque d'exécution, parcourir les écrans qu'elle touche avec `make dev`.
 
 ## Version majeure
@@ -68,7 +69,8 @@ deux dans la même PR.
 Dependabot lit sa configuration sur la branche par défaut (`main`) : il ne démarre qu'après la première release qui
 y porte `.github/dependabot.yml`. Ses PR ciblent ensuite `dev`, sur des branches `dependabot/...`.
 
-- **Dépendance d'exécution** : une PR par paquet.
+- **Dépendance d'exécution** : une PR par paquet, sauf `react` et `react-dom`, groupés : `react-dom` plante au
+  démarrage si sa version diffère de celle de `react`.
 - **Outillage** (`devDependencies`) : une PR groupée pour les mineures et correctifs.
 - **GitHub Actions** : une PR groupée.
 

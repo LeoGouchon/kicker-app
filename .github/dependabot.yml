@@ -12,8 +12,11 @@ updates:
       ignore:
           - dependency-name: '*'
             update-types: ['version-update:semver-major']
-      # Runtime dependencies stay ungrouped: one PR per package
+      # Runtime dependencies stay ungrouped (one PR per package), except react and react-dom,
+      # which must share the exact same version or react-dom throws at startup
       groups:
+          react:
+              patterns: ['react', 'react-dom']
           dev-dependencies:
               dependency-type: development
               update-types: [minor, patch]
