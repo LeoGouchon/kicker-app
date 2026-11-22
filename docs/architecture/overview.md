@@ -19,7 +19,7 @@ Stack, assemblage de l'application au démarrage et rôle de chaque dossier de `
 | Authentification | `oidc-client-ts` (Authorization Code + PKCE)                                       |
 | Graphiques       | chart.js 4 via `react-chartjs-2` (+ `chartjs-plugin-annotation`)                   |
 | Icônes           | FontAwesome (`@fortawesome/react-fontawesome`)                                     |
-| Build            | Vite 8, TypeScript 5.8 (strict)                                                    |
+| Build            | Vite 8, TypeScript 5.9 (strict)                                                    |
 | Qualité          | ESLint 9, Prettier 3, husky + lint-staged                                          |
 | Hébergement      | Vercel (`vercel.json` : réécriture de toutes les URL vers `/` pour le routing SPA) |
 

@@ -1,0 +1,36 @@
+version: 2
+updates:
+    - package-ecosystem: npm
+      directory: /
+      target-branch: dev
+      schedule:
+          interval: weekly
+      commit-message:
+          prefix: chore(deps)
+          prefix-development: chore(deps)
+      # Major versions need their own PR and migration (docs/process/update-dependencies.md)
+      ignore:
+          - dependency-name: '*'
+            update-types: ['version-update:semver-major']
+          # 0.x package: Dependabot sees 0.4 -> 0.5 as minor, but it is a breaking release
+          - dependency-name: 'eslint-plugin-react-refresh'
+            update-types: ['version-update:semver-minor']
+      # Runtime dependencies stay ungrouped (one PR per package), except react and react-dom,
+      # which must share the exact same version or react-dom throws at startup
+      groups:
+          react:
+              patterns: ['react', 'react-dom']
+          dev-dependencies:
+              dependency-type: development
+              update-types: [minor, patch]
+
+    - package-ecosystem: github-actions
+      directory: /
+      target-branch: dev
+      schedule:
+          interval: weekly
+      commit-message:
+          prefix: chore(deps)
+      groups:
+          github-actions:
+              patterns: ['*']

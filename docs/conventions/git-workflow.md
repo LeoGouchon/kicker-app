@@ -14,11 +14,12 @@ Branches, commits et flux de merge. Le pas-à-pas d'une PR est dans
 feature branch ──PR (squash)──► dev ──PR « release » (merge commit)──► main ──► déploiement
 ```
 
-| Branche                      | Rôle             | Règle                                                                 |
-| ---------------------------- | ---------------- | --------------------------------------------------------------------- |
-| `main`                       | Production       | Jamais de push direct. N'évolue que par la PR de release depuis `dev` |
-| `dev`                        | Intégration      | Base de toutes les branches de travail. Jamais de push direct         |
-| `<type>/<kebab-description>` | Travail en cours | Créée depuis `dev` à jour, supprimée après le merge                   |
+| Branche                      | Rôle                          | Règle                                                                                                 |
+| ---------------------------- | ----------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `main`                       | Production                    | Jamais de push direct. N'évolue que par la PR de release depuis `dev`                                 |
+| `dev`                        | Intégration                   | Base de toutes les branches de travail. Jamais de push direct                                         |
+| `<type>/<kebab-description>` | Travail en cours              | Créée depuis `dev` à jour, supprimée après le merge                                                   |
+| `dependabot/...`             | PR automatiques de Dependabot | Créées par Dependabot vers `dev`, hors format `<type>/<kebab>`. Titre déjà au format `chore(deps): …` |
 
 - **Nom de branche** : `<type>/<description-kebab>`, avec le même `type` que les commits.
     - Exemples : `feat/match-public-code`, `fix/remove-auto-redirection`, `docs/project-conventions`.

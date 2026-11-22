@@ -68,7 +68,6 @@ Les règles à suivre (nommage, interdiction du style inline, couleurs) sont dan
 - **Configuration** :
     - les modules (échelles, éléments, tooltip, légende, annotation) sont enregistrés **une fois** dans `main.tsx` ;
     - les options de base sont construites dans `EloEvolution.tsx` à partir des tokens antd.
-- `@ant-design/plots` est une dépendance mais n'est importé nulle part.
 
 ## Dates
 
