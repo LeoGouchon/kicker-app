@@ -71,6 +71,22 @@
 | Libellés dupliqués entre menu et breadcrumb                                                                                                              | `useMenuItems.tsx`, `routes/index.tsx`                                                          | Source unique dans la config de route                |
 | Prop de style `textAlign` transmise au DOM par `styled(Flex)` : warning React « does not recognize the `textAlign` prop » (visible dans les tests en CI) | `components/matchLine/MatchLine.style.tsx` (`MatchPlayers`)                                     | Prop transitoire `$textAlign` ou `shouldForwardProp` |
 
+## Dépendances : versions majeures reportées
+
+Relevé `npm outdated` du 2026-11-22. Une PR par ligne, en suivant
+[process/update-dependencies.md](process/update-dependencies.md#version-majeure).
+
+| Paquet                                                                                                   | Version installée → disponible         | Action                                                                                                |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `eslint` et `@eslint/js`                                                                                 | 9.39.5 → 10.15.0 (`@eslint/js` 10.0.1) | Migrer la config flat vers ESLint 10 ; vérifier la compatibilité des plugins                          |
+| `typescript`                                                                                             | 5.9.3 → 7.0.2                          | Bloqué par `typescript-eslint`, qui n'accepte pas au-delà de 6.0 : attendre une version qui l'accepte |
+| `@fortawesome/*` (core, `free-brands`, `free-regular`, `free-solid`) et `@fortawesome/react-fontawesome` | 6.7.2 → 7.3.1 ; 0.2.6 → 3.5.0          | Monter les cinq paquets ensemble, revoir les icônes renommées                                         |
+| `eslint-plugin-react-hooks`                                                                              | 5.2.0 → 7.1.1                          | Nouvelles règles React Compiler : corriger ou désactiver explicitement                                |
+| `globals`                                                                                                | 16.5.0 → 17.14.0                       | Vérifier les environnements déclarés dans `eslint.config.js`                                          |
+| `lint-staged`                                                                                            | 16.4.0 → 17.6.2                        | Vérifier la config `lint-staged` de `package.json` et le hook husky                                   |
+| `eslint-plugin-simple-import-sort`                                                                       | 12.1.1 → 14.0.0                        | Relancer `npm run lint -- --fix` et relire l'ordre des imports                                        |
+| `eslint-plugin-react-refresh`                                                                            | 0.4.26 → 0.5.8                         | Lire le changelog (0.x : changements cassants possibles)                                              |
+
 ## Outillage
 
 | Sujet                                                                                                                                                                        | Action                                                                           |
@@ -80,3 +96,6 @@
 | Pas de `@tanstack/eslint-plugin-query`                                                                                                                                       | L'installer pour vérifier les query keys                                         |
 | Limite de 200 lignes contrôlée uniquement pour les écritures de Claude Code                                                                                                  | Ajouter le script du hook à `lint-staged` pour `docs/**/*.md`                    |
 | Règle ESLint `quotes: single` contredite par Prettier, qui garde `"…'…"` : un warning par chaîne avec apostrophe (`MatchLine.tsx`, `MatchLine.test.tsx`, `GameHistory.tsx`…) | `quotes: ['warn', 'single', { avoidEscape: true }]` dans `eslint.config.js`      |
+| Alertes et correctifs de sécurité Dependabot non activés (seules les mises à jour de version sont configurées, dans `.github/dependabot.yml`)                                | Les activer dans les Settings GitHub (Code security)                             |
+| `npm audit` absent de la CI : une vulnérabilité n'est vue qu'à la release ou par Dependabot                                                                                  | Ajouter `npm audit --audit-level=high` au workflow `ci.yml`                      |
+| Écrans sans tests (ni composants ni bout en bout) : aucun filet pour les montées de bibliothèques d'exécution (antd, React, React Router…)                                   | Tests de composants sur les parcours principaux, puis grouper ces montées        |

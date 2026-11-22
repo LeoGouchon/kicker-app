@@ -21,3 +21,6 @@ ordre faire quoi** et renvoient vers [conventions/](../conventions/README.md) po
   _À lire si_ : ton code est prêt à être proposé, ou tu relis la PR de quelqu'un.
 - [release.md](release.md) : livrer `dev` en production via la PR vers `main`.
   _À lire si_ : tu prépares une mise en production.
+- [update-dependencies.md](update-dependencies.md) : auditer et mettre à jour les dépendances, versions majeures, PR
+  Dependabot.
+  _À lire si_ : tu traites une PR Dependabot, une alerte `npm audit` ou une montée de version.

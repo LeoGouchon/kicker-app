@@ -1,6 +1,6 @@
 # Journal d'exécution : audit et mise à jour des dépendances
 
-- **Statut** : en cours (cycle des statuts : `specs/README.md`)
+- **Statut** : à valider (cycle des statuts : `specs/README.md`)
 - **Plan** : [2-plan.md](2-plan.md)
 
 Le diff de la feature se calcule par `git diff origin/dev...HEAD` (depuis la base commune avec `dev`) : il reste
@@ -46,6 +46,12 @@ Une ligne par tâche, ajoutée quand la tâche est faite. Une tâche absente n'e
   TypeScript 5.9.3 → 7.0.2 (eslint 9.39.5 → 10.15.0, `@eslint/js` → 10.0.1) ; `npx prettier --check .` → les
   mêmes 16 fichiers qu'en référence ; `npm audit` → 0 ; après `rm -rf node_modules && npm ci` : lint 0 erreur /
   19 warnings, build ok, tests 59 ok, `npm ls` sans erreur. Aucune correction de `src/` ni d'`eslint.config.js`.
+- **Tâche 5** : faite. Commit `chore(deps): add dependabot config and dependency update process`. Créés :
+  `.github/dependabot.yml`, `docs/process/update-dependencies.md` (93 lignes, 7 sections du brief). Modifiés :
+  `docs/process/README.md`, `docs/process/release.md`, `docs/conventions/git-workflow.md`, `docs/tech-debt.md`
+  (101 lignes). Vérification : `npx prettier --check .github docs` ok ; YAML relu après parsing (`js-yaml`) contre
+  la doc GitHub « Dependabot options reference » ; tous les fichiers de `docs/` touchés sous 200 lignes ; lint
+  0 erreur / 19 warnings, build ok.
 
 ## Décisions
 
@@ -64,6 +70,15 @@ Chaque écart au plan ou ambiguïté tranchée, au moment où elle est prise :
 - **Tâche 4** : l'étape 2 n'avait rien à faire : `vitest`, `jsdom`, `@testing-library/*`, `husky`,
   `eslint-config-prettier`, `eslint-plugin-react-hooks` et `eslint-plugin-simple-import-sort` étaient déjà à leur
   version installée (script de contrôle vide) ; aucun coût.
+- **Tâche 5** : relecture de la doc GitHub (point de vigilance 5) : Dependabot ajoute un deux-points après un préfixe
+  qui finit par `)`, donc `chore(deps)` donne `chore(deps): bump …`. `include: scope` n'est **pas** utilisé (il
+  ajouterait `deps` / `deps-dev` après le préfixe). Les groupes ne couvrent par défaut que les mises à jour de
+  version (`applies-to` non défini). La doc ne dit pas si `ignore` s'applique aux mises à jour de sécurité, ce qui
+  est sans effet ici : elles ne sont pas activées (dette). Coût si c'est faux : un titre de PR à renommer au merge.
+- **Tâche 5** : pas de ligne de dette pour une vulnérabilité restante : la tâche 2 n'en a laissé aucune.
+- **Tâche 5** : l'en-tête « Relevé du 2026-11-11 » de `tech-debt.md` porte sur tout le fichier ; la nouvelle section
+  porte sa propre date (2026-11-22) plutôt que de changer celle du fichier, dont les autres sections n'ont pas été
+  relevées à nouveau.
 - **Toutes les tâches** : le journal est commité avec la tâche et cite le commit par son message plutôt que par son
   SHA (un commit ne peut pas contenir son propre SHA, et le message survit aux rebases) ; aucun coût.
 
@@ -75,4 +90,15 @@ Chaque `// shortcut:` laissé dans le code :
 
 ## Bilan
 
-À remplir quand toutes les tâches sont faites.
+- **Construit** : `npm audit` passe de 14 vulnérabilités à 0 ; toutes les dépendances sont à leur dernière mineure
+  ou corrective (TypeScript 5.9.3), plages de `package.json` alignées sur les versions installées, `@ant-design/plots`
+  supprimé et deux plugins ESLint passés en `devDependencies`.
+- **Outillé** : `.github/dependabot.yml` (npm et GitHub Actions vers `dev`, hebdomadaire, majeures ignorées), fiche
+  `docs/process/update-dependencies.md`, case `npm audit` dans la release, exception `dependabot/...` dans le
+  workflow Git, majeures reportées et trois lignes d'outillage dans `tech-debt.md`.
+- **Aucun fichier de `src/` modifié**. Filet constant sur les 5 tâches : lint 0 erreur / 19 warnings, build ok,
+  59 tests ok, mêmes 16 fichiers signalés par Prettier.
+- **À regarder en priorité en vérification** : la CI sur la branche poussée (seul `npm ci` local a été fait) ; les
+  montées antd 6.3 → 6.7, React 19.1 → 19.3 et TanStack Query 5.81 → 5.108 ne sont couvertes par aucun test
+  d'écran ; l'avertissement Vite sur la taille des chunks (préexistant a priori, non comparé) ; le
+  `dependabot.yml` contre la configuration du brief.
