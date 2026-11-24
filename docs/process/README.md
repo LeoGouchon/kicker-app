@@ -9,7 +9,7 @@ ordre faire quoi** et renvoient vers [conventions/](../conventions/README.md) po
 ## Sommaire
 
 - [new-feature.md](new-feature.md) : le parcours complet d'une feature, du cadrage au merge, et son déroulé avec
-  Claude Code (`/feature`).
+  Claude Code (`/gouchon:feature`).
   _À lire si_ : tu démarres une nouvelle feature ou une évolution significative. **Point d'entrée par défaut.**
 - [add-a-page.md](add-a-page.md) : créer une page routée (dossier, route, breadcrumb, menu, protection), avec un
   squelette de code.

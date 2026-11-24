@@ -6,7 +6,7 @@ référence pour les briefs, l'interface et les échanges : un terme défini ici
 ## Fichiers clés
 
 - `src/types/*.type.ts` : les noms du code.
-- `.claude/skills/cadrer/SKILL.md` : la phase de cadrage lit ce glossaire et le complète.
+- skill `gouchon:cadrer` (plugin `claude-workflow`) : la phase de cadrage lit ce glossaire et le complète.
 
 ## Règles
 
