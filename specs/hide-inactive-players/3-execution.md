@@ -1,6 +1,6 @@
 # Journal d'exécution : retirer les joueurs inactifs du classement général
 
-- **Statut** : à valider (cycle des statuts : `specs/README.md`)
+- **Statut** : terminé (cycle des statuts : `specs/README.md`)
 - **Plan** : [2-plan.md](2-plan.md)
 
 Le diff de la feature se calcule par `git diff origin/dev...HEAD` (depuis la base commune avec `dev`) : il reste
@@ -56,9 +56,12 @@ Chaque commentaire `shortcut:` laissé dans le code :
   « Tous les matchs », nouveaux libellés, tag « Nouveau » / « Inactif » et ELO des inactifs ; numérotation des non
   classés retirée partout. 4 commits, 24 nouveaux tests.
 - **À regarder en priorité** :
-    - les cas « – » (évolution du rang et Diff 7j) et « Inactif » avec ELO ne sont pas visibles avec les données de
-      dev : seuls les tests les prouvent. Les vérifier après déploiement du backend, ou avec une réponse simulée ;
-    - thème sombre et largeur mobile (non contrôlés ici) : couleurs `--ant-color-success` / `-error` / `-info` et
-      colonne des tags (50 px) ;
+    - contrôle déjà fait après l'implémentation, sur le backend `hubscore` du worktree `hide-inactive-players`
+      (base recréée avec le seed V9999) et des réponses `/kicker/stats/*` modifiées dans le navigateur (patch de
+      `XMLHttpRequest`, aucun changement dans le dépôt) : « New » + Diff « – », retour d'inactivité « – » + ↑15,
+      Diff « – » avec rang connu, « Inactif » avec ELO, tri « Diff 7j » (« – » en tête, pas de `NaN`), carte
+      « General » du dashboard, saison en cours (ELO d'un non classé masqué, ni tag ni numérotation), aucun joueur
+      classé, thème sombre, largeur 390 px. À refaire contre le vrai backend une fois la règle d'activité codée ;
+    - le tableau vide affiche « No data » (locale antd par défaut, existant) ;
     - avertissement existant de React (« unique key ») sur le tableau des classés dans les tests : il n'a pas de
       `rowKey`, hors périmètre.
