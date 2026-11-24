@@ -1,7 +1,9 @@
 # Glossaire
 
 Le vocabulaire métier de Kicker-App, avec le terme de l'interface (français) et son nom dans le code (anglais). C'est la
-référence pour les briefs, l'interface et les échanges : un terme défini ici ne s'emploie pas dans un autre sens.
+référence pour les briefs, l'interface et les échanges : un terme défini ici ne s'emploie pas dans un autre sens. Il
+est commun avec le backend hubscore : un terme ajouté ou corrigé ici l'est aussi là-bas (seuls les noms du code
+diffèrent).
 
 ## Fichiers clés
 
@@ -23,7 +25,8 @@ Une personne qui joue au baby-foot et dont on enregistre les matchs. Un joueur p
 _À éviter_ : utilisateur, membre.
 
 **Utilisateur** (`User`) :
-Un compte qui se connecte à l'application, avec un e-mail et un rôle. Il peut être lié à un joueur.
+Un compte qui se connecte à l'application, avec un e-mail et un rôle. Il peut être lié à un joueur. Le compte
+lui-même (identifiants, connexion) vit dans l'identity server ; hubscore en garde le rôle et le lien au joueur.
 _À éviter_ : joueur (quand on parle du compte), membre.
 
 **Rôle** (`UserRole`) :
@@ -69,27 +72,33 @@ _À éviter_ : code match (libellé actuel du menu, à harmoniser), mot de passe
 
 **ELO** :
 La note de niveau d'un joueur. Elle monte quand il gagne, baisse quand il perd, et varie d'autant plus que le résultat
-était inattendu. La valeur de départ est fixée par le backend et peut changer : l'interface ne la suppose jamais.
+était inattendu et l'écart de buts grand. Tout joueur part d'une valeur de départ fixée par le backend (1500
+aujourd'hui) : l'interface ne la suppose jamais.
 
 **ELO global** :
 L'ELO calculé sur tous les matchs depuis le début.
 
 **ELO saisonnier** :
-L'ELO calculé uniquement sur les matchs de la saison en cours.
+L'ELO calculé uniquement sur les matchs d'une saison ; il repart de la valeur de départ à chaque saison.
 
-**Gain d'ELO** (`deltaElo`) :
-Les points d'ELO gagnés ou perdus par un joueur sur un match.
-_À éviter_ : delta (seul), points.
+**Gain d'ELO** (`eloWinTeamA`, `eloWinTeamB`) :
+Les points d'ELO gagnés ou perdus par un joueur, ou par chaque joueur d'une équipe, sur un match.
+_À éviter_ : delta (seul), points. `deltaElo` est un champ déprécié de l'API.
 
 **Chance de victoire** (`winChanceTeamA`, `winChanceTeamB`) :
 La probabilité de victoire de chaque équipe avant le match, déduite de l'ELO de ses joueurs.
+
+**Joueur classé** :
+Un joueur qui a joué au moins 10 matchs (depuis le début, ou dans la saison). Son ELO n'est montré et il n'apparaît
+au classement qu'à partir de ce seuil.
+_À confirmer_ : le terme « classé ».
 
 **Saison** (`SeasonStats`) :
 Un trimestre civil (année et trimestre T1 à T4). Les classements et l'ELO saisonnier sont calculés par saison.
 _À éviter_ : période, année.
 
 **Classement** (`rank`) :
-La position d'un joueur parmi tous les joueurs, triés par ELO, sur la saison ou depuis le début.
+La position d'un joueur parmi les joueurs classés, triés par ELO, sur la saison ou depuis le début.
 _À éviter_ : ranking, rang.
 
 **Taux de victoire** (`winRate`) :
