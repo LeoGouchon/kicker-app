@@ -8,8 +8,8 @@ import { useGetGlobalStats } from '../../../../hooks/useApiEndPoint/useStats.ts'
 import type { GlobalStats } from '../../../../types/GlobalStats.type.ts';
 import type { Player } from '../../../../types/Player.type.ts';
 import { getEloDelta } from '../../../../utils/eloDelta.ts';
-import { SeasonStatsNewText } from './SeasonStats.style.tsx';
-import { compareNullableNumbers, getRankEvolution } from './SeasonStats.utils.tsx';
+import { SeasonStatsBlurredEloText, SeasonStatsNewText } from './SeasonStats.style.tsx';
+import { compareNullableNumbers, getRankEvolution, getUnrankedTag } from './SeasonStats.utils.tsx';
 
 export const SeasonStats = React.memo(
     ({ year: selectedYear, quarter: selectedQuarter }: { year: number; quarter: number }) => {
@@ -45,7 +45,11 @@ export const SeasonStats = React.memo(
                         ? 'Toutes les saisons cumulées'
                         : `Année ${selectedYear} - Trimestre ${selectedQuarter}`}
                 </Typography.Title>
-                <Typography.Title level={4}>Joueurs classés (min. 10 matchs)</Typography.Title>
+                <Typography.Title level={4}>
+                    {isAllTime
+                        ? 'Joueurs classés (min. 10 matchs + 1 match récemment)'
+                        : 'Joueurs classés (min. 10 matchs)'}
+                </Typography.Title>
                 <Table
                     loading={isLoading}
                     size={'small'}
@@ -152,7 +156,11 @@ export const SeasonStats = React.memo(
                     ]}
                 />
 
-                <Typography.Title level={4}> Joueurs non classé (-10 matchs) </Typography.Title>
+                <Typography.Title level={4}>
+                    {isAllTime
+                        ? 'Joueurs non classés (moins de 10 matchs ou aucun match récent)'
+                        : 'Joueurs non classé (-10 matchs)'}
+                </Typography.Title>
 
                 <Table
                     loading={isLoading}
@@ -163,10 +171,15 @@ export const SeasonStats = React.memo(
                     rowKey={(record) => record.playerId}
                     columns={[
                         {
-                            key: 'id',
-                            dataIndex: 'id',
+                            key: 'tag',
                             width: 50,
-                            render: (_, __, index) => index + 1,
+                            hidden: !isAllTime,
+                            render: (_, player) =>
+                                getUnrankedTag(player) === 'new' ? (
+                                    <Tag color="processing">Nouveau</Tag>
+                                ) : (
+                                    <Tag>Inactif</Tag>
+                                ),
                         },
                         {
                             key: 'name',
@@ -187,15 +200,14 @@ export const SeasonStats = React.memo(
                         {
                             key: 'elo',
                             title: 'Elo',
-                            render: () => (
-                                <Tag variant={'outlined'}>
-                                    <Typography.Text
-                                        style={{ filter: 'blur(3px)', pointerEvents: 'none', userSelect: 'none' }}
-                                    >
-                                        1500
-                                    </Typography.Text>
-                                </Tag>
-                            ),
+                            render: (_, player) =>
+                                isAllTime && player.currentElo !== null ? (
+                                    <Tag variant={'outlined'}>{player.currentElo}</Tag>
+                                ) : (
+                                    <Tag variant={'outlined'}>
+                                        <SeasonStatsBlurredEloText>1500</SeasonStatsBlurredEloText>
+                                    </Tag>
+                                ),
                             dataIndex: 'currentElo',
                         },
                         {

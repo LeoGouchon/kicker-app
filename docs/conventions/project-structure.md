@@ -80,7 +80,7 @@ Un composant `Xxx.tsx` peut avoir, **à côté de lui** :
 | `Xxx.columns.tsx`  | Colonnes d'un `Table` antd                            | quand la définition des colonnes est longue                          |
 | `Xxx.type.ts`      | Types partagés entre ces fichiers                     | quand plusieurs satellites partagent un type                         |
 
-Ne pas créer de satellite vide. ⚠️ Quatre `.style.tsx` vides existent.
+Ne pas créer de satellite vide. ⚠️ Trois `.style.tsx` vides existent.
 
 ### Extraire la logique : `.utils.tsx` ou hook ?
 
