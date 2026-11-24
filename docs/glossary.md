@@ -98,8 +98,23 @@ Un trimestre civil (année et trimestre T1 à T4). Les classements et l'ELO sais
 _À éviter_ : période, année.
 
 **Classement** (`rank`) :
-La position d'un joueur parmi les joueurs classés, triés par ELO, sur la saison ou depuis le début.
+La position d'un joueur classé parmi les joueurs classés, triés par ELO, sur une saison (classement saisonnier) ou
+depuis le début (classement général).
 _À éviter_ : ranking, rang.
+
+**Classement général** :
+Le classement depuis le début, par ELO global. Pour y être classé, un joueur doit avoir joué au moins 10 matchs au
+total et être actif.
+_À éviter_ : classement global, classement « tous les matchs ».
+
+**Joueur actif** :
+Un joueur qui a joué au moins un match dans les 90 derniers jours. L'interface reste vague sur la durée (« récemment »).
+_À éviter_ : joueur récent.
+
+**Non classé** :
+Un joueur qui figure dans un classement sans y avoir de position : moins de 10 matchs sur la période, ou, pour le
+classement général, joueur qui n'est pas actif.
+_À éviter_ : hors classement.
 
 **Taux de victoire** (`winRate`) :
 La part de matchs gagnés parmi les matchs joués.
