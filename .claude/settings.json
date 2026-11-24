@@ -1,17 +1,10 @@
 {
-    "hooks": {
-        "PostToolUse": [
-            {
-                "matcher": "Write|Edit|MultiEdit",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-doc-length.mjs\"",
-                        "timeout": 10,
-                        "statusMessage": "Vérification de la taille des docs"
-                    }
-                ]
-            }
-        ]
+    "extraKnownMarketplaces": {
+        "claude-workflow": {
+            "source": { "source": "github", "repo": "LeoGouchon/claude-workflow" }
+        }
+    },
+    "enabledPlugins": {
+        "gouchon@claude-workflow": true
     }
 }
