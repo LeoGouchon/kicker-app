@@ -37,14 +37,14 @@ puis uniquement les fichiers dont la ligne « À lire si » correspond à ta tâ
     - une phrase de résumé ;
     - une section « Fichiers clés » (chemins `src/...` qui font foi) ;
     - le contenu, illustré par des extraits courts du vrai code.
-3. **200 lignes visées par fichier.** Au-delà, un hook Claude Code (`.claude/hooks/check-doc-length.mjs`) signale le
+3. **200 lignes visées par fichier.** Au-delà, un hook Claude Code (plugin `gouchon`, [ADR 0008](decisions/0008-plugin-workflow.md)) signale le
    dépassement et l'agent **propose** un découpage. C'est l'auteur qui décide. Si on accepte, le fichier `x.md`
    devient un dossier `x/` qui suit le même système :
     - un `README.md` : visée, quand y ajouter un fichier, sommaire ;
     - des sous-fichiers.
 
     Le sommaire parent pointe ensuite vers `x/README.md`. Un fichier qu'on choisit de garder long est ajouté à
-    `.claude/hooks/doc-length-ignore.txt` : le hook ne le signale plus, et l'exception reste visible en relecture.
+    `.claude/doc-length-ignore.txt` : le hook ne le signale plus, et l'exception reste visible en relecture.
 
 4. **Sommaire à jour** : tout nouveau fichier ou dossier est ajouté au `README.md` de son dossier, au format
    `- [fichier.md](fichier.md) : description. *À lire si* : situation.`

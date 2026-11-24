@@ -3,24 +3,24 @@
 Le parcours complet, du besoin au merge dans `dev`. Chaque étape renvoie vers la doc qui détaille les règles.
 Coche mentalement chaque case : une case sautée finit en dette.
 
-## Avec Claude Code : `/feature`
+## Avec Claude Code : `/gouchon:feature`
 
-La skill `/feature` déroule ce parcours en quatre phases. Chacune produit un fichier dans `specs/<feature>/`, que tu
+La skill `/gouchon:feature` (plugin `claude-workflow`, profil du projet dans `.claude/workflow.md`) déroule ce parcours en quatre phases. Chacune produit un fichier dans `specs/<feature>/`, que tu
 valides avant la phase suivante :
 
-1. **Cadrer** (`/cadrer`) : tours de questions jusqu'à ce que le besoin soit tranché ; glossaire et ADR mis à jour au
+1. **Cadrer** (`/gouchon:cadrer`) : tours de questions jusqu'à ce que le besoin soit tranché ; glossaire et ADR mis à jour au
    passage → `1-brief.md`.
-2. **Planifier** (`/planifier`) : tâches vérifiables tirées du brief → `2-plan.md`.
-3. **Implémenter** (`/implementer`) : exécution tâche par tâche, changement minimal, une preuve par tâche →
+2. **Planifier** (`/gouchon:planifier`) : tâches vérifiables tirées du brief → `2-plan.md`.
+3. **Implémenter** (`/gouchon:implementer`) : exécution tâche par tâche, changement minimal, une preuve par tâche →
    `3-execution.md`.
-4. **Vérifier** (`/verifier`) : lint, build, tests, critères d'acceptation, revue indépendante, parcours dans le
+4. **Vérifier** (`/gouchon:verifier`) : lint, build, tests, critères d'acceptation, revue indépendante, parcours dans le
    navigateur, dette reportée → `4-verification.md`, avec la checklist des rôles à faire toi-même.
 
 **Une session par phase** : quand une phase est validée et commitée, ferme la session (ou `/clear`) et relance
-`/feature` dans une nouvelle. Le contexte reste léger et chaque phase part des fichiers produits, pas de la
-conversation. Relancer `/feature` reprend à la première phase non validée, y compris depuis une autre machine après un
+`/gouchon:feature` dans une nouvelle. Le contexte reste léger et chaque phase part des fichiers produits, pas de la
+conversation. Relancer `/gouchon:feature` reprend à la première phase non validée, y compris depuis une autre machine après un
 `git push`.
-Fonctionnement détaillé : [specs/README.md](../../specs/README.md). Pourquoi : [ADR 0006](../decisions/0006-workflow-feature.md).
+Fonctionnement détaillé : [specs/README.md](../../specs/README.md). Pourquoi : [ADR 0006](../decisions/0006-workflow-feature.md) et [ADR 0008](../decisions/0008-plugin-workflow.md).
 
 Les sections suivantes restent la checklist de référence, avec ou sans l'agent.
 
@@ -34,7 +34,7 @@ git switch -c feat/<description-kebab> origin/dev
 ```
 
 Dans un worktree Orca, la branche créée s'appelle `<utilisateur>/<nom>` : renomme-la avant de commencer
-(`git branch -m feat/<description-kebab>`). Avec Claude Code, `/feature` crée ou renomme la branche lui-même.
+(`git branch -m feat/<description-kebab>`). Avec Claude Code, `/gouchon:feature` crée ou renomme la branche lui-même.
 
 Convention : [../conventions/git-workflow.md](../conventions/git-workflow.md).
 
@@ -46,7 +46,7 @@ Convention : [../conventions/git-workflow.md](../conventions/git-workflow.md).
 - [ ] Une décision structurante (nouvelle librairie, nouveau pattern, changement d'architecture) ? → rédiger un ADR
       dans [../decisions/](../decisions/README.md) **avant** de coder.
 - [ ] Employer les termes de [../glossary.md](../glossary.md). Un nouveau terme métier y est ajouté.
-- [ ] Avec Claude Code : lancer `/feature` (voir plus haut). Valider le brief, puis le plan, avant l'implémentation.
+- [ ] Avec Claude Code : lancer `/gouchon:feature` (voir plus haut). Valider le brief, puis le plan, avant l'implémentation.
 
 ## 3. Implémenter, dans cet ordre
 
@@ -97,11 +97,11 @@ Pendant l'implémentation, respecter :
       [../tech-debt.md](../tech-debt.md).
 - [ ] Dette traitée au passage → la retirer de [../tech-debt.md](../tech-debt.md).
 - [ ] Chaque fichier touché reste sous 200 lignes (ou l'exception est assumée dans
-      `.claude/hooks/doc-length-ignore.txt`), et chaque nouveau fichier est ajouté au sommaire de son dossier.
+      `.claude/doc-length-ignore.txt`), et chaque nouveau fichier est ajouté au sommaire de son dossier.
 
 ## 6. Proposer
 
 - [ ] Commits au format Conventional Commits.
 - [ ] PR vers `dev` avec le template rempli. Suivre [pull-request.md](pull-request.md).
-- [ ] Avec Claude Code : faire relire la branche avant de demander une relecture humaine. Avec `/feature`, la revue de
-      la phase Vérifier en tient lieu ; sans `/feature`, ou si du code a changé depuis, lancer `/code-review`.
+- [ ] Avec Claude Code : faire relire la branche avant de demander une relecture humaine. Avec `/gouchon:feature`, la revue de
+      la phase Vérifier en tient lieu ; sans `/gouchon:feature`, ou si du code a changé depuis, lancer `/code-review`.

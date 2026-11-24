@@ -1,6 +1,6 @@
 # 0006. Workflow feature en quatre phases avec Claude Code
 
-- **Statut** : Proposé
+- **Statut** : Proposé, remplacé en partie par [0008](0008-plugin-workflow.md) (les skills vivent dans un plugin)
 - **Date** : 2026-11-17
 
 ## Contexte

@@ -11,7 +11,7 @@ La documentation du projet est dans `docs/`. Son sommaire est importé ci-dessou
 
 1. Lis le sommaire ci-dessus, puis ouvre **uniquement** le `README.md` du ou des dossiers utiles à ta tâche.
 2. Dans ce dossier, charge seulement les fichiers dont la ligne « À lire si » correspond à ce que tu fais.
-3. Pour une nouvelle feature ou une évolution significative, utilise la skill `feature` (`/feature`) : cadrer,
+3. Pour une nouvelle feature ou une évolution significative, utilise `/gouchon:feature` (plugin `claude-workflow`, profil du projet dans `.claude/workflow.md`) : cadrer,
    planifier, implémenter, vérifier, avec un fichier par phase dans `specs/<feature>/` (voir `specs/README.md`).
    La checklist de référence reste `docs/process/new-feature.md`.
 4. Si le code existant contredit une convention, **la convention l'emporte** pour le nouveau code. L'écart est
@@ -58,7 +58,7 @@ npm run test:watch     # Vitest en continu
 - **200 lignes visées** par fichier `.md` de `docs/` et pour ce `CLAUDE.md`. Au-delà, un hook
   (`.claude/settings.json`) le signale. Tu **proposes** alors le découpage à l'utilisateur avec `AskUserQuestion` :
   « Découper maintenant », « Pas maintenant » ou « Ne plus demander pour ce fichier ». Tu ne découpes jamais sans son
-  accord. Les exceptions assumées sont listées dans `.claude/hooks/doc-length-ignore.txt`.
+  accord. Les exceptions assumées sont listées dans `.claude/doc-length-ignore.txt`.
 - **Découpage** : `x.md` devient un dossier `x/` avec un `README.md` (visée et sommaire) et des sous-fichiers.
   Le sommaire parent pointe ensuite vers `x/README.md`.
 - **Sommaires** : chaque dossier de `docs/` a un `README.md`. Chaque entrée de sommaire donne un lien, une

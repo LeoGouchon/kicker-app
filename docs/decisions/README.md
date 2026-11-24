@@ -35,8 +35,9 @@ Pas d'ADR pour un choix local à une feature ni pour un détail de style : ceux-
 | [0003](0003-react-query-etat-serveur.md) | TanStack Query comme unique source d'état serveur, pas de store global                                                        | Accepté                     |
 | [0004](0004-antd-emotion-style.md)       | antd pour les composants et les tokens, emotion pour le style, FontAwesome pour les icônes                                    | Accepté                     |
 | [0005](0005-organisation-des-pages.md)   | Pages dans `src/pages/<kebab>/`, dossiers en kebab-case, satellites `.style` / `.utils` / `.reducer`                          | Accepté (migration à faire) |
-| [0006](0006-workflow-feature.md)         | Workflow feature en quatre phases (`/feature`), specs versionnées dans `specs/`, glossaire métier                             | Proposé                     |
+| [0006](0006-workflow-feature.md)         | Workflow feature en quatre phases (`/gouchon:feature`), specs versionnées dans `specs/`, glossaire métier                     | Remplacé en partie par 0008 |
 | [0007](0007-tests-automatises.md)        | Tests avec Vitest, Testing Library et jsdom, obligatoires pour la logique pure, vérifiés en CI sur chaque PR                  | Proposé                     |
+| [0008](0008-plugin-workflow.md)          | Workflow feature partagé par le plugin `gouchon` (dépôt privé `claude-workflow`), profil `.claude/workflow.md` par projet     | Proposé                     |
 
 _À lire si_ :
 
@@ -45,5 +46,6 @@ _À lire si_ :
 - **0003** : tu envisages un store global ou un autre client de données ;
 - **0004** : tu envisages une autre librairie UI ou de style ;
 - **0005** : tu crées ou déplaces des fichiers ;
-- **0006** : tu modifies le workflow `/feature`, ses skills ou le dossier `specs/` ;
-- **0007** : tu écris des tests, tu touches à la CI ou tu remets en cause l'exigence de tests.
+- **0006** : tu modifies le déroulé du workflow feature ou le dossier `specs/` ;
+- **0007** : tu écris des tests, tu touches à la CI ou tu remets en cause l'exigence de tests ;
+- **0008** : tu modifies les skills du workflow, le profil `.claude/workflow.md` ou l'installation du plugin.
