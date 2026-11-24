@@ -1,15 +1,15 @@
-import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Badge, Result, Skeleton, Space, Table, Tag, Typography } from 'antd';
 import React, { useCallback } from 'react';
 
 import { FlexFullWidth } from '../../../../App.style.tsx';
+import { DeltaIndicator } from '../../../../components/delta-indicator/DeltaIndicator.tsx';
 import { LinkPlayer } from '../../../../components/linkPlayer/LinkPlayer.tsx';
 import { useGetGlobalStats } from '../../../../hooks/useApiEndPoint/useStats.ts';
 import type { GlobalStats } from '../../../../types/GlobalStats.type.ts';
 import type { Player } from '../../../../types/Player.type.ts';
-
-const { Text } = Typography;
+import { getEloDelta } from '../../../../utils/eloDelta.ts';
+import { SeasonStatsNewText } from './SeasonStats.style.tsx';
+import { compareNullableNumbers, getRankEvolution } from './SeasonStats.utils.tsx';
 
 export const SeasonStats = React.memo(
     ({ year: selectedYear, quarter: selectedQuarter }: { year: number; quarter: number }) => {
@@ -64,19 +64,11 @@ export const SeasonStats = React.memo(
                             width: 60,
                             hidden: !(isCurrentSeason() || isAllTime),
                             render: (_, record) => {
-                                const delta = record.rankLastWeek - record.rank;
-                                return record.rankLastWeek === 0 ? (
-                                    <Text style={{ color: 'var(--ant-blue)' }}>New</Text>
-                                ) : delta === 0 ? (
-                                    <Text type="secondary">= 0</Text>
-                                ) : delta > 0 ? (
-                                    <Text style={{ color: 'green' }}>
-                                        <FontAwesomeIcon icon={faCaretUp} /> {delta}
-                                    </Text>
+                                const evolution = getRankEvolution(record);
+                                return evolution === 'new' ? (
+                                    <SeasonStatsNewText>New</SeasonStatsNewText>
                                 ) : (
-                                    <Text style={{ color: 'red' }}>
-                                        <FontAwesomeIcon icon={faCaretDown} /> {delta * -1}
-                                    </Text>
+                                    <DeltaIndicator delta={evolution} />
                                 );
                             },
                         },
@@ -102,28 +94,15 @@ export const SeasonStats = React.memo(
                             width: 50,
                             align: 'center',
                             defaultSortOrder: 'descend',
-                            sorter: (a, b) => a.currentElo - b.currentElo,
+                            sorter: (a, b) => compareNullableNumbers(a.currentElo, b.currentElo),
                             dataIndex: 'currentElo',
                             render: (variable) => <Tag variant={'outlined'}>{variable}</Tag>,
                         },
                         {
                             title: 'Diff 7j',
                             hidden: !(isCurrentSeason() || isAllTime),
-                            sorter: (a, b) => a.currentElo - a.eloLastWeek - (b.currentElo - b.eloLastWeek),
-                            render: (_, record) => {
-                                const delta = record.currentElo - record.eloLastWeek;
-                                return delta === 0 ? (
-                                    <Text type="secondary">= 0</Text>
-                                ) : delta > 0 ? (
-                                    <Text style={{ color: 'green' }}>
-                                        <FontAwesomeIcon icon={faCaretUp} /> {delta}
-                                    </Text>
-                                ) : (
-                                    <Text style={{ color: 'red' }}>
-                                        <FontAwesomeIcon icon={faCaretDown} /> {delta * -1}
-                                    </Text>
-                                );
-                            },
+                            sorter: (a, b) => compareNullableNumbers(getEloDelta(a), getEloDelta(b)),
+                            render: (_, record) => <DeltaIndicator delta={getEloDelta(record)} />,
                         },
                         {
                             key: 'count',

@@ -7,8 +7,8 @@ export type GlobalStats = {
     winRate: number;
     totalMatches: number;
     lastMatches: boolean[];
-    currentElo: number;
+    currentElo: number | null;
     rank: number;
-    rankLastWeek: number;
-    eloLastWeek: number;
+    rankLastWeek: number | null;
+    eloLastWeek: number | null;
 };
