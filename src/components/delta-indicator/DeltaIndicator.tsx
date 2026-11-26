@@ -2,8 +2,6 @@ import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Typography } from 'antd';
 
-import { DeltaIndicatorText } from './DeltaIndicator.style.tsx';
-
 type DeltaIndicatorProps = {
     delta: number | null;
 };
@@ -18,12 +16,12 @@ export const DeltaIndicator = ({ delta }: DeltaIndicatorProps) => {
     }
 
     return delta > 0 ? (
-        <DeltaIndicatorText trend="up">
+        <Typography.Text type="success">
             <FontAwesomeIcon icon={faCaretUp} /> {delta}
-        </DeltaIndicatorText>
+        </Typography.Text>
     ) : (
-        <DeltaIndicatorText trend="down">
+        <Typography.Text type="danger">
             <FontAwesomeIcon icon={faCaretDown} /> {-delta}
-        </DeltaIndicatorText>
+        </Typography.Text>
     );
 };
