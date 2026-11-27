@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Card, Flex, Typography } from 'antd';
+import { Card, Flex } from 'antd';
 import type { ComponentProps } from 'react';
 
 type DashboardCardType = 'primary' | 'secondary' | 'superior';
@@ -129,10 +129,6 @@ export const RankingSummaryRow = styled.div`
     align-items: center;
     gap: 8px;
     min-height: 24px;
-`;
-
-export const RankingDeltaText = styled(Typography.Text)<{ delta: 'up' | 'down' }>`
-    color: ${({ delta }) => (delta === 'up' ? 'green' : 'red')} !important;
 `;
 
 export const HistorySummaryList = styled(Flex)`

@@ -1,16 +1,15 @@
-import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Skeleton, Tag, Typography } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 
+import { DeltaIndicator } from '../../../components/delta-indicator/DeltaIndicator.tsx';
 import { LinkPlayer } from '../../../components/linkPlayer/LinkPlayer.tsx';
 import { useGetGlobalStats } from '../../../hooks/useApiEndPoint/useStats.ts';
 import type { GlobalStats } from '../../../types/GlobalStats.type.ts';
 import type { Player } from '../../../types/Player.type.ts';
+import { getEloDelta } from '../../../utils/eloDelta.ts';
 import {
     CardContent,
     HoverableDashboardCard,
-    RankingDeltaText,
     RankingSummaryList,
     RankingSummaryRow,
     RankingSummarySections,
@@ -37,30 +36,12 @@ const toPlayer = (player: GlobalStats): Player => ({
     lastname: player.lastname,
 });
 
-const RankingDelta = ({ player }: { player: GlobalStats }) => {
-    const delta = player.currentElo - player.eloLastWeek;
-
-    if (delta === 0) {
-        return <Typography.Text type="secondary">= 0</Typography.Text>;
-    }
-
-    return delta > 0 ? (
-        <RankingDeltaText delta="up">
-            <FontAwesomeIcon icon={faCaretUp} /> {delta}
-        </RankingDeltaText>
-    ) : (
-        <RankingDeltaText delta="down">
-            <FontAwesomeIcon icon={faCaretDown} /> {delta * -1}
-        </RankingDeltaText>
-    );
-};
-
 const renderRankingPlayer = (rankingPlayer: GlobalStats) => (
     <RankingSummaryRow key={rankingPlayer.playerId}>
         <Typography.Text strong>#{rankingPlayer.rank}</Typography.Text>
         <LinkPlayer player={toPlayer(rankingPlayer)} />
         <Tag>{rankingPlayer.currentElo}</Tag>
-        <RankingDelta player={rankingPlayer} />
+        <DeltaIndicator delta={getEloDelta(rankingPlayer)} />
     </RankingSummaryRow>
 );
 

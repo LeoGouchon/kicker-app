@@ -1,15 +1,15 @@
-import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Badge, Result, Skeleton, Space, Table, Tag, Typography } from 'antd';
 import React, { useCallback } from 'react';
 
 import { FlexFullWidth } from '../../../../App.style.tsx';
+import { DeltaIndicator } from '../../../../components/delta-indicator/DeltaIndicator.tsx';
 import { LinkPlayer } from '../../../../components/linkPlayer/LinkPlayer.tsx';
 import { useGetGlobalStats } from '../../../../hooks/useApiEndPoint/useStats.ts';
 import type { GlobalStats } from '../../../../types/GlobalStats.type.ts';
 import type { Player } from '../../../../types/Player.type.ts';
-
-const { Text } = Typography;
+import { getEloDelta } from '../../../../utils/eloDelta.ts';
+import { SeasonStatsBlurredEloText, SeasonStatsNewText } from './SeasonStats.style.tsx';
+import { compareNullableNumbers, getRankEvolution, getUnrankedTag } from './SeasonStats.utils.tsx';
 
 export const SeasonStats = React.memo(
     ({ year: selectedYear, quarter: selectedQuarter }: { year: number; quarter: number }) => {
@@ -45,7 +45,11 @@ export const SeasonStats = React.memo(
                         ? 'Toutes les saisons cumulées'
                         : `Année ${selectedYear} - Trimestre ${selectedQuarter}`}
                 </Typography.Title>
-                <Typography.Title level={4}>Joueurs classés (min. 10 matchs)</Typography.Title>
+                <Typography.Title level={4}>
+                    {isAllTime
+                        ? 'Joueurs classés (min. 10 matchs + 1 match récemment)'
+                        : 'Joueurs classés (min. 10 matchs)'}
+                </Typography.Title>
                 <Table
                     loading={isLoading}
                     size={'small'}
@@ -64,19 +68,11 @@ export const SeasonStats = React.memo(
                             width: 60,
                             hidden: !(isCurrentSeason() || isAllTime),
                             render: (_, record) => {
-                                const delta = record.rankLastWeek - record.rank;
-                                return record.rankLastWeek === 0 ? (
-                                    <Text style={{ color: 'var(--ant-blue)' }}>New</Text>
-                                ) : delta === 0 ? (
-                                    <Text type="secondary">= 0</Text>
-                                ) : delta > 0 ? (
-                                    <Text style={{ color: 'green' }}>
-                                        <FontAwesomeIcon icon={faCaretUp} /> {delta}
-                                    </Text>
+                                const evolution = getRankEvolution(record);
+                                return evolution === 'new' ? (
+                                    <SeasonStatsNewText>New</SeasonStatsNewText>
                                 ) : (
-                                    <Text style={{ color: 'red' }}>
-                                        <FontAwesomeIcon icon={faCaretDown} /> {delta * -1}
-                                    </Text>
+                                    <DeltaIndicator delta={evolution} />
                                 );
                             },
                         },
@@ -102,28 +98,15 @@ export const SeasonStats = React.memo(
                             width: 50,
                             align: 'center',
                             defaultSortOrder: 'descend',
-                            sorter: (a, b) => a.currentElo - b.currentElo,
+                            sorter: (a, b) => compareNullableNumbers(a.currentElo, b.currentElo),
                             dataIndex: 'currentElo',
                             render: (variable) => <Tag variant={'outlined'}>{variable}</Tag>,
                         },
                         {
                             title: 'Diff 7j',
                             hidden: !(isCurrentSeason() || isAllTime),
-                            sorter: (a, b) => a.currentElo - a.eloLastWeek - (b.currentElo - b.eloLastWeek),
-                            render: (_, record) => {
-                                const delta = record.currentElo - record.eloLastWeek;
-                                return delta === 0 ? (
-                                    <Text type="secondary">= 0</Text>
-                                ) : delta > 0 ? (
-                                    <Text style={{ color: 'green' }}>
-                                        <FontAwesomeIcon icon={faCaretUp} /> {delta}
-                                    </Text>
-                                ) : (
-                                    <Text style={{ color: 'red' }}>
-                                        <FontAwesomeIcon icon={faCaretDown} /> {delta * -1}
-                                    </Text>
-                                );
-                            },
+                            sorter: (a, b) => compareNullableNumbers(getEloDelta(a), getEloDelta(b)),
+                            render: (_, record) => <DeltaIndicator delta={getEloDelta(record)} />,
                         },
                         {
                             key: 'count',
@@ -173,7 +156,11 @@ export const SeasonStats = React.memo(
                     ]}
                 />
 
-                <Typography.Title level={4}> Joueurs non classé (-10 matchs) </Typography.Title>
+                <Typography.Title level={4}>
+                    {isAllTime
+                        ? 'Joueurs non classés (moins de 10 matchs ou aucun match récent)'
+                        : 'Joueurs non classé (-10 matchs)'}
+                </Typography.Title>
 
                 <Table
                     loading={isLoading}
@@ -184,10 +171,15 @@ export const SeasonStats = React.memo(
                     rowKey={(record) => record.playerId}
                     columns={[
                         {
-                            key: 'id',
-                            dataIndex: 'id',
+                            key: 'tag',
                             width: 50,
-                            render: (_, __, index) => index + 1,
+                            hidden: !isAllTime,
+                            render: (_, player) =>
+                                getUnrankedTag(player) === 'new' ? (
+                                    <Tag color="processing">Nouveau</Tag>
+                                ) : (
+                                    <Tag>Inactif</Tag>
+                                ),
                         },
                         {
                             key: 'name',
@@ -208,15 +200,14 @@ export const SeasonStats = React.memo(
                         {
                             key: 'elo',
                             title: 'Elo',
-                            render: () => (
-                                <Tag variant={'outlined'}>
-                                    <Typography.Text
-                                        style={{ filter: 'blur(3px)', pointerEvents: 'none', userSelect: 'none' }}
-                                    >
-                                        1500
-                                    </Typography.Text>
-                                </Tag>
-                            ),
+                            render: (_, player) =>
+                                isAllTime && player.currentElo !== null ? (
+                                    <Tag variant={'outlined'}>{player.currentElo}</Tag>
+                                ) : (
+                                    <Tag variant={'outlined'}>
+                                        <SeasonStatsBlurredEloText>1500</SeasonStatsBlurredEloText>
+                                    </Tag>
+                                ),
                             dataIndex: 'currentElo',
                         },
                         {
