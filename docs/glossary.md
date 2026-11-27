@@ -89,8 +89,9 @@ _À éviter_ : delta (seul), points. `deltaElo` est un champ déprécié de l'AP
 La probabilité de victoire de chaque équipe avant le match, déduite de l'ELO de ses joueurs.
 
 **Joueur classé** :
-Un joueur qui a joué au moins 10 matchs (depuis le début, ou dans la saison). Son ELO n'est montré et il n'apparaît
-au classement qu'à partir de ce seuil.
+Un joueur qui a une position dans un classement : il a joué au moins 10 matchs sur la période (depuis le début, ou dans
+la saison) et, pour le classement général, il est actif. Sinon, il figure parmi les non classés. Son ELO n'est montré
+qu'à partir de 10 matchs.
 _À confirmer_ : le terme « classé ».
 
 **Saison** (`SeasonStats`) :
